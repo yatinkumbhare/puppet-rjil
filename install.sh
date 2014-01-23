@@ -5,7 +5,7 @@ dpkg -i puppet.deb
 apt-get update
 apt-get install -y puppet git
 sudo puppet module install saz/ssh
-git clone https://github.com/jiocloud/puppet-rjil
+git clone https://github.com/JioCloud/puppet-rjil
 ln -s ${PWD}/puppet-rjil /etc/puppet/modules/rjil
 cat <<EOF > /etc/puppet/manifests/site.pp
 include rjil::server
