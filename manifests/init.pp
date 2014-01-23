@@ -28,4 +28,9 @@ class rjil {
     realname => 'Jaspreet Walia',
     sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgkofVVuQ9Us4sU+g1slDQODFRSyiokzFRdGkxP5dgsPkGuGbXT2K/TzTkg4vNjGsOhn6K8F2lUxFB10gRnaWyWpaOaHzNnRUE/qxH9cTXwKxsKcGmvtus0/G3xVDFCShrjnj0W+AZA5ESXkc3J1sRBBGkQwuc9BdDMWFxovHeuJwJacuQVfhe+3gxvqdescWA3vZixONTdOwAphU3Whk4PZHQYG5t6sAFg3oi77dUcJh8rwk6qFQPbFWTu9BK+D/6AvnvK1raHWPFpTup/zOYKYcZDC5YlOGFn6SCLno05hjOMvL8HF16oVQdJ2Vhkx7hmpN7KcnLB0RBZhuKvWD7Q==\n",
   }
+
+  @rjil::localuser { 'rushiagr':
+    realname => 'Rushi Agrawal',
+    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZZJsMzGhCa9PNYUogCdkdjVLXpCLAJ9u54yUXdi2Kgz0AkZUY8H/WUQlxIy9mm8PqHHlV8vn8hMUGgfRCU1R3Ar1Hqj2wGmLWC94vfFj+62yLDTfOEDPnCfUPjZgpkXOQVizvkpfYdf9nDaYWr9VSfQoa95VD72xh25T/HAdvOUnVdNAochn9lX4dC3/7eNTCVysfvY8x53+3R6pOSex4vP4iofhNAeeg5EX900VsZOv2dRrHYnfQC0L2zaaNebMapMC41CfEBRVV3BEfB+oA3ZZiCQg9bhNlI0PDRgHgmMzmHvC49BRusOKodf99j1XNgKfEFKPWGzQnq7I2KeTn rushi.agr@gmail.com\n",
+  }
 }
