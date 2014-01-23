@@ -3,7 +3,7 @@ release="$(lsb_release -cs)"
 wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb
 dpkg -i puppet.deb
 apt-get update
-apt-get install puppet git
+apt-get install -y puppet git
 sudo puppet module install saz/ssh
 git clone https://github.com/jiocloud/puppet-rjil
 ln -s ${PWD}/puppet-rjil /etc/puppet/modules/rjil
