@@ -13,4 +13,9 @@ class rjil {
     realname => 'Amar Krishna',
     sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMRUrR+7mTJAV26b57t4lXbrm9wfzU7dOd0Yge+3esLeMKc4oDDgHke11UFhFjCflfx6Fu4RuyRq9LeL90YCWXvExWgljrJNTwJs9aUDe23LV0GeSHtBnt4/7tpFoE1h79rX5QIWoRDHBwfrQMu/ZtlvLg3+idd8ZzoVaUk1kdIhrX9xUWE95g6tieJcAyr6uP/gu+2vRPfAZ7+nYjhPIVwov0sNn9hoGx5JxK//INUjzgWFhRHu0S2ae4xp1/uRSZwNoJpvNdDiwUhD3NgZTkmzONkiXb/FkXuHK1YK9a2dM+1vIVfLQiKJS2wCDVRTEOCszGKGSp8CQ18SUxd7JV amar@localhost.localdomain\n",
   }
+
+  @rjil::localuser { 'sanjayu':
+    realname => 'Sanjay S Upadhyay',
+    sshkeys  => "ssh-dss AAAAB3NzaC1kc3MAAACBAI+y8C9f48PXOo6DOUgvDdyDlEmaiRyaHep64ddLY/OLu5KPLb0Qr8NVQ/rlU8lvLLzTmgj8LfFPrzt7zHuNpW4OVxcjZa+vAsFVCVKOfwHS3TatPXClHGKqp1W797HqDtEViti6rpHbxsPUkYb3uqPTlt3Hb/8YCTnfuRQGffixAAAAFQCE8EleKsutjOQbrLIjzQx2OGOgqwAAAIBMkXFXlaEGff9VUd4E4K3S6FhMpRjJNImVhHzSfm/xBAPTLmb6fJsE1B1EhMa9drEUj3EYAbbRWsEXwOqsVfbxlUbL8pALi+HasKnJ3IZ5tgpHOGpARNgtfvGppyr7yOdRWuG/4UOjgpjlrVamaCn/F8d5SJhXcfJIfiPbp7UCGAAAAIB4La5onWCklzSRY8RFoOs6mVX3KhS+MsOf/xd4C2R9U63bUejP56HHF+enGdbHcwOHPp9/DAedgP+bd0rd9D/aJoUfJUE0r3U/r6/WyrCZsChxQ0E2ibeHnyNrErqxZYtrkXzESmakpMSwfPT6CoGO7q4NEailFgnH5WU+EeT9xg== sanjayu@glowfriend.com\nssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAqqn1SeVuzQIZTski6aeWhH39E7icc35Axb5Hv9E8JXxXmxCIgOk+N9bEVPBB7UQsb7R7gLsbYraeKHNFg9D2n9YPEcUVdBttON2Th5tg/y4nMOxzkoWWLIe9HdrovfpAE+RzA6Ti28zjhddNCsL9ZU5riCJzdI1sXlJD5OmjYMuI+mocAzwh8dHrMrXD5iqzfQoK7FC1XzMuOTwa+so4tZqgeqWStaGgTAfTXmYi/0RIeFG2OXc03khBzLP/gLprlFEHJX4O60gGLEHbfyRk11x+trR9JUobR1FFF0q8JNoeuRW4bKkelCtEGjDry+Qh4yIg4cbBGunlRf3a4VWDqw== sanjayu@glowfriend.com\n",
+  }
 }
