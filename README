@@ -1,0 +1,3 @@
+Bootstrap new servers like so:
+
+wget -q -O - https://raw.github.com/jiocloud/puppet-rjil/master/install.sh | sudo bash
