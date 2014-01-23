@@ -23,4 +23,9 @@ class rjil {
     realname => 'Om Prakash Pandey',
     sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnyfDtofClb1cyEtv/osg+zxhBLbpuQSPXdMjf+KUoC8KxvDl8+yZRC6tY0wzTCX5deNdvaZb02FbHFuqKg1HEW3QNnvobkc/jl4PgYbXoCZe4e+sLB8szMHHrCgrQH07HMvwiQKOJSlmrR8GVKTHlDpGC1wbv9s/udy1hOweHDp1mXYyFPAq1tvENs64S+LAojtmaGjSrwQLlgfc3t56e9+C52+vu+RmwNRA6o07kZl+L3DUyl4OtX2q08pLH2LJ7hso/jqHPN7ozeG77tNgwWVp1O6oO443LFMA/+1nVlZFhJjwNcIeKbKV+eAAFWmA6l5xt75L27tS0Jm1Si0kww==\n",
   }
+
+  @rjil::localuser { 'jas':
+    realname => 'Jaspreet Walia',
+    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgkofVVuQ9Us4sU+g1slDQODFRSyiokzFRdGkxP5dgsPkGuGbXT2K/TzTkg4vNjGsOhn6K8F2lUxFB10gRnaWyWpaOaHzNnRUE/qxH9cTXwKxsKcGmvtus0/G3xVDFCShrjnj0W+AZA5ESXkc3J1sRBBGkQwuc9BdDMWFxovHeuJwJacuQVfhe+3gxvqdescWA3vZixONTdOwAphU3Whk4PZHQYG5t6sAFg3oi77dUcJh8rwk6qFQPbFWTu9BK+D/6AvnvK1raHWPFpTup/zOYKYcZDC5YlOGFn6SCLno05hjOMvL8HF16oVQdJ2Vhkx7hmpN7KcnLB0RBZhuKvWD7Q==\n",
+  }
 }
