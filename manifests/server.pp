@@ -9,6 +9,11 @@ class rjil::server() {
     value => "no"
   }
 
+  ssh::server::configline { "PermitRootLogin":
+    ensure => present,
+    value => "no"
+  }
+
   file { '/etc/sudoers':
     ensure  => present,
     owner   => 'root',
