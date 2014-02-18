@@ -53,6 +53,6 @@ class rjil {
 
   @rjil::localuser { 'angrybird':
     realname => 'Maninder Rajpal',
-    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgbPSgwfu7eJdCQMf7pMiJxrE8z/KQDp4HPf+jYqDBCq6y374I5v2/SdALEg4TAC0Z5TN/pxcxgxABfnAXzZpj7km8o/D5XrAUhNw7Ct7GgSIg/kbq60Q1ebqIF6Aw2OFIKi8XWKTokgW5Y61mhW0axyVieF1DvaRtJAPn+cv0HeA2AGXoFwe3IO0z+KcYMJOC0dnzIJ73LcKknWtd4YPrSfyzOlZiYEpQBrr3PdyaBFx69tPJaIT4InITbjpzapsAATOox50B/VDbJt3S3Rafw/b4ScqW7GCOC/U/uMzNHPzX5kYR51x+hCvv8TCV2xTmQCwGn99wYTxpegH+cpy2Q==\n",
+    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDYRhVZa/dh9vDX1jkEsN2QfIP4M34lNG7X+FHytBt2nRK5LrDrSwzej36i0nI3X+clYJ+HlD2SR/XjyMlzBlAFQrwIWI4edAtrVTXQYJaNXQ6Ma0/ozUASUji48sKddccydg7VO/wj/AcB/jJbCDcy/Ozj4glAdy7XYtNzLioVA4auf3PuYQhSH33e7NYrH/q13yUvZxQrZJ1sqZhigzgOx1+tATtH5mbpM4ypd0N0uHE1Y0Y9mKshMCWzk6o8OfFXzPXwZGZioyBoSKAOUs2oQZqgCtbJyD/PhJC6tfTjKD9UXRQ+25zUzhFvxkfrEG8vn7ymM8b6uJGb+IOZifDL angrybird\n",
   }
 }
