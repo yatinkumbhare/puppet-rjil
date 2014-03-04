@@ -6,7 +6,7 @@ class rjil {
 
   @rjil::localuser { 'rohit':
     realname => 'Rohit Karajgi',
-    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1wAEVq8M01LFo8T8kxD/tVF7AUKNatp0s2wzmQ7bKv3OlvjmAZXkjgTISdXNejiUC2Iy/EuHtpr0NGEN8sQLDMjMrlQPq4JtWofw1VWL0BpO9VCeiwVtCtcuLQNZTCLscksXxjRNvWl4s5v8uANck3Ns2zOSs1mhsh3FdubQx+Dzh/XNcfCJDxROApOgI65PXiS2YdJPlG57mjyj0cppR361ifPTf5yTkRFa1LQEhDHK3fA5y+jill/ar8ry9+OKUzy4iiSSzY6kMyHpV6FWGauFP86wAjTRYLOtmIRWmKONYOHxbY2qLqwOdtjBW1M0QOtr2xrgUu9au477P5bRf rohit@rocloud\n",
+    sshkeys => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJxTBYLxV9ry2lzUpPNfXrjuHLp95R05dJjjShHYFFyIObSeA1PZ3M3pYd7fwdnB2mFGXaCDovYNvdu29N+gfeB+SimODxM503ytNIZcEgjQzPm7TtSKbQbj/bur9ZIVrBsvHW7gbgH3bPMWO1UoNSa981JPzrB6X9XqD5K3Y6OnS7jkm7692O0+viIeoFo0IXlwtCVl/aPPlhEJL5sQkbxR7ryjLS1NF8pbQx03hRTQ+r3x2wnkx43KE4G7IcXLrlclC85coya1nZsKd2B0IBGOj1ukZv3WWe5qp/nwpj99owe3GHJrAS0s8O2i/ZdxrE7O/TLqGQFNt06jd8ykqX rohit@rocloud\n",
   }
 
   @rjil::localuser { 'amar':
