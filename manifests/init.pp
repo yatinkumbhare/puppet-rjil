@@ -55,4 +55,9 @@ class rjil {
     realname => 'Maninder Rajpal',
     sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDYRhVZa/dh9vDX1jkEsN2QfIP4M34lNG7X+FHytBt2nRK5LrDrSwzej36i0nI3X+clYJ+HlD2SR/XjyMlzBlAFQrwIWI4edAtrVTXQYJaNXQ6Ma0/ozUASUji48sKddccydg7VO/wj/AcB/jJbCDcy/Ozj4glAdy7XYtNzLioVA4auf3PuYQhSH33e7NYrH/q13yUvZxQrZJ1sqZhigzgOx1+tATtH5mbpM4ypd0N0uHE1Y0Y9mKshMCWzk6o8OfFXzPXwZGZioyBoSKAOUs2oQZqgCtbJyD/PhJC6tfTjKD9UXRQ+25zUzhFvxkfrEG8vn7ymM8b6uJGb+IOZifDL angrybird\n",
   }
+
+  @rjil::localuser { 'rclark':
+    realname => 'Richard Clark',
+    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAyPD6HkWT4pz20Ygfo72MxiMsCc4JmlVq/LO0GQRw1ZBG4f0rkjegYBDFLLzOR60RPfqpvb3OApJBHcx3HJG9IxtPc5yZN615sBwPOLK6SWO9kFMhBVq4w3uQFIvpONyR7KbRlWJFVn1W02pRkGGp//bN15h6Ry24kfzEgcjOMbq9vb57/dumj9tL6pZyBSWLgOjWj70KEo/n8Z9AFn7lZOZgq4fmqMuDD79ahsjnwGpKjh2v/SIALV2AjYWJOwY/0ou7l7ghVvfOB4ZOgSYDxhz2/ORqL4yUzncyChcLH1Xg5nscvc+yaOatMaXtVlkPAEPDUSzfho8DyAqt1tjRKw== rclark@blackcat",
+  }
 }
