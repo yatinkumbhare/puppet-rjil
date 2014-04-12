@@ -1,17 +1,10 @@
 class rjil::server() {
   include rjil
-  include ssh::server
-
-  package { "mosh": }
-
-  ssh::server::configline { "PasswordAuthentication":
-    ensure => present,
-    value => "no"
-  }
-
-  ssh::server::configline { "PermitRootLogin":
-    ensure => present,
-    value => "no"
+  class { ssh::server:
+    options => {
+      "PasswordAuthentication" => 'no',
+      "PermitRootLogin" => 'no',
+    },
   }
 
   file { '/etc/sudoers':
