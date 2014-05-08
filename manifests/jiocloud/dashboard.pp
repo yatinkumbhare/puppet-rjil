@@ -1,6 +1,7 @@
 class rjil::jiocloud::dashboard($keystone_url,
                                 $secret_key,
                                 $debug                 = false,
+                                $fqdn                  = $::fqdn,
                                 $api_result_limit      = 2000,
                                 $recaptcha_public_key  = 'fake_public_key',
                                 $recaptcha_private_key = 'fake_private_key',
@@ -30,6 +31,7 @@ class rjil::jiocloud::dashboard($keystone_url,
   }
 
   class { 'horizon':
+    fqdn                    => $fqdn,
     cache_server_ip         => '127.0.0.1',
     cache_server_port       => '11211',
     secret_key              => $secret_key,
