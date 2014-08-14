@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+refresh_modules:
+	rm -rf modules
+	librarian-puppet install
+
+override_dh_auto_clean:
+	dh_auto_clean
