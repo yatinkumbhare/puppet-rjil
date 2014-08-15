@@ -1,4 +1,6 @@
 class rjil::jiocloud::sources($snapshot_version = false) {
+  include apt
+
   $ubuntu_url = $snapshot_version ? {
     false   => "http://archive.ubuntu.com/ubuntu",
     default => "http://archive.internal/${snapshot_version}/archive.ubuntu.com/ubuntu"
@@ -56,7 +58,7 @@ Chk4NnD90SYZt36sTLITe5O/BgYlRMqVo+bVj0tmjMJP/B4PZjABX7A=
 
 
   # XXX: This needs to be snapshotted as well.
-  apt::ppa { 'ppa:benley/etcd':
+  apt::key { '3695394E':
     key_content => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1
 
@@ -70,6 +72,7 @@ ov/HLX6kmL+s9NKFPrlgF1vPEzoj6As05DQmtiMCZZUMubdXeWcwqf2H/yzwW11s
 ZJLc7lQ0gUibky1GWuXx66wCyc68ucnJLfI3jqE=
 =kTTQ
 -----END PGP PUBLIC KEY BLOCK-----',
-  }
+  } ->
+  apt::ppa { 'ppa:benley/etcd': }
 
 }

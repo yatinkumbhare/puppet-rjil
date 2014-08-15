@@ -4,7 +4,7 @@ mod 'puppetlabs/inifile',
 
 mod 'jiocloud/etcd',
 	:git => "git://github.com/JioCloud/puppet-etcd.git",
-	:ref => "7be4ce1b0c8f92cd8ea855d2bcb89ccbf6cd2927"
+	:ref => "74efce9cbd0f854b33111dc0ffa72b5a349e3f8f"
 
 mod 'dprince/qpid',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/dprince-qpid-1.0.2.tar.gz'
