@@ -2,6 +2,10 @@ mod 'puppetlabs/inifile',
 	:git => "git://github.com/puppetlabs/puppetlabs-inifile.git",
 	:ref => "41e2ddbc1cd861247e57d16b778cbe891602f509"
 
+mod 'jiocloud/etcd',
+	:git => "git://github.com/JioCloud/puppet-etcd.git",
+	:ref => "7be4ce1b0c8f92cd8ea855d2bcb89ccbf6cd2927"
+
 mod 'dprince/qpid',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/dprince-qpid-1.0.2.tar.gz'
 
