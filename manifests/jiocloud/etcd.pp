@@ -1,3 +1,3 @@
-class rjil::jiocloud::etc {
+class rjil::jiocloud::etcd {
   class { 'etcd': }
 }
