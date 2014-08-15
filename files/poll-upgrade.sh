@@ -14,10 +14,10 @@ do_upgrade() {
 	echo $pending_version > /etc/running_version
 }
 
-pending_version=$(etcdctl get current_version)
 
 while true
 do
+	pending_version=$(etcdctl get current_version)
 	if [ ! -e /etc/running_version ]
 	then
 		do_upgrade $pending_version
