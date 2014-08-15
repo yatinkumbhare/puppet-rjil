@@ -1,6 +1,6 @@
 #!/bin/bash
 
-do_upgrade {
+do_upgrade() {
 	pending_version=$1
 	etcdctl set upgrade_running/$(hostname) true
 	export http_proxy="http://10.135.121.138:3128/"
