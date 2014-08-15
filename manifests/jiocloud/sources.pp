@@ -21,7 +21,7 @@ class rjil::jiocloud::sources($snapshot_version = false) {
   apt::source { 'rustedhalo':
     location    => $rustedhalo_url,
     release     => $codename,
-    repos       => 'main universe restricted',
+    repos       => 'main',
     key         => '85596F7A',
     key_server  => 'keyserver.ubuntu.com',
     key_content => '-----BEGIN PGP PUBLIC KEY BLOCK-----
