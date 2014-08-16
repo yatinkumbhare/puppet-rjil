@@ -5,5 +5,7 @@ class rjil::jiocloud::etcd() {
     peer_addr      => "${::ipaddress}:7001",
     peer_bind_addr => "0.0.0.0:7001",
   } ->
-  package { 'etcdctl': }
+  package { 'etcdctl':
+    require => Exec['apt_update']
+  }
 }
