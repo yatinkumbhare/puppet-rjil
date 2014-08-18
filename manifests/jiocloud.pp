@@ -6,6 +6,8 @@ class rjil::jiocloud {
     group => 'root'
   }
 
+  package { 'python-jiocloud': }
+
   file { '/usr/local/bin/poll-upgrade.sh':
     source => 'puppet:///modules/rjil/poll-upgrade.sh',
     mode => '0755',
