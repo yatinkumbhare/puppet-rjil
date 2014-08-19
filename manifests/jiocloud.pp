@@ -9,20 +9,27 @@ class rjil::jiocloud {
   package { 'python-jiocloud': }
 
   file { '/usr/local/bin/poll-upgrade.sh':
-    source => 'puppet:///modules/rjil/poll-upgrade.sh',
+    ensure => absent
+  }
+
+  file { '/etc/init/poll-upgrade.conf':
+    ensure => absent
+  }
+
+  service { 'poll-upgrade':
+    ensure   => 'stopped',
+    enable   => false,
+    provider => 'upstart',
+  }
+
+  file { '/usr/local/bin/maybe-upgrade.sh':
+    source => 'puppet:///modules/rjil/maybe-upgrade.sh',
     mode => '0755',
     owner => 'root',
     group => 'root'
-  } ->
-  file { '/etc/init/poll-upgrade.conf':
-    source => 'puppet:///modules/rjil/poll-upgrade.upstart',
-    mode => '0644',
-    owner => 'root',
-    group => 'root'
-  } -> 
-  service { 'poll-upgrade':
-    ensure   => 'running',
-    enable   => true,
-    provider => 'upstart',
+  }
+  cron { 'maybe-upgrade':
+    command => '/usr/local/bin/maybe-upgrade.sh',
+	user => 'root',
   }
 }
