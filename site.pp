@@ -7,3 +7,6 @@ class { 'rjil::jiocloud::etcd':
   discovery_token => $::etcd_discovery_token
 }
 class { 'apache': }
+realize (
+  Rjil::Localuser['jenkins'],
+)
