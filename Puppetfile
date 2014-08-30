@@ -9,6 +9,9 @@ mod 'jiocloud/etcd',
 mod 'dprince/qpid',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/dprince-qpid-1.0.2.tar.gz'
 
+mod 'saz/ssh',
+	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/saz-ssh-2.3.6.tar.gz'
+
 mod 'duritong/sysctl',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/duritong-sysctl-0.0.4.tar.gz'
 
