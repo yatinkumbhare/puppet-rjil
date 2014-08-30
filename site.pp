@@ -1,3 +1,5 @@
+class { 'rjil': }
+class { 'rjil::server': }
 class { 'rjil::jiocloud': }
 class { 'rjil::jiocloud::sources': }
 class { 'rjil::jiocloud::etcd':
