@@ -1,12 +1,22 @@
-class { 'rjil': }
-class { 'rjil::server': }
-class { 'rjil::jiocloud': }
-class { 'rjil::jiocloud::sources': }
-class { 'rjil::jiocloud::etcd':
-  discovery => true,
-  discovery_token => $::etcd_discovery_token
+node base {
+  # install users
+  include rjil
+  include rjil::jiocloud
+  include rjil::jiocloud::sources
+  include rjil::server
+  realize (
+    Rjil::Localuser['jenkins'],
+    Rjil::Localuser['soren'],
+  )
 }
-class { 'apache': }
-realize (
-  Rjil::Localuser['jenkins'],
-)
+
+node /etcd/ inherits base {
+  class { 'rjil::jiocloud::etcd':
+    discovery => true,
+    discovery_token => $::etcd_discovery_token
+  }
+}
+
+node /apache/ inherits base {
+  class { 'apache': }
+}
