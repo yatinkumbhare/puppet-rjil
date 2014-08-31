@@ -24,12 +24,12 @@ class rjil::jiocloud {
 
   file { '/usr/local/bin/maybe-upgrade.sh':
     source => 'puppet:///modules/rjil/maybe-upgrade.sh',
-    mode => '0755',
-    owner => 'root',
-    group => 'root'
+    mode   => '0755',
+    owner  => 'root',
+    group  => 'root'
   }
   cron { 'maybe-upgrade':
     command => '/usr/local/bin/maybe-upgrade.sh',
-	user => 'root',
+    user    => 'root',
   }
 }
