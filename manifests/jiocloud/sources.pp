@@ -1,6 +1,8 @@
 class rjil::jiocloud::sources($snapshot_version = false) {
   include apt
 
+  Apt::Source<||> -> Package<||>
+
   $ubuntu_url = $snapshot_version ? {
     false   => "http://archive.ubuntu.com/ubuntu",
     default => "http://archive.internal/${snapshot_version}/archive.ubuntu.com/ubuntu"
@@ -55,5 +57,4 @@ Chk4NnD90SYZt36sTLITe5O/BgYlRMqVo+bVj0tmjMJP/B4PZjABX7A=
 =iZW7
 -----END PGP PUBLIC KEY BLOCK-----',
   }
-
 }
