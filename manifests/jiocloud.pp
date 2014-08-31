@@ -1,4 +1,6 @@
 class rjil::jiocloud {
+  include rjil::jiocloud::sources
+
   file { '/usr/local/bin/jiocloud-update.sh':
     source => 'puppet:///modules/rjil/update.sh',
     mode => '0755',
