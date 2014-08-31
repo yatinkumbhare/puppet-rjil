@@ -14,7 +14,7 @@ export https_proxy="http://10.135.121.138:3128/"
 export no_proxy="127.0.0.1,localhost,10.135.127.35"
 
 run_puppet() {
-	puppet apply /etc/puppet/manifests/site.pp
+	puppet apply --logdest=syslog /etc/puppet/manifests/site.pp
 }
 
 if [ $rv -eq 0 ]
