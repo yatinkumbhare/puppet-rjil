@@ -56,3 +56,24 @@ mod 'puppetlabs/stdlib',
 
 mod 'puppetlabs/vswitch',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/puppetlabs-vswitch-0.3.0.tar.gz'
+
+mod 'stackforge/openstack_extras',
+  :git => 'https://github.com/bodepd/puppet-openstack_extras'
+
+mod 'stackforge/heat',
+  :git => 'https://github.com/stackforge/puppet-heat'
+
+mod 'stackforge/nova',
+  :git => 'https://github.com/stackforge/puppet-nova'
+
+mod 'stackforge/glance',
+  :git => 'https://github.com/stackforge/puppet-glance'
+
+mod 'stackforge/keystone',
+  :git => 'https://github.com/stackforge/puppet-keystone'
+
+mod 'stackforge/cinder',
+  :git => 'https://github.com/stackforge/puppet-cinder'
+
+mod 'stackforge/neutron',
+  :git => 'https://github.com/stackforge/puppet-neutron'
