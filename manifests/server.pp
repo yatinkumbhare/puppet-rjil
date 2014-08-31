@@ -16,7 +16,4 @@ class rjil::server() {
     replace => true,
   }
 
-  realize (
-    Rjil::Localuser['soren'],
-  )
 }
