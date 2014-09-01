@@ -11,8 +11,13 @@ node base {
 }
 
 node /etcd/ inherits base {
+  if $::etcd_discovery_token {
+    $discovery = true
+  } else {
+    $discovery = false
+  }
   class { 'rjil::jiocloud::etcd':
-    discovery => true,
+    discovery       => $discovery,
     discovery_token => $::etcd_discovery_token
   }
 }
