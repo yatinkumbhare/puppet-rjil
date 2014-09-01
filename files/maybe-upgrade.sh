@@ -1,11 +1,12 @@
 #!/bin/bash
 
+discovery_token=$(facter etcd_discovery_token)
 # Exit codes:
 # 0: Yup, there's an update
 # 1: No, no updates
 # 2: Could not reach etcd, so we don't know
 # 3: Could not reach etcd, but we also haven't been initialised ourselves.
-python -m jiocloud.orchestrate pending_update
+python -m jiocloud.orchestrate --discovery_token=$discovery_token pending_update
 rv=$?
 
 run_puppet() {
@@ -31,4 +32,4 @@ then
 	# Let's just run Puppet and see if things normalize
 	run_puppet
 fi
-python -m jiocloud.orchestrate update_own_info
+python -m jiocloud.orchestrate --discovery_token=$discovery_token update_own_info
