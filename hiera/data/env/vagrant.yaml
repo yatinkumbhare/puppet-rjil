@@ -1,0 +1,2 @@
+rjil::jiocloud::etcd::addr: "%{ipaddress_eth1}:4001"
+rjil::jiocloud::etcd::peer_addr: "%{ipaddress_eth1}:7001"
