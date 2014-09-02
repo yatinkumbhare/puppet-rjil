@@ -41,6 +41,7 @@ Vagrant.configure("2") do |config|
         puppet.options           = ['--hiera_config=/etc/puppet/hiera/hiera.yaml', "--certname=#{node_name}"]
         puppet.facter            = { 'env' => 'vagrant' }
       end
+      config.vm.provision 'shell', :inline => 'run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/'
     end
   end
 end
