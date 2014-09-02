@@ -1,0 +1,41 @@
+## This is to create databases, users, and grants
+define db_def (
+  $db,
+  $pass = $db,
+  $user = $db,
+  $grant = ['ALL'],
+  $ensure = 'present',
+  $charset = 'utf8',
+  $table = "${db}.*",
+) {
+  ## Create databases
+  mysql_database { $db:
+    ensure   => $ensure,
+    charset  => $charset,
+    provider => 'mysql',
+    require  => [ Class['mysql::server'] ],
+    before   => Mysql_user["${user}@%"],
+  }
+
+  ## Create users
+  $user_resource = {
+    ensure        => $ensure,
+    password_hash => mysql_password($pass),
+    provider      => 'mysql',
+    require       => Class['mysql::server'],
+  }
+  ensure_resource('mysql_user', "${user}@%", $user_resource)
+
+  ## Create grants
+  if $ensure == 'present' {
+    mysql_grant { "${user}@%/${table}":
+	privileges => $grant,
+	provider   => 'mysql',
+	user       => "${user}@%",
+	table      => $table,
+	require    => [ Mysql_user["${user}@%"], Class['mysql::server'] ],
+    }
+  }
+
+}
+

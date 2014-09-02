@@ -43,3 +43,8 @@ node /haproxy/ {
   }
 
 }
+
+## Setup databases on db node
+node /db\d*/ {
+  include rjil::db
+}
