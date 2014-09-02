@@ -1,13 +1,15 @@
 Vagrant.configure("2") do |config|
 
-  # ENV['http_proxy'] = 'http://10.22.3.1:3128'
-  # ENV['https_proxy'] = 'http://10.22.3.1:3128'
+   ENV['http_proxy'] = 'http://10.22.3.1:3128'
+   ENV['https_proxy'] = 'http://10.22.3.1:3128'
 
   config.vm.box      = 'ubuntu/trusty64'
 
   {
     :openstackclient => '15',
     :etcd            => '16',
+    :haproxy         => '17',
+    :apache          => '18',
   }.each do |node_name, number|
 
     config.vm.define(node_name) do |config|

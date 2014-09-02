@@ -34,3 +34,12 @@ node /openstackclient/ inherits base {
     ceilometer => false,
   }
 }
+
+node /haproxy/ {
+
+  include rjil::haproxy
+  class { 'rjil::haproxy::openstack' :
+    keystone_ips => '10.0.0.1',
+  }
+
+}

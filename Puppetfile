@@ -1,3 +1,7 @@
+mod 'puppetlabs/haproxy',
+  :git => 'git://github.com/puppetlabs/puppetlabs-haproxy',
+  :ref => '1.0.0'
+
 mod 'puppetlabs/inifile',
 	:git => "git://github.com/puppetlabs/puppetlabs-inifile.git",
 	:ref => "41e2ddbc1cd861247e57d16b778cbe891602f509"
