@@ -1,5 +1,6 @@
 class rjil::jiocloud::controller(
-  $keystone_db_password => "sample_keystone_db_password") {
+  $keystone_db_password = "sample_keystone_db_password"
+) {
 
   class { 'mysql::server': }
   class { 'keystone::db::mysql':

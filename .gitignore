@@ -1,2 +1,4 @@
 modules
 .vagrant
+spec/fixtures
+Gemfile.lock
