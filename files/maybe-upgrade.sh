@@ -17,7 +17,7 @@ if [ $rv -eq 0 ]
 then
 	pending_version=$(python -m jiocloud.orchestrate --discovery_token=$discovery_token current_version)
 	apt-get update
-	apt-get dist-upgrade -o Dpkg::Options::="--force-confnew" -y
+	apt-get dist-upgrade -o Dpkg::Options::="--force-confold" -y
 	run_puppet
 	python -m jiocloud.orchestrate local_version $pending_version
 elif [ $rv -eq 1 ]
