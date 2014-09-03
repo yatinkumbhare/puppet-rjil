@@ -1,0 +1,31 @@
+###################################
+########  Database config #########
+###################################
+
+rjil::db::mysql_datadir: /data
+rjil::db::mysql_root_pass: 'changeme'
+rjil::db::dbs:
+  novadb: { db: "%{hiera('rjil::openstack::nova_db_name')}", user: "%{hiera('rjil::openstack::nova_db_user')}", pass: "%{hiera('rjil::openstack::nova_db_password')}" }
+  keystonedb: { db: "%{hiera('rjil::openstack::keystone_db_name')}", user: "%{hiera('rjil::openstack::keystone_db_user')}", pass: "%{hiera('rjil::openstack::keystone_db_password')}" }
+  cinderdb: { db: "%{hiera('rjil::openstack::cinder_db_name')}", user: "%{hiera('rjil::openstack::cinder_db_user')}", pass: "%{hiera('rjil::openstack::cinder_db_password')}" }
+  glancedb: { db: "%{hiera('rjil::openstack::glance_db_name')}", user: "%{hiera('rjil::openstack::glance_db_user')}", pass: "%{hiera('rjil::openstack::glance_db_password')}" }
+
+
+####################################
+######## Openstack configs #########
+####################################
+
+rjil::openstack::keystone_db_user: keystone
+rjil::openstack::keystone_db_password: keystone
+rjil::openstack::keystone_db_name: keystone
+rjil::openstack::glance_db_user: glance
+rjil::openstack::glance_db_password: glance
+rjil::openstack::glance_db_name: glance
+rjil::openstack::nova_db_user: nova
+rjil::openstack::nova_db_password: nova
+rjil::openstack::nova_db_name: nova
+rjil::openstack::cinder_db_user: cinder
+rjil::openstack::cinder_db_password: cinder
+rjil::openstack::cinder_db_name: cinder
+
+
