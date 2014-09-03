@@ -63,6 +63,7 @@ class rjil {
 
   @rjil::localuser { 'jenkins':
     realname => 'Jenkins',
-    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDd51FWUwG7BaVNoIb5aidm6nci2ixgyvqa5p4kq2m95GztMmIC9yhBbKzGIdTrWKdWi1q2xcQbJS+ojM/PswpuB++JA+XuYVIaROi/69zU7rBWtu2Siq7l991scuaoYG6jvazgpNl/fFXkdd671lEz/GSW05DADGO/jyDeOWo82MKE72zeVz181IuhlYZXkbUmLuKXPtFCjHyXkJ4WHziUUinozKsM6s9HRsMYCKMEU5w+zIKaM6n85GRAL+DCIQBCatv9ZctVGF8QxWtzDouh3C/E6d2//+vDkfVA+DejkvkfXjcHUuUTgs45IXIbOKIhrx9XiW79zNenPUbNgTMD jenkins@bulky",
+    sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDd51FWUwG7BaVNoIb5aidm6nci2ixgyvqa5p4kq2m95GztMmIC9yhBbKzGIdTrWKdWi1q2xcQbJS+ojM/PswpuB++JA+XuYVIaROi/69zU7rBWtu2Siq7l991scuaoYG6jvazgpNl/fFXkdd671lEz/GSW05DADGO/jyDeOWo82MKE72zeVz181IuhlYZXkbUmLuKXPtFCjHyXkJ4WHziUUinozKsM6s9HRsMYCKMEU5w+zIKaM6n85GRAL+DCIQBCatv9ZctVGF8QxWtzDouh3C/E6d2//+vDkfVA+DejkvkfXjcHUuUTgs45IXIbOKIhrx9XiW79zNenPUbNgTMD jenkins@bulky
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCvzdgrPlMiFFE4F+tK0INhGhZGqHQCHYMlMcXjUMSJCu7DMetDyIcoZZyMXWtvjszmbnM8hEtJPrMeBcCigTpw6yZmZT1grhyv6XoSX9ig+NM+vvipsUkGA2oKLEe0jQve0PiJWPj2DGn9xroZzxqAz7zVdLJcqU/sspLlFn4sVqqD32fIIltI4jnIfmRlj9LK+tUW3ifjeuG40rFVLhF81szGybPRLQ8ZLtiuti1/4DBtjkLDkS2qkdrTBJfCNY0bWkyvKVRqdEm3YEJ2+y1HXpKp4vmqkagFa1s45H1Pij/7hiupX62FZQPWB2YDpISLfWWgyzIHo5BTzJXs5Wfd jenkins@jiocloud",
   }
 }
