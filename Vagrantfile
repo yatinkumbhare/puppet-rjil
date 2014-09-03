@@ -10,6 +10,8 @@ Vagrant.configure("2") do |config|
     :etcd            => '16',
     :haproxy         => '17',
     :apache          => '18',
+    :db              => '19',
+    :memcached       => '20',
   }.each do |node_name, number|
 
     config.vm.define(node_name) do |config|
