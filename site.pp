@@ -50,3 +50,8 @@ node /haproxy/ {
 node /db\d*/ {
   include rjil::db
 }
+
+## Setup memcache on mc node
+node /mc\d*/ {
+  include rjil::memcached
+}

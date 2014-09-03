@@ -1,3 +1,6 @@
+git_protocol=ENV['git_protocol'] || 'git'
+base_url = "#{git_protocol}://github.com"
+
 mod 'puppetlabs/haproxy',
   :git => 'git://github.com/puppetlabs/puppetlabs-haproxy',
   :ref => '1.0.0'
@@ -81,3 +84,7 @@ mod 'stackforge/cinder',
 
 mod 'stackforge/neutron',
   :git => 'https://github.com/stackforge/puppet-neutron'
+
+mod 'saz/memcached',
+  :git => "#{base_url}/saz/puppet-memcached",
+  :ref => 'fee24ce'
