@@ -10,6 +10,7 @@ node base {
     Rjil::Localuser['jenkins'],
     Rjil::Localuser['soren'],
   )
+  include rjil::system
 }
 
 node /etcd/ inherits base {

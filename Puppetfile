@@ -59,7 +59,7 @@ mod 'puppetlabs/rabbitmq',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/puppetlabs-rabbitmq-4.0.0.tar.gz'
 
 mod 'puppetlabs/stdlib',
-	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/puppetlabs-stdlib-4.2.2.tar.gz'
+	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/puppetlabs-stdlib-4.3.2.tar.gz'
 
 mod 'puppetlabs/vswitch',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/puppetlabs-vswitch-0.3.0.tar.gz'
