@@ -24,11 +24,7 @@ node /etcd/ inherits base {
   }
 }
 
-node /apache/ inherits base {
-  class { 'apache': }
-}
-
-node /openstackclient/ inherits base {
+node /openstackclient\d*/ inherits base {
   class { 'openstack_extras::repo::uca':
     release => 'juno'
   }
@@ -54,4 +50,21 @@ node /db\d*/ {
 ## Setup memcache on mc node
 node /mc\d*/ {
   include rjil::memcached
+}
+
+node /apache\d*/ inherits base {
+  ## Configure apache reverse proxy
+  include rjil::apache
+  apache::vhost { 'nova-api':
+    servername      => $::ipaddress_eth1,
+    serveradmin     => 'root@localhost',
+    port            => 80,
+    ssl             => false,
+    docroot         => '/var/www',
+    error_log_file  => 'test.error.log',
+    access_log_file => 'test.access.log',
+    logroot         => '/var/log/httpd',
+   #proxy_pass => [ { path => '/', url => "http://localhost:${nova_osapi_compute_listen_port}/"  } ],
+  }
+
 }
