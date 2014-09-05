@@ -7,4 +7,5 @@
   - "clientcert/%{::clientcert}"
   - user
   - "env/%{env}"
+  - secrets
   - common

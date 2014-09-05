@@ -28,4 +28,17 @@ rjil::openstack::cinder_db_user: cinder
 rjil::openstack::cinder_db_password: cinder
 rjil::openstack::cinder_db_name: cinder
 
+#########################################
+###### System configuration #############
+#########################################
 
+########### Account settings
+############################
+
+rjil::system::accounts::active_users:
+  - user1
+  - user2
+
+rjil::system::accounts::sudo_users:
+  - user1
+  - user3
