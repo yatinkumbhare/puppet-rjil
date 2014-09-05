@@ -12,7 +12,7 @@ node base {
   )
 }
 
-node /etcd/ inherits base {
+node /etcd/ {
   if $::etcd_discovery_token {
     $discovery = true
   } else {
@@ -24,7 +24,8 @@ node /etcd/ inherits base {
   }
 }
 
-node /openstackclient\d*/ inherits base {
+
+node /openstackclient\d*/  {
   class { 'openstack_extras::repo::uca':
     release => 'juno'
   }
@@ -52,7 +53,7 @@ node /mc\d*/ {
   include rjil::memcached
 }
 
-node /apache\d*/ inherits base {
+node /apache\d*/ {
   ## Configure apache reverse proxy
   include rjil::apache
   apache::vhost { 'nova-api':
