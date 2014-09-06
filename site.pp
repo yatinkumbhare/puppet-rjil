@@ -4,7 +4,7 @@ class base {
   # install users
   include rjil
   include rjil::jiocloud
-  include rjil::jiocloud::sources
+  include rjil::system::apt
   include rjil::server
   realize (
     Rjil::Localuser['jenkins'],
