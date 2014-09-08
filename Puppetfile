@@ -5,6 +5,10 @@ mod 'puppetlabs/haproxy',
   :git => 'git://github.com/puppetlabs/puppetlabs-haproxy',
   :ref => '1.0.0'
 
+mod 'jiocloud/account',
+  :git => "#{base_url}/jiocloud/puppet-account",
+  :ref => 'origin/master'
+
 mod 'puppetlabs/inifile',
 	:git => "git://github.com/puppetlabs/puppetlabs-inifile.git",
 	:ref => "41e2ddbc1cd861247e57d16b778cbe891602f509"
@@ -12,6 +16,10 @@ mod 'puppetlabs/inifile',
 mod 'jiocloud/etcd',
 	:git => "git://github.com/JioCloud/puppet-etcd.git",
 	:ref => "74efce9cbd0f854b33111dc0ffa72b5a349e3f8f"
+
+mod 'saz/sudo',
+  	:git => "#{base_url}/saz/puppet-sudo",
+  	:ref => '62b93da'
 
 mod 'dprince/qpid',
 	:tarball => 'https://forgeapi.puppetlabs.com/v3/files/dprince-qpid-1.0.2.tar.gz'
