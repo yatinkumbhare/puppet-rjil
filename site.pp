@@ -1,6 +1,6 @@
 Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin/","/usr/local/sbin/" ] }
 
-node base {
+class base {
   # install users
   include rjil
   include rjil::jiocloud
@@ -14,6 +14,8 @@ node base {
 }
 
 node /etcd/ {
+  include base
+
   if $::etcd_discovery_token {
     $discovery = true
   } else {
@@ -25,8 +27,8 @@ node /etcd/ {
   }
 }
 
-
-node /openstackclient\d*/  {
+node /openstackclient\d*/ {
+  include base
   class { 'openstack_extras::repo::uca':
     release => 'juno'
   }
@@ -36,7 +38,7 @@ node /openstackclient\d*/  {
 }
 
 node /haproxy/ {
-
+  include base
   include rjil::haproxy
   class { 'rjil::haproxy::openstack' :
     keystone_ips => '10.0.0.1',
@@ -46,15 +48,18 @@ node /haproxy/ {
 
 ## Setup databases on db node
 node /db\d*/ {
+  include base
   include rjil::db
 }
 
 ## Setup memcache on mc node
 node /mc\d*/ {
+  include base
   include rjil::memcached
 }
 
 node /apache\d*/ {
+  include base
   ## Configure apache reverse proxy
   include rjil::apache
   apache::vhost { 'nova-api':
