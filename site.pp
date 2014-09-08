@@ -10,7 +10,7 @@ class base {
     Rjil::Localuser['jenkins'],
     Rjil::Localuser['soren'],
   )
-  include rjil::system
+#  include rjil::system
 }
 
 node /etcd/ {
