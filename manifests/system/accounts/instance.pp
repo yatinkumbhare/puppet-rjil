@@ -9,7 +9,7 @@ define rjil::system::accounts::instance (
   $shell = '/bin/bash'
 ) {
   if member($active_users,$name) {
-    ::account::localuser { $name:
+    rjil::system::accounts::localuser { $name:
       realname => $realname,
       sshkeys => $sshkeys,
       password => $password,

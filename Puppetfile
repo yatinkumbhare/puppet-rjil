@@ -5,10 +5,6 @@ mod 'puppetlabs/haproxy',
   :git => "#{base_url}/puppetlabs/puppetlabs-haproxy",
   :ref => '1.0.0'
 
-mod 'jiocloud/account',
-  :git => "#{base_url}/jiocloud/puppet-account",
-  :ref => 'origin/master'
-
 mod 'puppetlabs/inifile',
   :git => "#{base_url}/puppetlabs/puppetlabs-inifile",
   :ref => 'ab21bd3'
