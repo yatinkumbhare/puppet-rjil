@@ -2,8 +2,22 @@
 ## Purpose: to group all system level configuration together.
 
 class rjil::system {
+
+  ##
+  ## It is decided to keep all devices in UTC timezone
+  ## This will keep all our systems in single timezone even if we have servers outside
+  ##    and in case we might have to get any external providers' services
+  ##
+
+  include ::timezone
+
   include rjil::system::apt
   include rjil::system::accounts
+
+  ## Setup tests
+  rjil::test {'check_timezone.sh':}
+
+  Anchor['rjil::system::start'] -> Class['::timezone'] -> Anchor['rjil::system::end']
 
   ## apt and accounts have circular dependancy, so making both of them dependant to anchors
   anchor { 'rjil::system::start':

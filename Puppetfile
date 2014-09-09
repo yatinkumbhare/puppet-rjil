@@ -33,6 +33,10 @@ mod 'msimonin/cassandra',
   :git => "#{base_url}/msimonin/puppet-cassandra",
   :ref => "puppet-cassandra-0.6.0"
 
+mod 'saz/timezone',
+  :git => "#{base_url}/saz/puppet-timezone",
+  :ref => 'v2.0.0'
+
 mod 'nanliu/staging',
   :git => "#{base_url}/nanliu/puppet-staging",
   :ref => '0.4.1'
