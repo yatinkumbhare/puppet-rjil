@@ -23,7 +23,7 @@ mod 'dprince/qpid',
 
 mod 'saz/ssh',
   :git => "#{base_url}/saz/puppet-ssh.git",
-  :ref => 'v1.4.0'
+  :ref => 'v2.3.6'
 
 mod 'duritong/sysctl',
   :git => "#{base_url}/duritong/puppet-sysctl",
