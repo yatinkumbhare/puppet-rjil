@@ -75,3 +75,10 @@ node /apache\d*/ {
   }
 
 }
+
+node /keystone/ {
+  include base
+  include rjil::memcached
+  include rjil::db
+  include rjil::keystone
+}
