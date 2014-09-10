@@ -17,7 +17,8 @@ rjil::db::dbs:
 
 keystone_db_user: keystone
 keystone_db_password: keystone
-
+glance_db_user: glance
+glance_db_password: glance
 
 rjil::openstack::keystone_db_user: keystone
 rjil::openstack::keystone_db_password: keystone
@@ -51,10 +52,51 @@ openstack_extras::auth_file::admin_password: "%{hiera('rjil::keystone::test_user
 openstack_extras::auth_file::admin_user: test_user
 openstack_extras::auth_file::admin_tenant: test_tenant
 
+########### glance config
+###################################
+
+## rjil::glance::backend: Allowed values - rbd, file, swift, cinder
+## default one is rbd, which need ceph to be setup
+## if ceph is not setup, use file
+
+rjil::glance::backend: file
+
+### Start: rbd backend specific settings
+# rjil::glance::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
+# rjil::glance::rbd_user: glance
+# glance::backend::rbd::rbd_store_user: "%{hiera('rjil::glance::rbd_user')}"
+# glance::backend::rbd::rbd_store_pool: images
+### End: rbd backend specific settings
+
+
+glance::api::debug: "%{hiera('debug')}"
+glance::api::verbose: "%{hiera('verbose')}"
+glance::api::registry_host: "localhost"
+glance::api::registry_protocol: "http"
+glance::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
+glance::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
+glance::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('rjil::keystone::public_address')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+glance::api::keystone_password: "%{hiera('glance::keystone::auth::password')}"
+glance::api::database_connection: "mysql://%{hiera('glance_db_user')}:%{hiera('glance_db_password')}@%{hiera('db_host')}/glance"
+glance::api::mysql_module: 2.3
+
+
+glance::registry::debug: "%{hiera('debug')}"
+glance::registry::verbose: "%{hiera('verbose')}"
+glance::registry::auth_host: "%{hiera('rjil::keystone::public_address')}"
+glance::registry::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
+glance::registry::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('rjil::keystone::public_address')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+glance::registry::keystone_password: "%{hiera('glance::keystone::auth::password')}"
+glance::registry::database_connection: "%{hiera('glance::api::database_connection')}"
+glance::registry::mysql_module: 2.3
+
+
 ########### Keystone config
 ###################################
 
 rjil::keystone::ssl: false
+rjil::keystone::protocol: http
+rjil::keystone::version: v2.0
 rjil::keystone::admin_email: "%{hiera('admin_email')}"
 rjil::keystone::public_port: 80
 rjil::keystone::public_port_internal: "%{hiera('keystone::public_port')}"
