@@ -76,3 +76,6 @@ fixtures:
     vswitch:
       repo: https://github.com/stackforge/puppet-vswitch
       ref: 0.3.0
+    puppet:
+      repo: https://github.com/stephenrjohnson/puppetmodule
+      ref: 1.0.0

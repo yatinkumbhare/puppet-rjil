@@ -96,3 +96,7 @@ mod 'stackforge/heat',
 mod 'saz/memcached',
   :git => "#{base_url}/saz/puppet-memcached",
   :ref => 'fee24ce'
+
+mod 'stephenrjohnson/puppet',
+  :git => "#{base_url}/stephenrjohnson/puppetmodule",
+  :ref => '1.0.0'

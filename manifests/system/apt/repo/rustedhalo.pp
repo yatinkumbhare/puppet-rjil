@@ -1,31 +1,17 @@
-class rjil::jiocloud::sources($snapshot_version = false) {
-  include apt
+class rjil::system::apt::repo::rustedhalo(
+  $location    = 'http://jiocloud.rustedhalo.com/ubuntu/',
+  $release     = 'trusty',
+  $repos       = 'main',
+  $include_src = false,
+) {
 
-  Apt::Source<||> -> Package<||>
-
-  $ubuntu_url = $snapshot_version ? {
-    false   => "http://archive.ubuntu.com/ubuntu",
-    default => "http://archive.internal/${snapshot_version}/archive.ubuntu.com/ubuntu"
-  }
-
-  $rustedhalo_url = $snapshot_version ? {
-    false   => "http://jiocloud.rustedhalo.com/ubuntu",
-    default => "http://archive.internal/${snapshot_version}/jiocloud.rustedhalo.com/ubuntu"
-  }
-
-  apt::source { 'ubuntu':
-    location    => $ubuntu_url,
-    release     => $codename,
-    repos       => 'main universe restricted',
-    key         => '437D05B5',
-  }
-
-  apt::source { 'rustedhalo':
-    location    => $rustedhalo_url,
-    release     => $codename,
-    repos       => 'main',
+  ::apt::source { 'rustedhalo':
+    location    => $location,
+    repos       => $repos,
+    release     => $release,
     key         => '85596F7A',
     key_server  => 'keyserver.ubuntu.com',
+    include_src => $include_src,
     key_content => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1
 
@@ -55,6 +41,7 @@ klc+BnhnZrb4FcB04RdQ/WXgVshDCzVQhmdIEILGKYHMTjlK/HkV6YqH7l7+jRvJ
 phmH35+GJQumLfXWlvDchtBjUTo5ZDCa7TWhwhXZoFg5nxadQDX4TwHhZBQH1TX5
 Chk4NnD90SYZt36sTLITe5O/BgYlRMqVo+bVj0tmjMJP/B4PZjABX7A=
 =iZW7
------END PGP PUBLIC KEY BLOCK-----',
+-----END PGP PUBLIC KEY BLOCK-----'
   }
+
 }
