@@ -15,6 +15,8 @@ rjil::db::dbs:
 ######## Openstack configs #########
 ####################################
 
+keystone_db_user: keystone
+keystone_db_password: keystone
 rjil::openstack::keystone_db_user: keystone
 rjil::openstack::keystone_db_password: keystone
 rjil::openstack::keystone_db_name: keystone
@@ -27,6 +29,98 @@ rjil::openstack::nova_db_name: nova
 rjil::openstack::cinder_db_user: cinder
 rjil::openstack::cinder_db_password: cinder
 rjil::openstack::cinder_db_name: cinder
+
+########### Openstack Common config
+###################################
+
+admin_email: cloud.devops@ril.com
+admin_password: Chang3M3
+db_host: 127.0.0.1
+debug: 'false'
+verbose: 'false'
+region: RegionOne
+admin_email: cloud.devops@ril.com
+
+########### Keystone config
+###################################
+
+rjil::keystone::ssl: false
+rjil::keystone::admin_email: "%{hiera('admin_email')}"
+rjil::keystone::public_port: 80
+rjil::keystone::public_port_internal: "%{hiera('keystone::public_port')}"
+rjil::keystone::admin_port: 81
+rjil::keystone::admin_port_internal: "%{hiera('keystone::admin_port')}"
+rjil::keystone::public_address: 127.0.0.1
+keystone::roles::admin::email: "%{hiera('admin_email')}"
+keystone::roles::admin::password: "%{hiera('admin_password')}"
+keystone::admin_password: "%{hiera('admin_password')}"
+keystone::admin_token: token123
+keystone::sql_connection: "mysql://keystone:%{hiera('keystone_db_password')}@%{hiera('db_host')}/keystone"
+keystone::database_connection: "mysql://keystone:%{hiera('keystone_db_password')}@%{hiera('db_host')}/keystone"
+keystone::debug: "%{hiera('debug')}"
+keystone::verbose: "%{hiera('verbose')}"
+keystone::admin_port: '35357'
+keystone::public_port: '5000'
+keystone::admin_bind_host: 127.0.0.1
+keystone::public_bind_host: 127.0.0.1
+#keystone::token_provider: keystone.token.providers.pki.Provider
+keystone::token_format: uuid
+keystone::mysql_module: 2.3
+
+# these changes are just from our fork and need to be moved to the profile
+rjil::keystone::cache_enabled: true
+rjil::keystone::cache_backend: dogpile.cache.memcached
+rjil::keystone::cache_backend_argument: url:127.0.0.1:11211
+
+cinder::keystone::auth::password: cinder
+cinder::keystone::auth::admin_address: 127.0.0.1
+cinder::keystone::auth::internal_address: 127.0.0.1
+cinder::keystone::auth::public_protocol: http
+cinder::keystone::auth::public_address: 127.0.0.1
+cinder::keystone::auth::public_port: 8776
+cinder::keystone::auth::region: "%{hiera('region')}"
+
+glance::keystone::auth::password: glance
+glance::keystone::auth::public_address: 127.0.0.1
+glance::keystone::auth::public_port: 9292
+glance::keystone::auth::public_protocol: http
+glance::keystone::auth::admin_address: 127.0.0.1
+glance::keystone::auth::internal_address: 127.0.0.1
+glance::keystone::auth::region: "%{hiera('region')}"
+
+keystone::endpoint::password: keystone
+keystone::endpoint::admin_address: 127.0.0.1
+keystone::endpoint::admin_port: "%{hiera('keystone::admin_port')}"
+keystone::endpoint::internal_address: 127.0.0.7
+keystone::endpoint::public_address: 127.0.0.1
+keystone::endpoint::public_port: "%{hiera('keystone::public_port')}"
+keystone::keystone::auth::region: "%{hiera('region')}"
+
+neutron::keystone::auth::password: neutron
+neutron::keystone::auth::public_address: 127.0.0.1
+neutron::keystone::auth::public_port: 9696
+neutron::keystone::auth::public_protocol: http
+neutron::keystone::auth::admin_address: 127.0.0.1
+neutron::keystone::auth::internal_address: 127.0.0.1
+neutron::keystone::auth::region: "%{hiera('region')}"
+
+nova::keystone::auth::password: nova
+nova::keystone::auth::public_address: 127.0.0.1
+nova::keystone::auth::public_port: 8774
+nova::keystone::auth::public_protocol: http
+nova::keystone::auth::admin_address: 127.0.0.1
+nova::keystone::auth::internal_address: 127.0.0.1
+nova::keystone::auth::region: "%{hiera('region')}"
+
+rjil::keystone::ceph_radosgw_enabled: false
+rjil::keystone::radosgw::admin_address: 127.0.0.1
+rjil::keystone::radosgw::internal_address: 127.0.0.1
+rjil::keystone::radosgw::public_protocol: http
+rjil::keystone::radosgw::public_address: 127.0.0.1
+rjil::keystone::radosgw::port: 8143
+rjil::keystone::radosgw:region: "%{hiera('region')}"
+rjil::keystone::radosgw::keystone_accepted_roles: ['Member', 'admin', 'swiftoperator']
+
 
 #########################################
 ###### System configuration #############

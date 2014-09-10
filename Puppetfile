@@ -57,9 +57,9 @@ mod 'stackforge/glance',
   :git => "#{base_url}/jiocloud/puppet-glance",
   :ref => 'svn_to_git_2'
 
-mod 'stackforge/keystone',
-  :git => "#{base_url}/jiocloud/puppet-keystone",
-  :ref => 'svn_to_git_2'
+mod 'puppetlabs/keystone',
+  :git => "#{base_url}/stackforge/puppet-keystone",
+  :ref => 'stable/icehouse'
 
 mod 'puppetlabs/mysql',
   :git => "#{base_url}/puppetlabs/puppetlabs-mysql",
