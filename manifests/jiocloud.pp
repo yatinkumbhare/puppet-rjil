@@ -1,6 +1,10 @@
 class rjil::jiocloud {
   include rjil::system::apt
 
+  package { 'run-one':
+    ensure => present,
+  }
+
   file { '/usr/local/bin/jiocloud-update.sh':
     source => 'puppet:///modules/rjil/update.sh',
     mode => '0755',
@@ -19,5 +23,6 @@ class rjil::jiocloud {
   cron { 'maybe-upgrade':
     command => 'run-one /usr/local/bin/maybe-upgrade.sh',
     user    => 'root',
+    require => Package['run-one'],
   }
 }

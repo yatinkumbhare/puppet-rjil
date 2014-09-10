@@ -10,7 +10,7 @@ python -m jiocloud.orchestrate --discovery_token=$discovery_token pending_update
 rv=$?
 
 run_puppet() {
-	puppet apply --logdest=syslog /etc/puppet/manifests/site.pp
+	puppet apply --logdest=syslog `puppet config print manifestdir`/site.pp
 }
 
 if [ $rv -eq 0 ]
