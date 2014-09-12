@@ -17,6 +17,9 @@ rjil::db::dbs:
 
 keystone_db_user: keystone
 keystone_db_password: keystone
+
+openstack_extras::auth_file::admin_password: "%{hiera('admin_password')}"
+
 rjil::openstack::keystone_db_user: keystone
 rjil::openstack::keystone_db_password: keystone
 rjil::openstack::keystone_db_name: keystone
