@@ -28,6 +28,15 @@ to use a timestamp to make the build number unique per invocation:
 export BUILD\_NUMBER=`date +"%d%m%y%H%M%S"`;
 ````
 
+#### env (required)
+
+The environment indicator. This is used to determine the file that specifies the machines
+should exist for a specific deployment. It refers to the file environment/cloud.${env}.yaml.
+
+````
+export env=dan
+````
+
 ### KEY\_NAME (required)
 
 The name of the keypair that will used assigned to the VM.
