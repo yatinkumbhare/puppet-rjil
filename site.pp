@@ -63,6 +63,28 @@ node /apache\d*/ {
 
 }
 
+##
+## Setup contrail nodes
+##
+node /^ct\d+/ {
+  include rjil::base
+  include rjil::contrail::server
+}
+
+
+##
+## oc is openstack controller node which will have all
+## openstack controller applications
+##
+
+node /^oc\d+/ {
+  include rjil::base
+  include rjil::memcached
+  include rjil::db
+  include rjil::keystone
+  include rjil::glance
+}
+
 node /keystone/ {
   include rjil::base
   include rjil::memcached
