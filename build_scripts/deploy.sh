@@ -22,6 +22,11 @@ then
     etcd_discovery_token=$(python -m jiocloud.orchestrate new_discovery_token)
 fi
 
+if [ -z "${env}" ]
+then
+    env='acceptance'
+fi
+
 cat <<EOF >userdata.txt
 #!/bin/bash
 release="\$(lsb_release -cs)"
@@ -45,6 +50,9 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   gem install librarian-puppet-simple --no-ri --no-rdoc;
   mkdir -p /etc/puppet/manifests.overrides
   cp /tmp/rjil/site.pp /etc/puppet/manifests.overrides/
+  mkdir -p /etc/puppet/hiera
+  cp /tmp/rjil/hiera/hiera.yaml /etc/puppet
+  cp -Rvf /tmp/rjil/hiera/data /etc/puppet/hiera
   mkdir -p /etc/puppet/modules.overrides/rjil
   cp -Rvf /tmp/rjil/* /etc/puppet/modules.overrides/rjil/
   librarian-puppet install --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
@@ -53,6 +61,7 @@ if [ -n "${puppet_modules_source_repo}" ]; then
 fi
 sudo mkdir -p /etc/facter/facts.d
 echo 'etcd_discovery_token='${etcd_discovery_token} > /etc/facter/facts.d/etcd.txt
+echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
 
@@ -71,3 +80,7 @@ $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostK
 
 $timeout 600 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
 $timeout 600 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
+# make sure that there are not any failures
+if ! python -m jiocloud.orchestrate --host ${ip} get_failures; then
+  echo "Failures occurred"
+fi

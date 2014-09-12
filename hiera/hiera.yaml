@@ -1,11 +1,13 @@
 ---
 :backends:
+  - array_lookup
   - yaml
 :yaml:
   :datadir: /etc/puppet/hiera/data
 :hierarchy:
   - "clientcert/%{::clientcert}"
   - user
+  - services
   - "env/%{env}"
   - secrets
   - common
