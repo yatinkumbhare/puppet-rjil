@@ -29,11 +29,11 @@ define rjil::db::instance (
   ## Create grants
   if $ensure == 'present' {
     mysql_grant { "${user}@%/${table}":
-	    privileges => $grant,
-	    provider   => 'mysql',
-	    user       => "${user}@%",
-	    table      => $table,
-	    require    => [ Mysql_user["${user}@%"], Class['mysql::server'] ],
+      privileges => $grant,
+      provider   => 'mysql',
+      user       => "${user}@%",
+      table      => $table,
+      require    => [ Mysql_user["${user}@%"], Class['mysql::server'] ],
     }
   }
 

@@ -5,7 +5,8 @@ class rjil::system {
 
   ##
   ## It is decided to keep all devices in UTC timezone
-  ## This will keep all our systems in single timezone even if we have servers outside
+  ## This will keep all our systems in single timezone even if we have servers
+  ## outside
   ##    and in case we might have to get any external providers' services
   ##
 

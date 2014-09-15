@@ -4,7 +4,7 @@ class rjil::jiocloud::etcd(
   $discovery = false,
   $discovery_token = '',
   $discovery_endpoint = 'https://discovery.etcd.io/',
- ) {
+) {
   class { '::etcd':
     addr               => $addr,
     bind_addr          => "0.0.0.0:4001",

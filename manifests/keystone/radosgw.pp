@@ -10,8 +10,8 @@ class rjil::keystone::radosgw (
   $admin_address     = undef,
   $internal_protocol = undef,
   $internal_address  = undef,
-  $auth_name	= 'swift',
-  $port		= 80,
+  $auth_name         = 'swift',
+  $port              = 80,
 ) {
 
   if ! $public_port {
@@ -26,7 +26,7 @@ class rjil::keystone::radosgw (
     $real_admin_protocol = $admin_protocol
   }
 
- if ! $internal_protocol {
+  if ! $internal_protocol {
     $real_internal_protocol = $public_protocol
   } else {
     $real_internal_protocol = $internal_protocol

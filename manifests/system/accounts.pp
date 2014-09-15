@@ -17,8 +17,8 @@ class rjil::system::accounts (
 
   class { 'ssh::server':
     options => {
-      "PasswordAuthentication" => 'no',
-      "PermitRootLogin" => 'no',
+      'PasswordAuthentication' => 'no',
+      'PermitRootLogin' => 'no',
     },
   }
 
