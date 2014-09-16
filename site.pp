@@ -1,18 +1,7 @@
 Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin/","/usr/local/sbin/" ] }
 
-class base {
-  # install users
-  include rjil
-  include rjil::jiocloud
-  include rjil::system
-  realize (
-    Rjil::Localuser['jenkins'],
-    Rjil::Localuser['soren'],
-  )
-}
-
 node /etcd/ {
-  include base
+  include rjil::base
 
   if $::etcd_discovery_token {
     $discovery = true
@@ -26,7 +15,7 @@ node /etcd/ {
 }
 
 node /openstackclient\d*/ {
-  include base
+  include rjil::base
   class { 'openstack_extras::repo::uca':
     release => 'juno'
   }
@@ -36,7 +25,7 @@ node /openstackclient\d*/ {
 }
 
 node /haproxy/ {
-  include base
+  include rjil::base
   include rjil::haproxy
   class { 'rjil::haproxy::openstack' :
     keystone_ips => '10.0.0.1',
@@ -46,18 +35,18 @@ node /haproxy/ {
 
 ## Setup databases on db node
 node /db\d*/ {
-  include base
+  include rjil::base
   include rjil::db
 }
 
 ## Setup memcache on mc node
 node /mc\d*/ {
-  include base
+  include rjil::base
   include rjil::memcached
 }
 
 node /apache\d*/ {
-  include base
+  include rjil::base
   ## Configure apache reverse proxy
   include rjil::apache
   apache::vhost { 'nova-api':
@@ -69,13 +58,13 @@ node /apache\d*/ {
     error_log_file  => 'test.error.log',
     access_log_file => 'test.access.log',
     logroot         => '/var/log/httpd',
-   #proxy_pass => [ { path => '/', url => "http://localhost:${nova_osapi_compute_listen_port}/"  } ],
+    #proxy_pass => [ { path => '/', url => "http://localhost:${nova_osapi_compute_listen_port}/"  } ],
   }
 
 }
 
 node /keystone/ {
-  include base
+  include rjil::base
   include rjil::memcached
   include rjil::db
   include rjil::keystone

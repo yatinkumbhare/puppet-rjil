@@ -24,13 +24,13 @@ class rjil::db (
   create_resources('rjil::db::instance', $dbs)
   ## setup mysql server
   class { '::mysql::server':
-    root_password   => $mysql_root_pass,
-    restart 	=> true,
-    package_name    => $mysql_server_package_name,
+    root_password    => $mysql_root_pass,
+    restart          => true,
+    package_name     => $mysql_server_package_name,
     override_options => { 'mysqld' => {
       'max_connections' => $mysql_max_connections,
       'datadir'         => $mysql_datadir,
-      'bind-address'	  => $bind_address,
+      'bind-address'    => $bind_address,
       }
     },
   }
@@ -58,7 +58,7 @@ class rjil::db (
     ## Add fstab entry
     file_line { "fstab_${mysql_data_disk}":
       line => "${mysql_data_disk} ${mysql_datadir} xfs rw,noatime,inode64 0 2",
-      path => "/etc/fstab",
+      path => '/etc/fstab',
       require => Exec["mkfs_${mysql_data_disk}"],
     }
 
@@ -98,8 +98,8 @@ class rjil::db (
   ## in /etc/mysql/debian.conf, so Make a symlink /root/.my.cnf to it
 
   file { '/etc/mysql/debian.cnf':
-    ensure =>  'link',
-    target =>  "${::root_home}/.my.cnf",
+    ensure => 'link',
+    target => "${::root_home}/.my.cnf",
   }
 
 }

@@ -371,7 +371,7 @@ class rjil::jiocloud::undercloud(
     host_routes      => ["destination=169.254.169.254/32,nexthop=${::ipaddress}"],
     network_name     => "ctlplane",
     tenant_name      => "openstack",
-  } 
+  }
 
   file { '/etc/init/neutron-plugin-openvswitch-agent.conf':
     source => 'puppet:///modules/rjil/neutron-plugin-openvswitch-agent.conf',
@@ -387,24 +387,24 @@ class rjil::jiocloud::undercloud(
   }
 
   file { '/tftpboot':
-    owner => 'ironic',
-    group => 'ironic',
     ensure => 'directory',
+    owner  => 'ironic',
+    group  => 'ironic',
   } ->
   file { '/tftpboot/pxelinx.cfg':
-    owner => 'ironic',
-    group => 'ironic',
     ensure => 'directory',
+    owner  => 'ironic',
+    group  => 'ironic',
   } ->
   file { '/tftpboot/pxelinux.0':
-    owner => 'ironic',
-    group => 'ironic',
-    source => '/usr/lib/syslinux/pxelinux.0',
+    owner   => 'ironic',
+    group   => 'ironic',
+    source  => '/usr/lib/syslinux/pxelinux.0',
     require => Package['syslinux']
   } ->
   file { '/tftpboot/map-file':
-    owner => 'ironic',
-    group => 'ironic',
+    owner  => 'ironic',
+    group  => 'ironic',
     source => 'puppet:///modules/rjil/tftpd.map-file',
   }
 

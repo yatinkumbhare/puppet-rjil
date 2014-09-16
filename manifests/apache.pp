@@ -5,17 +5,18 @@ class rjil::apache (
   $ssl_key_file = '/etc/apache2/certs/jiocloud.com.key',
   $ssl_ca_file = '/etc/apache2/certs/gd_bundle-g2-g1.crt',
   $ssl_secrets_packge_name = 'jiocloud-ssl-certificate',
+  $jiocloud_ssl_cert_package_version = undef,
 ) {
 
   if $ssl_enabled {
     class {'::apache':
-      server_signature => 'Off',
+      server_signature  => 'Off',
       default_ssl_chain => $ssl_ca_file,
-      default_ssl_cert => $ssl_cert_file,
-      default_ssl_key => $ssl_key_file,
-      default_vhost => false,
-      apache_version => '2.4',
-      require => Package[$ssl_secrets_packge_name],
+      default_ssl_cert  => $ssl_cert_file,
+      default_ssl_key   => $ssl_key_file,
+      default_vhost     => false,
+      apache_version    => '2.4',
+      require           => Package[$ssl_secrets_packge_name],
     }
     include ::apache::mod::wsgi
     include apache::mod::rewrite
@@ -30,8 +31,8 @@ class rjil::apache (
   } else {
     class {'::apache':
       server_signature => 'Off',
-      default_vhost => false,
-      mod_dir => '/etc/apache2/mods',
+      default_vhost    => false,
+      mod_dir          => '/etc/apache2/mods',
     }
     include ::apache::mod::wsgi
     include apache::mod::rewrite

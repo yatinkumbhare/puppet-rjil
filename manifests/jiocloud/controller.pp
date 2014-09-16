@@ -11,6 +11,6 @@ class rjil::jiocloud::controller(
     verbose        => True,
     catalog_type   => 'sql',
     admin_token    => 'random_uuid',
-    sql_connection => "mysql://keystone_admin:$keystone_db_password@localhost/keystone",
+    sql_connection => "mysql://keystone_admin:${keystone_db_password}@localhost/keystone",
   }
 }
