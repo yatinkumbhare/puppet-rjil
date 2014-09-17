@@ -12,6 +12,8 @@ describe 'rjil::keystone' do
       'glance::keystone::auth::password' => 'pass',
       'nova::keystone::auth::password' => 'pass',
       'neutron::keystone::auth::password' => 'pass',
+      'rjil::keystone::test_user::password' => 'pass',
+      'openstack_extras::auth_file::admin_password' => 'pass'
     }
   end
 
@@ -21,7 +23,6 @@ describe 'rjil::keystone' do
       should contain_class('keystone')
       should_not contain_apache__vhost('keystone')
       should_not contain_apache__vhost('keystone-admin')
-      should contain_class('openstack_extras::keystone_endpoints')
     end
   end
 

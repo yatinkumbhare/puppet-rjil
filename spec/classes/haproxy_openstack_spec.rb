@@ -2,6 +2,13 @@ require 'spec_helper'
 
 describe 'rjil::haproxy::openstack' do
 
+  let :hiera_data do
+    {
+      'openstack_extras::auth_file::admin_password' => 'pass'
+    }
+  end
+
+
   let :service_list do
     {
       'horizon' => '80',
