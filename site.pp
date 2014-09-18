@@ -27,14 +27,11 @@ node /openstackclient\d*/ {
 node /haproxy/ {
   include rjil::base
   include rjil::haproxy
-  class { 'rjil::haproxy::openstack' :
-    keystone_ips => '10.0.0.1',
-  }
-
+  include rjil::haproxy::openstack
 }
 
 ## Setup databases on db node
-node /db\d*/ {
+node /^db\d*/ {
   include rjil::base
   include rjil::db
 }
@@ -85,7 +82,7 @@ node /^oc\d+/ {
   include rjil::glance
 }
 
-node /keystone/ {
+node /keystonewithdb\d+/ {
   include rjil::base
   include rjil::memcached
   include rjil::db
