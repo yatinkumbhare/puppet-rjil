@@ -1,6 +1,10 @@
 git_protocol=ENV['git_protocol'] || 'git'
 base_url = "#{git_protocol}://github.com"
 
+mod 'puppetlabs/java',
+  :git => "#{base_url}/puppetlabs/puppetlabs-java",
+  :ref => '1.1.2'
+
 mod 'puppetlabs/haproxy',
   :git => "#{base_url}/puppetlabs/puppetlabs-haproxy",
   :ref => '1.0.0'
@@ -17,6 +21,10 @@ mod 'saz/sudo',
   :git => "#{base_url}/saz/puppet-sudo",
   :ref => '62b93da'
 
+mod 'fsalum/redis',
+  :git => "#{base_url}/fsalum/puppet-redis",
+  :ref => '0.0.12'
+
 mod 'dprince/qpid',
   :git => "#{base_url}/dprince/puppet-qpid",
   :ref => "1.0.2"
@@ -30,8 +38,7 @@ mod 'duritong/sysctl',
   :ref => '4a46338'
 
 mod 'msimonin/cassandra',
-  :git => "#{base_url}/msimonin/puppet-cassandra",
-  :ref => "puppet-cassandra-0.6.0"
+  :git => "#{base_url}/msimonin/puppet-cassandra"
 
 mod 'saz/timezone',
   :git => "#{base_url}/saz/puppet-timezone",
@@ -47,7 +54,7 @@ mod 'puppetlabs/apache',
 
 mod 'puppetlabs/apt',
   :git => "#{base_url}/puppetlabs/puppetlabs-apt",
-  :ref => '1.4.2'
+  :ref => '1.6.0'
 
 mod 'stackforge/cinder',
   :git => "#{base_url}/jiocloud/puppet-cinder",
@@ -104,3 +111,11 @@ mod 'saz/memcached',
 mod 'stephenrjohnson/puppet',
   :git => "#{base_url}/stephenrjohnson/puppetmodule",
   :ref => '1.0.0'
+
+mod 'jiocloud/contrail',
+  :git => "#{base_url}/jiocloud/jiocloud-contrail",
+  :ref => 'origin/master'
+
+mod 'deric/zookeeper',
+  :git => "#{base_url}/deric/puppet-zookeeper",
+  :ref => 'v0.2.4'

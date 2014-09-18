@@ -36,7 +36,15 @@ fixtures:
       ref: 3b027e816818f2c1086075038ac9b4af1cadbc24
     cassandra:
       repo: https://github.com/msimonin/puppet-cassandra
-      ref: 'puppet-cassandra-0.6.0'
+    redis:
+      repo: https://github.com/fsalum/puppet-redis
+      ref: 0.0.12
+    zookeeper:
+      repo: https://github.com/deric/puppet-zookeeper
+      ref: v0.2.4
+    java:
+      repo: https://github.com/puppetlabs/puppetlabs-java
+      ref: 1.1.2
     staging:
       repo: https://github.com/nanliu/puppet-staging
       ref: 0.4.0
@@ -45,7 +53,7 @@ fixtures:
       ref: 1.0.1
     apt:
       repo: https://github.com/puppetlabs/puppetlabs-apt
-      ref: 1.5.0
+      ref: 1.6.0
     cinder:
       repo: https://github.com/stackforge/puppet-cinder
       ref: 4.0.0
@@ -72,7 +80,7 @@ fixtures:
       ref: 4.0.0
     stdlib:
       repo: https://github.com/puppetlabs/puppetlabs-stdlib
-      ref: 4.2.2
+      ref: 4.3.2
     vswitch:
       repo: https://github.com/stackforge/puppet-vswitch
       ref: 0.3.0
