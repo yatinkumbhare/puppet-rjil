@@ -91,3 +91,11 @@ node /keystone/ {
   include rjil::db
   include rjil::keystone
 }
+
+node /keystone\d+/ {
+  include rjil::base
+  include rjil::memcached
+  include rjil::keystone
+  include openstack_extras::keystone_endpoints
+  include rjil::keystone::test_user
+}
