@@ -20,6 +20,8 @@ class rjil::db (
 
   rjil::test { 'mysql.sh': }
 
+  rjil::profile { 'db': }
+
   ## Call db_def to create databases, users and grants
   create_resources('rjil::db::instance', $dbs)
   ## setup mysql server
