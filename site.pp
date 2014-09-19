@@ -66,6 +66,7 @@ node /apache\d*/ {
 node /^ct\d+/ {
   include rjil::base
   include rjil::rabbitmq
+  include rjil::zookeeper
 }
 
 
