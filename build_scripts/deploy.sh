@@ -67,11 +67,6 @@ EOF
 
 python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml userdata.txt
 
-if [ -n "$floating_ip" ]
-then
-	nova floating-ip-associate etcd1_test${BUILD_NUMBER} ${floating_ip}
-fi
-
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_test${BUILD_NUMBER})
 
 $timeout 600 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} ping; do sleep 5; done"
