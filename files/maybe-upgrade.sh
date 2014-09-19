@@ -26,7 +26,13 @@ run_puppet() {
 
 validate_service() {
         run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/
-        python -m jiocloud.orchestrate --discovery_token=$discovery_token update_own_status validation $?
+        ret_code=$?
+        python -m jiocloud.orchestrate --discovery_token=$discovery_token update_own_status validation $ret_code
+        if [[ $ret_code != 0 ]]; then
+                echo "Validation failed with return code ${ret_code}"
+                sleep 5
+                exit 1
+        fi
 }
 
 if [ $rv -eq 0 ]
