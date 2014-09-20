@@ -158,3 +158,11 @@ rjil::system::apt::enable_ubuntu: true
 rjil::system::apt::enable_puppetlabs: true
 rjil::system::apt::enable_ceph: true
 rjil::system::apt::enable_rustedhalo: true
+
+
+########################################
+########## Contrail Settings ###########
+########################################
+
+rabbitmq::manage_repos: false
+rabbitmq::admin_enable: false
