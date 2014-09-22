@@ -27,4 +27,19 @@ class rjil::system {
   anchor { 'rjil::system::end':
     require => [Class['rjil::system::apt'],Class['rjil::system::accounts']],
   }
+
+
+  ##
+  ## Added security banner messages
+  ##
+
+  $issue = [ '/etc/issue.net','/etc/issue' ]
+
+  file { $issue:
+    ensure        => file,
+    owner         => root,
+    group         => root,
+    mode          => 644,
+    source        => "puppet:///modules/${module_name}/_etc_issue",
+  }
 }
