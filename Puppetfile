@@ -65,8 +65,8 @@ mod 'puppetlabs/concat',
   :ref => '1.1.1'
 
 mod 'stackforge/glance',
-  :git => "#{base_url}/jiocloud/puppet-glance",
-  :ref => 'svn_to_git_2'
+  :git => "#{base_url}/stackforge/puppet-glance",
+  :ref => 'stable/icehouse'
 
 mod 'puppetlabs/keystone',
   :git => "#{base_url}/stackforge/puppet-keystone",
