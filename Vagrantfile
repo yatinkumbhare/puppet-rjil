@@ -41,11 +41,12 @@ Vagrant.configure("2") do |config|
 
       config.vm.host_name = "#{node_name}.domain.name"
 
-      config.vm.provision 'shell', :inline =>
-        "[ -e '/etc/facter/facts.d/etcd.txt' -o -n '#{ENV['etcd_discovery_token']}' ] || (echo 'No etcd discovery token set. Bailing out. Use \". newtokens.sh\" to get tokens.' ; exit 1)"
-
-      config.vm.provision 'shell', :inline =>
-        "mkdir -p /etc/facter/facts.d; [ -e '/etc/facter/facts.d/etcd.txt' ] && exit 0; echo etcd_discovery_token=#{ENV['etcd_discovery_token']} > /etc/facter/facts.d/etcd.txt"
+      ['consul', 'etcd'].each do |x|
+        config.vm.provision 'shell', :inline =>
+          "[ -e '/etc/facter/facts.d/#{x}.txt' -o -n '#{ENV["#{x}_discovery_token"]}' ] || (echo 'No #{x} discovery token set. Bailing out. Use \". newtokens.sh\" to get tokens.' ; exit 1)"
+        config.vm.provision 'shell', :inline =>
+          "mkdir -p /etc/facter/facts.d; [ -e '/etc/facter/facts.d/#{x}.txt' ] && exit 0; echo #{x}_discovery_token=#{ENV["#{x}_discovery_token"]} > /etc/facter/facts.d/#{x}.txt"
+      end
 
       config.vm.provision 'shell', :inline =>
         "echo env=#{environment} > /etc/facter/facts.d/env.txt"
