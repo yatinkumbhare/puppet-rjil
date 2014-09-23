@@ -18,7 +18,8 @@ class rjil::system::accounts (
   class { 'ssh::server':
     options => {
       'PasswordAuthentication' => 'no',
-      'PermitRootLogin' => 'no',
+      'PermitRootLogin'        => 'no',
+      'Banner'                 => '/etc/issue.net',
     },
   }
 
