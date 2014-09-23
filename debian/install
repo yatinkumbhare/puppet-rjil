@@ -1,7 +1,7 @@
-modules etc/puppet
-manifests etc/puppet/modules/rjil
-templates etc/puppet/modules/rjil
-files etc/puppet/modules/rjil
+modules usr/share/puppet
+manifests usr/share/puppet/modules/rjil
+templates usr/share/puppet/modules/rjil
+files usr/share/puppet/modules/rjil
 hiera etc/puppet
 hiera/hiera.yaml etc/puppet
 site.pp etc/puppet/manifests
