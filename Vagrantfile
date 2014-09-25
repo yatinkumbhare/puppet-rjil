@@ -27,6 +27,16 @@ Vagrant.configure("2") do |config|
 
       config.vm.host_name = "#{node_name}.domain.name"
 
+      config.vm.provision 'shell', :inline =>
+        "[ -e '/etc/facter/facts.d/etcd.txt' -o -n '#{ENV['etcd_discovery_token']}' ] || (echo 'No etcd discovery token set. Bailing out. Use \". newtokens.sh\" to get tokens.' ; exit 1)"
+      end
+
+      config.vm.provision 'shell', :inline =>
+        "mkdir -p /etc/facter/facts.d; [ -e '/etc/facter/facts.d/etcd.txt' ] && exit 0; echo etcd_discovery_token=#{ENV['etcd_discovery_token']} > /etc/facter/facts.d/etcd.txt"
+
+      config.vm.provision 'shell', :inline =>
+        "echo env=vagrant > /etc/facter/facts.d/env.txt"
+
       if ENV['http_proxy']
         #config.vm.provision :shell, :inline => "echo 'export http_proxy=#{ENV['http_proxy']}'  > /etc/profile.d/proxy.sh"
         #if ENV['https_proxy']
