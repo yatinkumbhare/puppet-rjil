@@ -2,6 +2,11 @@ require 'yaml'
 
 Vagrant.configure("2") do |config|
 
+  # allow users to set their own environment
+  # which effect the hiera hierarchy and the
+  # cloud file that is used
+  environment = ENV['env'] || 'vagrant'
+
   config.vm.box      = 'ubuntu/trusty64'
 
   config.vm.provider "lxc" do |v, override|
@@ -9,7 +14,7 @@ Vagrant.configure("2") do |config|
   end
 
   last_octet = 41
-  env_data = YAML.load_file('environment/cloud.vagrant.yaml')
+  env_data = YAML.load_file("environment/cloud.#{environment}.yaml")
 
   machines = {}
   env_data['resources'].each do |name, info|
@@ -43,7 +48,7 @@ Vagrant.configure("2") do |config|
         "mkdir -p /etc/facter/facts.d; [ -e '/etc/facter/facts.d/etcd.txt' ] && exit 0; echo etcd_discovery_token=#{ENV['etcd_discovery_token']} > /etc/facter/facts.d/etcd.txt"
 
       config.vm.provision 'shell', :inline =>
-        "echo env=vagrant > /etc/facter/facts.d/env.txt"
+        "echo env=#{environment} > /etc/facter/facts.d/env.txt"
 
       if ENV['http_proxy']
         #config.vm.provision :shell, :inline => "echo 'export http_proxy=#{ENV['http_proxy']}'  > /etc/profile.d/proxy.sh"
