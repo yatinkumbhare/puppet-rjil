@@ -1,3 +1,5 @@
+require 'yaml'
+
 Vagrant.configure("2") do |config|
 
    ENV['http_proxy'] = 'http://10.22.3.1:3128'
@@ -9,17 +11,17 @@ Vagrant.configure("2") do |config|
     override.vm.box = "fgrehm/trusty64-lxc"
   end
 
-  {
-    :openstackclient => '15',
-    :etcd            => '16',
-    :haproxy         => '17',
-    :apache          => '18',
-    :db              => '19',
-    :memcached       => '20',
-    :keystone        => '21',
-    :keystonewithdb  => '22',
-    :oc1             => '31',
-  }.each do |node_name, number|
+  last_octet = 41
+  env_data = YAML.load_file('environment/cloud.vagrant.yaml')
+
+  machines = {}
+  env_data['resources'].each do |name, info|
+    (1..info['number']).to_a.each do |idx|
+      machines["#{name}#{idx}"] = last_octet
+      last_octet += 1
+    end
+  end
+  machines.each do |node_name, number|
 
     config.vm.define(node_name) do |config|
 
