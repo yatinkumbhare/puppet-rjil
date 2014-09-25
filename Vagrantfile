@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
 
       # upgrade puppet
       config.vm.provision 'shell', :inline =>
-        'release=$(lsb_release -cs);wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1'
+        'test -e puppet.deb && exit 0; release=$(lsb_release -cs);wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1'
 
       config.vm.network "private_network", :ip => "10.22.3.#{number}"
       config.vm.network "private_network", :ip => "10.22.4.#{number}"
