@@ -23,13 +23,19 @@ Vagrant.configure("2") do |config|
     config.vm.define(node_name) do |config|
 
       config.vm.synced_folder("hiera/", '/etc/puppet/hiera/')
-      #config.vm.synced_folder("modules/", '/etc/puppet/modules/')
+      config.vm.synced_folder("modules/", '/etc/puppet/modules/')
+      config.vm.synced_folder("manifests/", '/etc/puppet/modules/rjil/manifests/')
+      config.vm.synced_folder("files/", '/etc/puppet/modules/rjil/files/')
+      config.vm.synced_folder("templates/", '/etc/puppet/modules/rjil/templates/')
+
+      # This seems wrong - Soren
+      config.vm.provision 'shell', :inline =>
+         'cp /vagrant/hiera/hiera.yaml /etc/puppet'
 
       config.vm.host_name = "#{node_name}.domain.name"
 
       config.vm.provision 'shell', :inline =>
         "[ -e '/etc/facter/facts.d/etcd.txt' -o -n '#{ENV['etcd_discovery_token']}' ] || (echo 'No etcd discovery token set. Bailing out. Use \". newtokens.sh\" to get tokens.' ; exit 1)"
-      end
 
       config.vm.provision 'shell', :inline =>
         "mkdir -p /etc/facter/facts.d; [ -e '/etc/facter/facts.d/etcd.txt' ] && exit 0; echo etcd_discovery_token=#{ENV['etcd_discovery_token']} > /etc/facter/facts.d/etcd.txt"
@@ -56,15 +62,12 @@ Vagrant.configure("2") do |config|
       config.vm.provision 'shell', :inline =>
         'test -e puppet.deb && exit 0; release=$(lsb_release -cs);wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1'
 
+      config.vm.provision 'shell', :inline =>
+        'puppet apply --debug -e "include rjil::jiocloud"'
+
       config.vm.network "private_network", :ip => "10.22.3.#{number}"
       config.vm.network "private_network", :ip => "10.22.4.#{number}"
-      config.vm.provision(:puppet) do |puppet|
-        puppet.manifests_path    = '.'
-        puppet.manifest_file     = 'site.pp'
-        puppet.module_path       = ['modules', '../']
-        puppet.options           = ['--hiera_config=/etc/puppet/hiera/hiera.yaml', "--certname=#{node_name}"]
-        puppet.facter            = { 'env' => 'vagrant' }
-      end
+
       config.vm.provision 'shell', :inline => 'run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/'
     end
   end
