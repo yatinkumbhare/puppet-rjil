@@ -1,7 +1,6 @@
-Vagrant.configure("2") do |config|
+require 'yaml'
 
-   ENV['http_proxy'] = 'http://10.22.3.1:3128'
-   ENV['https_proxy'] = 'http://10.22.3.1:3128'
+Vagrant.configure("2") do |config|
 
   config.vm.box      = 'ubuntu/trusty64'
 
@@ -9,24 +8,42 @@ Vagrant.configure("2") do |config|
     override.vm.box = "fgrehm/trusty64-lxc"
   end
 
-  {
-    :openstackclient => '15',
-    :etcd            => '16',
-    :haproxy         => '17',
-    :apache          => '18',
-    :db              => '19',
-    :memcached       => '20',
-    :keystone        => '21',
-    :keystonewithdb  => '22',
-    :oc1             => '31',
-  }.each do |node_name, number|
+  last_octet = 41
+  env_data = YAML.load_file('environment/cloud.vagrant.yaml')
+
+  machines = {}
+  env_data['resources'].each do |name, info|
+    (1..info['number']).to_a.each do |idx|
+      machines["#{name}#{idx}"] = last_octet
+      last_octet += 1
+    end
+  end
+  machines.each do |node_name, number|
 
     config.vm.define(node_name) do |config|
 
       config.vm.synced_folder("hiera/", '/etc/puppet/hiera/')
-      #config.vm.synced_folder("modules/", '/etc/puppet/modules/')
+      config.vm.synced_folder("modules/", '/etc/puppet/modules/')
+      config.vm.synced_folder("manifests/", '/etc/puppet/modules/rjil/manifests/')
+      config.vm.synced_folder("files/", '/etc/puppet/modules/rjil/files/')
+      config.vm.synced_folder("templates/", '/etc/puppet/modules/rjil/templates/')
+      config.vm.synced_folder("lib/", '/etc/puppet/modules/rjil/lib/')
+      config.vm.synced_folder(".", "/etc/puppet/manifests")
+
+      # This seems wrong - Soren
+      config.vm.provision 'shell', :inline =>
+         'cp /vagrant/hiera/hiera.yaml /etc/puppet'
 
       config.vm.host_name = "#{node_name}.domain.name"
+
+      config.vm.provision 'shell', :inline =>
+        "[ -e '/etc/facter/facts.d/etcd.txt' -o -n '#{ENV['etcd_discovery_token']}' ] || (echo 'No etcd discovery token set. Bailing out. Use \". newtokens.sh\" to get tokens.' ; exit 1)"
+
+      config.vm.provision 'shell', :inline =>
+        "mkdir -p /etc/facter/facts.d; [ -e '/etc/facter/facts.d/etcd.txt' ] && exit 0; echo etcd_discovery_token=#{ENV['etcd_discovery_token']} > /etc/facter/facts.d/etcd.txt"
+
+      config.vm.provision 'shell', :inline =>
+        "echo env=vagrant > /etc/facter/facts.d/env.txt"
 
       if ENV['http_proxy']
         #config.vm.provision :shell, :inline => "echo 'export http_proxy=#{ENV['http_proxy']}'  > /etc/profile.d/proxy.sh"
@@ -45,18 +62,13 @@ Vagrant.configure("2") do |config|
 
       # upgrade puppet
       config.vm.provision 'shell', :inline =>
-        'release=$(lsb_release -cs);wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1'
+        'test -e puppet.deb && exit 0; release=$(lsb_release -cs);wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1'
+
+      config.vm.provision 'shell', :inline =>
+        'puppet apply --debug -e "include rjil::jiocloud"'
 
       config.vm.network "private_network", :ip => "10.22.3.#{number}"
       config.vm.network "private_network", :ip => "10.22.4.#{number}"
-      config.vm.provision(:puppet) do |puppet|
-        puppet.manifests_path    = '.'
-        puppet.manifest_file     = 'site.pp'
-        puppet.module_path       = ['modules', '../']
-        puppet.options           = ['--hiera_config=/etc/puppet/hiera/hiera.yaml', "--certname=#{node_name}"]
-        puppet.facter            = { 'env' => 'vagrant' }
-      end
-      config.vm.provision 'shell', :inline => 'run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/'
     end
   end
 end
