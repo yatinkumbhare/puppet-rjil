@@ -2,9 +2,6 @@ require 'yaml'
 
 Vagrant.configure("2") do |config|
 
-   ENV['http_proxy'] = 'http://10.22.3.1:3128'
-   ENV['https_proxy'] = 'http://10.22.3.1:3128'
-
   config.vm.box      = 'ubuntu/trusty64'
 
   config.vm.provider "lxc" do |v, override|
