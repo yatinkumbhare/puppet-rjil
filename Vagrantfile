@@ -69,8 +69,6 @@ Vagrant.configure("2") do |config|
 
       config.vm.network "private_network", :ip => "10.22.3.#{number}"
       config.vm.network "private_network", :ip => "10.22.4.#{number}"
-
-      config.vm.provision 'shell', :inline => 'run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/'
     end
   end
 end
