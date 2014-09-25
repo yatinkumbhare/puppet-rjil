@@ -27,6 +27,8 @@ Vagrant.configure("2") do |config|
       config.vm.synced_folder("manifests/", '/etc/puppet/modules/rjil/manifests/')
       config.vm.synced_folder("files/", '/etc/puppet/modules/rjil/files/')
       config.vm.synced_folder("templates/", '/etc/puppet/modules/rjil/templates/')
+      config.vm.synced_folder("lib/", '/etc/puppet/modules/rjil/lib/')
+      config.vm.synced_folder(".", "/etc/puppet/manifests")
 
       # This seems wrong - Soren
       config.vm.provision 'shell', :inline =>
