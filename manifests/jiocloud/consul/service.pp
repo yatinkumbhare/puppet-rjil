@@ -1,12 +1,14 @@
 define rjil::jiocloud::consul::service(
   $port,
   $check_command = "true",
-  $interval      = '10s'
+  $interval      = '10s',
+  $tags          = [],
 ) {
   $service_hash = {
     service => {
       name  => $name,
       port  => $port + 0,
+      tags  => $tags,
       check => {
         script => $check_command,
         interval => $interval
