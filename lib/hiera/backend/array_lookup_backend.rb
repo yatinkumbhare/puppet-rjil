@@ -18,14 +18,19 @@ class Hiera
           next unless data.include?(key)
           if data[key] =~ /^%\{(lookup_array|lookup_array_first_element)\(['"]([^"']*)["']\)\}$/
             value = Hiera::Backend.lookup($2, nil, scope, nil, :priority)
-            unless value.class == Array
-              raise Exception, "Invalid value #{$2}=#{value}. Hiera lookup array methods expect an array value"
-            end
-            case $1
-            when 'lookup_array'
-              break if answer = value
-            when 'lookup_array_first_element'
-              break if answer = value.first
+            if value == nil
+              answer = nil
+              break
+            else
+              unless value.class == Array
+                raise Exception, "Invalid value #{$2}=#{value.class}. Hiera lookup array methods expect an array value"
+              end
+              case $1
+              when 'lookup_array'
+                break if answer = value
+              when 'lookup_array_first_element'
+                break if answer = value.first
+              end
             end
           elsif data[key] =~ /%\{(lookup_array|lookup_array_first_element)\(['"]([^"']*)["']\)\}/
             raise Exception, "Invalid lookup_array call: #{data[key]} Cannot interpolate array lookups."
