@@ -76,7 +76,7 @@ node /^ct\d+/ {
 ## openstack controller applications
 ##
 
-node /^oc\d+/ {
+node /^ocdb\d+/ {
   include rjil::base
   include rjil::memcached
   include rjil::db
@@ -84,6 +84,24 @@ node /^oc\d+/ {
   include rjil::glance
   include openstack_extras::keystone_endpoints
   include rjil::keystone::test_user
+}
+node /^oc\d+/ {
+  include rjil::base
+  include rjil::memcached
+  include rjil::keystone
+  include rjil::glance
+}
+
+node /^oclb\d+/ {
+  include rjil::base
+  include rjil::memcached
+  include rjil::db
+  include rjil::keystone
+  include rjil::glance
+  include openstack_extras::keystone_endpoints
+  include rjil::keystone::test_user
+  include rjil::haproxy
+  include rjil::haproxy::openstack
 }
 
 node /keystonewithdb\d+/ {
