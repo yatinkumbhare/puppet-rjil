@@ -11,6 +11,8 @@ class rjil::glance (
   ## Add tests for glance api and registry
   include rjil::test::glance
 
+  rjil::profile { 'glance': }
+
   ## setup glance api
   include ::glance::api
 
