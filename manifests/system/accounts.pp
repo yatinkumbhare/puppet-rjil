@@ -43,4 +43,8 @@ class rjil::system::accounts (
 
   rjil::system::accounts::sudo_conf { $sudo_users_orig: }
 
+  rjil::jiocloud::consul::service { "ssh":
+    port          => 22,
+    check_command => "/usr/lib/nagios/plugins/check_ssh -t 5 ${::ipaddress}"
+  }
 }

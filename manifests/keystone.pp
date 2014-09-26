@@ -71,4 +71,15 @@ class rjil::keystone(
     }
   }
 
+  rjil::jiocloud::consul::service { "keystone":
+    tags          => ['real'],
+    port          => 5000,
+    check_command => "/usr/lib/nagios/plugins/check_http -I ${::ipaddress} -p 5000"
+  }
+
+  rjil::jiocloud::consul::service { "keystone-admin":
+    tags          => ['real'],
+    port          => 35357,
+    check_command => "/usr/lib/nagios/plugins/check_http -I ${::ipaddress} -p 35357"
+  }
 }

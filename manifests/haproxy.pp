@@ -58,6 +58,15 @@ class rjil::haproxy () {
     },
   }
 
+  package { 'nagios-plugins-contrib':
+    ensure => 'present'
+  }
+
+  rjil::jiocloud::consul::service { "mysql":
+    port          => 8084,
+    check_command => "/usr/lib/nagios/plugins/check_haproxy -u 'http://0.0.0.0:8084/lb-stats;csv'"
+  }
+
 #  if $cluster_master == $::fqdn {
 #    $state = 'MASTER'
 #  } else {

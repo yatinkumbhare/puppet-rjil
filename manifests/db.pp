@@ -104,4 +104,21 @@ class rjil::db (
     target => "${::root_home}/.my.cnf",
   }
 
+  mysql_user { "monitor@${::ipaddress}":
+    ensure        => 'present',
+	password_hash => mysql_password('monitor'),
+  }
+
+  mysql_grant { "monitor@${::ipaddress}/*.*":
+    ensure     => 'present',
+    options    => ['GRANT'],
+    privileges => ['USAGE'],
+    user       => "monitor@${::ipaddress}",
+	table      => '*.*'
+  }
+
+  rjil::jiocloud::consul::service { "mysql":
+    port          => 3306,
+	check_command => "/usr/lib/nagios/plugins/check_mysql -H ${::ipaddress} -u monitor -p monitor"
+  }
 }
