@@ -75,17 +75,18 @@ glance::api::registry_host: "localhost"
 glance::api::registry_protocol: "http"
 glance::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
 glance::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
-glance::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('rjil::keystone::public_address')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+glance::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
 glance::api::keystone_password: "%{hiera('glance::keystone::auth::password')}"
 glance::api::database_connection: "mysql://%{hiera('glance_db_user')}:%{hiera('glance_db_password')}@%{hiera('db_host')}/glance"
 glance::api::mysql_module: 2.3
+
 
 
 glance::registry::debug: "%{hiera('debug')}"
 glance::registry::verbose: "%{hiera('verbose')}"
 glance::registry::auth_host: "%{hiera('rjil::keystone::public_address')}"
 glance::registry::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
-glance::registry::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('rjil::keystone::public_address')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+glance::registry::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::registry::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
 glance::registry::keystone_password: "%{hiera('glance::keystone::auth::password')}"
 glance::registry::database_connection: "%{hiera('glance::api::database_connection')}"
 glance::registry::mysql_module: 2.3
@@ -134,19 +135,21 @@ cinder::keystone::auth::public_address: 127.0.0.1
 cinder::keystone::auth::public_port: 8776
 cinder::keystone::auth::region: "%{hiera('region')}"
 
+glance_public_address: 127.0.0.1
+glance_internal_address: 127.0.0.1
 glance::keystone::auth::password: glance
-glance::keystone::auth::public_address: 127.0.0.1
+glance::keystone::auth::public_address: "%{hiera('glance_public_address')}"
 glance::keystone::auth::public_port: 9292
 glance::keystone::auth::public_protocol: http
-glance::keystone::auth::admin_address: 127.0.0.1
-glance::keystone::auth::internal_address: 127.0.0.1
+glance::keystone::auth::admin_address: "%{hiera('glance_internal_address')}"
+glance::keystone::auth::internal_address: "%{hiera('glance_internal_address')}"
 glance::keystone::auth::region: "%{hiera('region')}"
 
 keystone::endpoint::password: keystone
-keystone::endpoint::admin_address: 127.0.0.1
+keystone::endpoint::admin_address: "%{hiera('keystone_private_address')}"
 keystone::endpoint::admin_port: "%{hiera('keystone::admin_port')}"
-keystone::endpoint::internal_address: 127.0.0.7
-keystone::endpoint::public_address: 127.0.0.1
+keystone::endpoint::internal_address: "%{hiera('keystone_private_address')}"
+keystone::endpoint::public_address: "%{hiera('keystone_public_address')}"
 keystone::endpoint::public_port: "%{hiera('keystone::public_port')}"
 keystone::keystone::auth::region: "%{hiera('region')}"
 
