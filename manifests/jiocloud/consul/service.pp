@@ -19,5 +19,5 @@ define rjil::jiocloud::consul::service(
   file { "/etc/consul/$name.json":
     ensure => "present",
     content => template('rjil/consul.service.erb'),
-  } ~> Exec['reload-consul']
+  } ~> Exec <| title == 'reload-consul' |>
 }
