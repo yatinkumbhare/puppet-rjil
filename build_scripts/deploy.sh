@@ -47,6 +47,12 @@ if [ -n "${puppet_modules_source_repo}" ]; then
     git checkout ${puppet_modules_source_branch}
     popd
   fi
+  if [ -n "${pull_request_id}" ]; then
+    pushd /tmp/rjil
+    git fetch origin pull/${pull_request_id}/head:test_${pull_request_id}
+    git merge test_${pull_request_id}
+    popd
+  fi
   gem install librarian-puppet-simple --no-ri --no-rdoc;
   mkdir -p /etc/puppet/manifests.overrides
   cp /tmp/rjil/site.pp /etc/puppet/manifests.overrides/
