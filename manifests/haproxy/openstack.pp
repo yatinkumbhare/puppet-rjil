@@ -18,6 +18,8 @@ class rjil::haproxy::openstack(
   $nova_ec2_port         = '8773',
 ) {
 
+  rjil::profile { 'controller_load_balancer': }
+
   class { 'rjil::test::haproxy_openstack':
     horizon_ips           => $horizon_ips,
     keystone_ips          => $keystone_ips,
