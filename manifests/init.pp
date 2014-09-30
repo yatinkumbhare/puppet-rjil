@@ -61,6 +61,11 @@ class rjil {
     sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAyPD6HkWT4pz20Ygfo72MxiMsCc4JmlVq/LO0GQRw1ZBG4f0rkjegYBDFLLzOR60RPfqpvb3OApJBHcx3HJG9IxtPc5yZN615sBwPOLK6SWO9kFMhBVq4w3uQFIvpONyR7KbRlWJFVn1W02pRkGGp//bN15h6Ry24kfzEgcjOMbq9vb57/dumj9tL6pZyBSWLgOjWj70KEo/n8Z9AFn7lZOZgq4fmqMuDD79ahsjnwGpKjh2v/SIALV2AjYWJOwY/0ou7l7ghVvfOB4ZOgSYDxhz2/ORqL4yUzncyChcLH1Xg5nscvc+yaOatMaXtVlkPAEPDUSzfho8DyAqt1tjRKw== rclark@blackcat",
   }
 
+  @rjil::localuser { 'bodepd':
+    realname => 'Dan Bode',
+    sshkeys  => 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBuPzobX3U/OZ10r0Jwc9yrd8d5Lj+QqUWDEid+b7pm9DnceGgGLE618Tk8KBHFVjmjCXeoEOajx/75HFHI8iRuj/DWd1EGpt/J100VOfZFw/ZSE4Y3qJG5s9Afm2ZwAbwq6gPCb1scYawcg/1uU7x50CEIRto09gfQ1sbTSWbeTzuqu1F+KMgdeKRtwkPiSR3LzCY0lkBeJSICYoXvUcDwmmytpGdnFlY/dpJIs95okVtNUV5cJEFP/lWGmui1nLmD29NgN5r6RsLnhnH2eIs6QONwD55Iui38nryT97g4mw9OaVpBXgHcdnd+9TlDGO6ezyBNJMVuYMuhXdhqSF5 dan@bodeco.io'
+  }
+
   @rjil::localuser { 'jenkins':
     realname => 'Jenkins',
     sshkeys  => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDd51FWUwG7BaVNoIb5aidm6nci2ixgyvqa5p4kq2m95GztMmIC9yhBbKzGIdTrWKdWi1q2xcQbJS+ojM/PswpuB++JA+XuYVIaROi/69zU7rBWtu2Siq7l991scuaoYG6jvazgpNl/fFXkdd671lEz/GSW05DADGO/jyDeOWo82MKE72zeVz181IuhlYZXkbUmLuKXPtFCjHyXkJ4WHziUUinozKsM6s9HRsMYCKMEU5w+zIKaM6n85GRAL+DCIQBCatv9ZctVGF8QxWtzDouh3C/E6d2//+vDkfVA+DejkvkfXjcHUuUTgs45IXIbOKIhrx9XiW79zNenPUbNgTMD jenkins@bulky
