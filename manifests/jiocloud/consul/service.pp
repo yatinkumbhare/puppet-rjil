@@ -16,6 +16,10 @@ define rjil::jiocloud::consul::service(
     }
   }
 
+  ensure_resource( 'file', '/etc/consul',
+    {'ensure' => 'directory'}
+  )
+
   file { "/etc/consul/$name.json":
     ensure => "present",
     content => template('rjil/consul.service.erb'),
