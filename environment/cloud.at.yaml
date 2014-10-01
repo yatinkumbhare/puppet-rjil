@@ -6,21 +6,28 @@ resources:
     networks:
       - d7c83218-276b-4e4c-8ed1-1165b44c3a44
     assign_floating_ip: true
-  db:
+  haproxy:
     number: 1
     flavor: 100
     image: 169d484a-dde2-44c8-8f15-daaa1ba69e94
     networks:
       - d7c83218-276b-4e4c-8ed1-1165b44c3a44
     assign_floating_ip: true
-  keystone:
-    number: 2
+  oc:
+    number: 1
     flavor: 100
     image: 169d484a-dde2-44c8-8f15-daaa1ba69e94
     networks:
       - d7c83218-276b-4e4c-8ed1-1165b44c3a44
     assign_floating_ip: true
-  haproxy:
+  ocdb:
+    number: 1
+    flavor: 100
+    image: 169d484a-dde2-44c8-8f15-daaa1ba69e94
+    networks:
+      - d7c83218-276b-4e4c-8ed1-1165b44c3a44
+    assign_floating_ip: true
+  ct:
     number: 1
     flavor: 100
     image: 169d484a-dde2-44c8-8f15-daaa1ba69e94
