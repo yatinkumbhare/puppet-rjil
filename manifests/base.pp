@@ -6,6 +6,7 @@ class rjil::base {
   realize (
     Rjil::Localuser['jenkins'],
     Rjil::Localuser['soren'],
+    Rjil::Localuser['bodepd'],
   )
 }
 
