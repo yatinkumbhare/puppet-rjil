@@ -7,3 +7,5 @@ resources:
     number: 2
   ocdb:
     number: 1
+  ct:
+    number: 1

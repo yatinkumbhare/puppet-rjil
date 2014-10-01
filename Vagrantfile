@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
     override.vm.box = 'ubuntu/trusty64'
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    vb.memory = 1024
   end
 
   config.vm.provider "lxc" do |v, override|
@@ -29,6 +30,12 @@ Vagrant.configure("2") do |config|
     end
   end
   machines.each do |node_name, number|
+
+    config.vm.provider :virtualbox do |vb, override|
+      if node_name =~ /ct/
+        vb.memory = 2048
+      end
+    end
 
     config.vm.define(node_name) do |config|
 
