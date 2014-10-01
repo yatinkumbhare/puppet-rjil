@@ -18,6 +18,11 @@ class rjil::ceph::mon_config (
   ##
   # Configure mon details
   ##
-  ::ceph::conf::mon_config{ $mon_config: }
+
+  if ! empty($mon_config) {
+    ::ceph::conf::mon_config{ $mon_config: }
+  } else {
+    fail("External Mon list cannot be empty for non-mon nodes")
+  }
 
 }

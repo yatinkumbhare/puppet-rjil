@@ -32,11 +32,13 @@ class rjil::glance (
     # File storage backend
     include ::glance::backend::file
   } elsif($backend == 'rbd') {
-    if ! defined(Class['rjil::ceph']) {
-      fail("Class['rjil::ceph'] is not defined")
-    }
     # Rbd backend
-    Class['rjil::ceph'] ->  Class['::glance::backend::rbd']
+    include rjil::ceph
+    include rjil::ceph::mon_config
+    ensure_resource('rjil::service_blocker', 'stmon', {})
+    Rjil::Service_blocker['stmon'] -> Class['rjil::ceph::mon_config'] ->
+    Class['::glance::backend::rbd']
+    Class['glance::api'] -> Ceph::Auth['glance_client']
 
     if ! $ceph_mon_key {
       fail("Parameter ceph_mon_key is not defined")
