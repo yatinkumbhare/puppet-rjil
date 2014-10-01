@@ -13,6 +13,7 @@ describe 'rjil::haproxy_service' do
     it do
       should_not contain_haproxy__listen('testname')
       should_not contain_haproxy__balancermember('testname')
+      should_not contain_file('/etc/consul/testname.json')
     end
   end
 
@@ -47,7 +48,8 @@ describe 'rjil::haproxy_service' do
         'server_names'      => ['10.1.1.1','10.1.1.2'],
         'ipaddresses'       => ['10.1.1.1','10.1.1.2'],
       })
-    end
+      should contain_file('/etc/consul/testname.json').with_content(/\"port\": 100/)
+   end
   end
 
   context 'with cluster_address, vip, balancer_ports' do
@@ -71,6 +73,7 @@ describe 'rjil::haproxy_service' do
         'server_names'      => ['10.1.1.1','10.1.1.2'],
         'ipaddresses'       => ['10.1.1.1','10.1.1.2'],
       })
+      should contain_file('/etc/consul/testname.json').with_content(/\"port\": 90/)
     end
   end
 
@@ -96,6 +99,7 @@ describe 'rjil::haproxy_service' do
         'server_names'      => ['10.1.1.1','10.1.1.2'],
         'ipaddresses'       => ['10.1.1.1','10.1.1.2'],
       })
+      should contain_file('/etc/consul/testname.json').with_content(/\"port\": 100/)
     end
   end
 end

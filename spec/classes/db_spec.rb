@@ -21,6 +21,7 @@ describe 'rjil::db' do
 
   describe 'default resources' do
     it 'should contain default resources' do
+      should contain_file('/etc/consul/mysql.json').with_content(/\"port\": 3306/)
       should contain_file('/usr/lib/jiocloud/tests/mysql.sh')
       should contain_class('mysql::server').with(
         {

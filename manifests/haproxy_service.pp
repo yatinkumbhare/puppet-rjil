@@ -60,5 +60,31 @@ define rjil::haproxy_service(
       options           => $balancer_options,
       define_cookies    => $balancer_cookie
     }
+
+    if (is_array($listen_ports)) {
+      if ($listen_ports == []) {
+        if (is_array($balancer_ports)) {
+          if ($balancer_ports == []) {
+            $port = undefined
+          } else {
+            $port = $balancer_ports[0]
+          }
+        } else {
+          $port = $balancer_ports
+        }
+      } else {
+        $port = $listen_ports[0]
+      }
+    } else {
+      $port = $listen_ports
+    }
+
+    if ($balancer_ports) {
+      rjil::jiocloud::consul::service { "${name}":
+        tags          => ['lb'],
+        port          => $port,
+        check_command => "/usr/lib/nagios/plugins/check_http -I ${vip} -p $port"
+      }
+    }
   }
 }

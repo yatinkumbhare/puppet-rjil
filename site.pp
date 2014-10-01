@@ -2,6 +2,8 @@ Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin/
 
 node /etcd/ {
   include rjil::base
+  include rjil::jiocloud::consul::bootstrapserver
+  include rjil::jiocloud::consul::cron
 
   if $::etcd_discovery_token {
     $discovery = true
@@ -16,6 +18,7 @@ node /etcd/ {
 
 node /openstackclient\d*/ {
   include rjil::base
+  include rjil::jiocloud::consul::agent
   class { 'openstack_extras::repo::uca':
     release => 'juno'
   }
@@ -28,18 +31,21 @@ node /haproxy/ {
   include rjil::base
   include rjil::haproxy
   include rjil::haproxy::openstack
+  include rjil::jiocloud::consul::agent
 }
 
 ## Setup databases on db node
 node /^db\d*/ {
   include rjil::base
   include rjil::db
+  include rjil::jiocloud::consul::server
 }
 
 ## Setup memcache on mc node
 node /mc\d*/ {
   include rjil::base
   include rjil::memcached
+  include rjil::jiocloud::consul::agent
 }
 
 node /apache\d*/ {
@@ -57,7 +63,7 @@ node /apache\d*/ {
     logroot         => '/var/log/httpd',
     #proxy_pass => [ { path => '/', url => "http://localhost:${nova_osapi_compute_listen_port}/"  } ],
   }
-
+  include rjil::jiocloud::consul::agent
 }
 
 ##
@@ -70,6 +76,7 @@ node /^ct\d+/ {
   include rjil::zookeeper
   include rjil::haproxy
   include rjil::haproxy::contrail
+  include rjil::jiocloud::consul::agent
 }
 
 
@@ -104,6 +111,7 @@ node /^oclb\d+/ {
   include rjil::keystone::test_user
   include rjil::haproxy
   include rjil::haproxy::openstack
+  include rjil::jiocloud::consul::agent
 }
 
 node /keystonewithdb\d+/ {
@@ -111,6 +119,7 @@ node /keystonewithdb\d+/ {
   include rjil::memcached
   include rjil::db
   include rjil::keystone
+  include rjil::jiocloud::consul::agent
 }
 
 node /keystone\d+/ {
@@ -119,4 +128,5 @@ node /keystone\d+/ {
   include rjil::keystone
   include openstack_extras::keystone_endpoints
   include rjil::keystone::test_user
+  include rjil::jiocloud::consul::agent
 }

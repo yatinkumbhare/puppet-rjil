@@ -22,4 +22,9 @@ class rjil::jiocloud::etcd(
     refreshonly => true,
     subscribe   => Service['etcd'],
   }
+
+  rjil::jiocloud::consul::service { 'etcd':
+    port => 4001,
+    check_command => "python -m jiocloud.orchestrate ping"
+  }
 }

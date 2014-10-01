@@ -119,3 +119,15 @@ mod 'jiocloud/contrail',
 mod 'deric/zookeeper',
   :git => "#{base_url}/deric/puppet-zookeeper",
   :ref => 'v0.2.4'
+
+mod 'saz/dnsmasq',
+  :git => "#{base_url}/JioCloud/puppet-dnsmasq",
+  :ref => 'origin/master'
+
+mod 'puppet-modules/common',
+  :git => "#{base_url}/puppet-modules/puppet-common",
+  :ref => 'origin/master'
+
+mod 'solarkennedy/consul',
+  :git => "#{base_url}/solarkennedy/puppet-consul",
+  :ref => 'origin/master'

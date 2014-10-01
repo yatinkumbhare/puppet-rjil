@@ -93,3 +93,9 @@ fixtures:
     puppet:
       repo: https://github.com/stephenrjohnson/puppetmodule
       ref: 1.0.0
+    dnsmasq:
+      repo: https://github.com/JioCloud/puppet-dnsmasq
+      ref: origin/master
+    consul:
+      repo: https://github.com/solarkennedy/puppet-consul
+      ref: origin/master
