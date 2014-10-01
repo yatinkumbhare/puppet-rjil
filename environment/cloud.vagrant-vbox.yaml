@@ -1,0 +1,9 @@
+resources:
+  etcd:
+    number: 1
+  haproxy:
+    number: 1
+  oc:
+    number: 2
+  ocdb:
+    number: 1
