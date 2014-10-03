@@ -24,7 +24,7 @@ fi
 
 if [ -z "${consul_discovery_token}" ]
 then
-    etcd_discovery_token=$(curl http://consuldiscovery.linux2go.dk/new)
+    consul_discovery_token=$(curl http://consuldiscovery.linux2go.dk/new)
 fi
 
 if [ -z "${env}" ]

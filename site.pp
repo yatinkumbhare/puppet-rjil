@@ -94,12 +94,14 @@ node /^ocdb\d+/ {
   include rjil::glance
   include openstack_extras::keystone_endpoints
   include rjil::keystone::test_user
+  include rjil::jiocloud::consul::agent
 }
 node /^oc\d+/ {
   include rjil::base
   include rjil::memcached
   include rjil::keystone
   include rjil::glance
+  include rjil::jiocloud::consul::agent
 }
 
 node /^oclb\d+/ {

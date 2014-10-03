@@ -37,16 +37,22 @@ class rjil::cassandra (
 ) {
 
   rjil::test { 'check_cassandra.sh': }
+  # make sure that hostname is resolvable or cassandra fails
+  host { 'localhost':
+    ip => '127.0.0.1',
+    host_aliases => ['localhost.localdomain', $::hostname],
+  }
 
   if $thread_stack_size < 229 {
     fail("JVM Thread stack size (thread_stack_size) must be > 230")
   }
   class {'::cassandra':
-      seeds             => $seeds,
-      cluster_name      => $cluster_name,
-      thread_stack_size => $thread_stack_size,
-      version           => $version,
-      package_name      => $package_name,
+    seeds             => $seeds,
+    cluster_name      => $cluster_name,
+    thread_stack_size => $thread_stack_size,
+    version           => $version,
+    package_name      => $package_name,
+    require           => Host['localhost'],
   }
 
 }
