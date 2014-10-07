@@ -1,4 +1,0 @@
-services::db::eth1:       ["%{ipaddress_eth1}"]
-services::keystone::eth0: ["%{ipaddress_eth0}"]
-services::keystone::eth1: ["%{ipaddress_eth1}"]
-services::glance::eth1:  ["%{ipaddress_eth1}"]
