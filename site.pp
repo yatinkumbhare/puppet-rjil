@@ -18,7 +18,7 @@ node /etcd/ {
 }
 
 ## setup ceph configuration and osds on st nodes
-node /^st\d+$/ {
+node /^st\d+/ {
   include rjil::base
   include rjil::ceph
   include rjil::ceph::osd
@@ -26,7 +26,7 @@ node /^st\d+$/ {
 
 # single leader that will be used to ensure that all
 # mons form a single cluster
-node /^stmonleader1$/ {
+node /^stmonleader1/ {
   include rjil::base
   include rjil::ceph
   include rjil::ceph::mon
@@ -38,7 +38,7 @@ node /^stmonleader1$/ {
 ## Mon nodes.
 ## Note: This node list can be derived from hiera - rjil::ceph::mon_config
 
-node /^stmon\d+$/ {
+node /^stmon\d+/ {
   include rjil::base
   include rjil::ceph
   include rjil::ceph::mon
@@ -110,7 +110,7 @@ node /^cp\d+/ {
   include rjil::ceph
 }
 
-node /^haproxy\d+$/ {
+node /^haproxy\d+/ {
   include rjil::base
   include rjil::haproxy
   include rjil::haproxy::openstack
