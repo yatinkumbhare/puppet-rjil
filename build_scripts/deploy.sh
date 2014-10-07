@@ -55,7 +55,9 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   if [ -n "${pull_request_id}" ]; then
     pushd /tmp/rjil
     git fetch origin pull/${pull_request_id}/head:test_${pull_request_id}
-    git merge test_${pull_request_id}
+    git config user.email "testuser@localhost.com"
+    git config user.name "Test User"
+    git merge -m 'Merging Pull Request' test_${pull_request_id}
     popd
   fi
   gem install librarian-puppet-simple --no-ri --no-rdoc;
