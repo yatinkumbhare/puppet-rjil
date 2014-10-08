@@ -38,7 +38,8 @@
 #   Generate a loopback disk for testing
 #
 # [*autodisk_size*]
-#   Size of auto generated disk in GB
+#   Size of auto generated disk in GB. Minimum size required is 10GB in order
+#   ceph to work smoothly.
 # Note: both autogenerate and autodisk_size is only required while testing in
 # dev machines or Vagrant.
 #
@@ -90,10 +91,18 @@ class rjil::ceph::osd (
   ##   enabled.
   ##  Disks to be used is difference of $blankorcephdisks and disk_exceptions
   ##
-  ## If autogenerate is enabled, a loopback disk with size $autodisk_size MB
+  ## If autogenerate is enabled, a loopback disk with size $autodisk_size GB
   ##   created, and will be used as OSD.
 
   if $autogenerate {
+
+    ##
+    # ceph will not work smoothly if autodisk_size is less than 10GB,
+    # So adding a fail if autodisk_size is less than 10GB
+    ##
+    if $autodisk_size < 10 {
+      fail("Autodisk size must be at least 10GB (current size: ${autodisk_size})")
+    }
 
     ##
     ## fix osd_journal_size to autodisk_size/4 if not less than that.
@@ -108,7 +117,7 @@ class rjil::ceph::osd (
     $autodisk_size_4k = $autodisk_size*1000000/4
     exec { 'make_disk_file':
       command => "dd if=/dev/zero of=/var/lib/ceph/disk-1 bs=4k \
-                  count=$autodisk_size_4k",
+                  count=${autodisk_size_4k}",
       unless => 'test -e /var/lib/ceph/disk-1',
       require => Package['ceph'],
     }

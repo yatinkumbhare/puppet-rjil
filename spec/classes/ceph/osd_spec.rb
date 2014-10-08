@@ -82,4 +82,10 @@ describe 'rjil::ceph::osd' do
       })
     end
   end
+  context 'with autodisk_size less than 10GB' do
+    let (:params) { {'autogenerate' => true, 'autodisk_size' => 5 } }
+    it do
+     expect { should compile }.to raise_error(Puppet::Error,/Autodisk size must be at least 10GB/)
+    end
+  end
 end
