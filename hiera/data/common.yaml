@@ -118,7 +118,7 @@ rjil::keystone::public_port: 80
 rjil::keystone::public_port_internal: "%{hiera('keystone::public_port')}"
 rjil::keystone::admin_port: 81
 rjil::keystone::admin_port_internal: "%{hiera('keystone::admin_port')}"
-rjil::keystone::public_address: "lb.keystone.service.consul"
+rjil::keystone::public_address: "0.0.0.0"
 keystone::roles::admin::email: "%{hiera('admin_email')}"
 keystone::roles::admin::password: "%{hiera('admin_password')}"
 keystone::admin_password: "%{hiera('admin_password')}"

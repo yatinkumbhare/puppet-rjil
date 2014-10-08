@@ -12,3 +12,5 @@ rjil::jiocloud::etcd::peer_addr: "%{ipaddress_eth1}:7001"
 rjil::haproxy::openstack::keystone_ips: "%{lookup_array('services::keystone::eth1')}"
 rjil::haproxy::openstack::keystone_internal_ips: "%{lookup_array('services::keystone::eth1')}"
 rjil::haproxy::openstack::glance_ips: "%{lookup_array('services::glance::eth1')}"
+
+rjil::keystone::public_address: "%{ipaddress_eth1}"
