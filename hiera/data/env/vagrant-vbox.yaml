@@ -8,6 +8,9 @@ glance::bind_host: "%{ipaddress_eth1}"
 
 rjil::jiocloud::etcd::addr: "%{ipaddress_eth1}:4001"
 rjil::jiocloud::etcd::peer_addr: "%{ipaddress_eth1}:7001"
+rjil::jiocloud::consul::server::bind_addr: "%{ipaddress_eth1}"
+rjil::jiocloud::consul::bootstrapserver::bind_addr: "%{ipaddress_eth1}"
+rjil::jiocloud::consul::agent::bind_addr: "%{ipaddress_eth1}"
 
 rjil::haproxy::openstack::keystone_ips: "%{lookup_array('services::keystone::eth1')}"
 rjil::haproxy::openstack::keystone_internal_ips: "%{lookup_array('services::keystone::eth1')}"
