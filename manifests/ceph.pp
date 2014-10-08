@@ -2,15 +2,16 @@
 class rjil::ceph (
   $mon_config, ## a hash of mon hostname and ip address
   $fsid,
-  $mon_initial_members = undef,
-  $admin_key = undef,
-  $keyring  = '/etc/ceph/keyring',
-  $auth_type  = 'cephx',
-  $storage_cluster_if      = eth1,
-  $storage_cluster_network = undef,
-  $public_network          = undef,
-  $public_if               = eth0,
-  $osd_journal_type   = 'first_partition',
+  $mon_initial_members    = undef,
+  $admin_key              = undef,
+  $keyring                = '/etc/ceph/keyring',
+  $auth_type              = 'cephx',
+  $storage_cluster_if     = eth1,
+  $storage_cluster_network= undef,
+  $public_network         = undef,
+  $public_if              = eth0,
+  $osd_journal_type       = 'first_partition',
+  $pool_default_size      = 3
 ) {
 
 
@@ -79,6 +80,7 @@ class rjil::ceph (
     public_network   => $public_network_orig,
     mon_init_members => $mon_initial_members_orig,
     osd_journal_type => $osd_journal_type,
+    pool_default_size=> $pool_default_size,
     require          => File['/etc/ceph'],
   }
 

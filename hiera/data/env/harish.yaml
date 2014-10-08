@@ -1,3 +1,9 @@
+##
+# pool_default_size is by default 3, means ceph will keep three copies of data
+# on all pool unless set otherwise in specific pool
+##
+rjil::ceph::pool_default_size: 1
+
 ## rjil::ceph::mon_config: - A hash defines all mon nodes
 ## Currently this is moved to environment specific hiera file.
 ## Note: Ideally these IP addresses will be consumed from service discovery, but in
@@ -5,5 +11,3 @@
 
 rjil::ceph::mon_config:
   st1: { mon_addr: '10.1.0.51'}
-  st2: { mon_addr: '10.1.0.52'}
-  st3: { mon_addr: '10.1.0.53'}
