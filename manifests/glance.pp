@@ -13,6 +13,12 @@ class rjil::glance (
 
   rjil::profile { 'glance': }
 
+  # ensure that we don't even try to configure the
+  # database connection until the service is up
+  ensure_resource( 'rjil::service_blocker', 'mysql', {})
+  Rjil::Service_blocker['mysql'] -> Glance_api_config['database/connection']
+  Rjil::Service_blocker['mysql'] -> Glance_registry_config['database/connection']
+
   ## setup glance api
   include ::glance::api
 
@@ -55,4 +61,9 @@ class rjil::glance (
     fail("Unsupported backend ${backend}")
   }
 
+  rjil::jiocloud::consul::service { "glance":
+    tags          => ['real'],
+    port          => $::glance::api::bind_port,
+    check_command => "/usr/lib/nagios/plugins/check_http -I ${::glance::api::bind_host} -p ${::glance::api::bind_port}"
+  }
 }

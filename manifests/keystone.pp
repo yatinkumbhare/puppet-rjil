@@ -21,13 +21,34 @@ class rjil::keystone(
 
   rjil::profile { 'keystone': }
 
+  if $public_address == '0.0.0.0' {
+    $address = '127.0.0.1'
+  } else {
+    $address = $public_address
+  }
+
+  rjil::jiocloud::consul::service { "keystone":
+    tags          => ['real'],
+    port          => 5000,
+    check_command => "/usr/lib/nagios/plugins/check_http -I ${address} -p 5000"
+  }
+
+  rjil::jiocloud::consul::service { "keystone-admin":
+    tags          => ['real'],
+    port          => 35357,
+    check_command => "/usr/lib/nagios/plugins/check_http -I ${address} -p 35357"
+  }
+
+  # ensure that we don't even try to configure the
+  # database connection until the service is up
+  ensure_resource( 'rjil::service_blocker', 'mysql', {})
+  Rjil::Service_blocker['mysql'] -> Keystone_config['database/connection']
+
   if $ssl {
     include rjil::apache
   }
 
   class { '::keystone': }
-  include openstack_extras::keystone_endpoints
-  include rjil::keystone::test_user
   # class { 'keystone::cron::token_flush': }
 
   if $ceph_radosgw_enabled {
@@ -71,15 +92,6 @@ class rjil::keystone(
     }
   }
 
-  rjil::jiocloud::consul::service { "keystone":
-    tags          => ['real'],
-    port          => 5000,
-    check_command => "/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 5000"
-  }
+  Class['rjil::keystone'] -> Rjil::Service_blocker<| title == 'keystone-admin' |>
 
-  rjil::jiocloud::consul::service { "keystone-admin":
-    tags          => ['real'],
-    port          => 35357,
-    check_command => "/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 35357"
-  }
 }

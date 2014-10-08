@@ -127,4 +127,9 @@ class rjil::db (
     port          => 3306,
     check_command => "/usr/lib/nagios/plugins/check_mysql -H ${bind_address} -u monitor -p monitor"
   }
+
+  # make sure that we install mysql before our service blocker starts for the
+  # case where they are on the same machine
+  Class['rjil::db'] -> Rjil::Service_blocker<| title == 'mysql' |>
+
 }
