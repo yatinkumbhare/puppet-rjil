@@ -1,6 +1,7 @@
 modules usr/share/puppet
 manifests usr/share/puppet/modules/rjil
 templates usr/share/puppet/modules/rjil
+lib usr/share/puppet/modules/rjil
 files usr/share/puppet/modules/rjil
 hiera etc/puppet
 hiera/hiera.yaml etc/puppet
