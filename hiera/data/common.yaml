@@ -10,6 +10,9 @@ rjil::db::dbs:
   cinderdb: { db: "%{hiera('rjil::openstack::cinder_db_name')}", user: "%{hiera('rjil::openstack::cinder_db_user')}", pass: "%{hiera('rjil::openstack::cinder_db_password')}" }
   glancedb: { db: "%{hiera('rjil::openstack::glance_db_name')}", user: "%{hiera('rjil::openstack::glance_db_user')}", pass: "%{hiera('rjil::openstack::glance_db_password')}" }
 
+# Gets overridden for ocdb role
+rjil::keystone::disable_db_sync: true
+
 
 ####################################
 ######## Openstack configs #########

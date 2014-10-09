@@ -15,6 +15,7 @@ class rjil::keystone(
   $cache_expiration_time  = '600',
   $cache_backend          = undef,
   $cache_backend_argument = undef,
+  $disable_db_sync        = false,
 ) {
 
   include rjil::test::keystone
@@ -43,6 +44,12 @@ class rjil::keystone(
   # database connection until the service is up
   ensure_resource( 'rjil::service_blocker', 'mysql', {})
   Rjil::Service_blocker['mysql'] -> Keystone_config['database/connection']
+
+  if $disable_db_sync {
+    Exec <| title == 'keystone-manage db_sync' |> {
+      unless => '/bin/true'
+    }
+  }
 
   if $ssl {
     include rjil::apache
