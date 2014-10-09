@@ -63,7 +63,7 @@ class rjil::haproxy () {
   }
 
   rjil::jiocloud::consul::service { "haproxy":
-    port          => 8084,
+    port          => 8094,
     check_command => "/usr/lib/nagios/plugins/check_haproxy -u 'http://0.0.0.0:8094/lb-stats;csv'"
   }
 
