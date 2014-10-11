@@ -9,13 +9,13 @@ describe 'rjil::ceph::mon::mon_config' do
       :concat_basedir  => '/tmp',
     }
   }
-  
-  let(:title){ 'testtitle' }
-  
-  let(:params) { { :mon_service_name => 'google-public-dns-a.google.com' } }
 
   context 'default resources' do
+    let(:params) { { :mon_service_name => 'google-public-dns-a.google.com' } }
     it 'should contain default resources' do
+      should contain_ceph__conf__mon_config('host1').with({
+        'mon_addr' => '1.1.1.1'
+      })
       should contain_ceph__conf__mon_config('8.8.8.8')
     end
   end

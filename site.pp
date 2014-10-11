@@ -3,9 +3,6 @@ Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin/
 node /etcd/ {
 
   include rjil::base
-  include rjil::jiocloud::consul::bootstrapserver
-  include rjil::jiocloud::consul::cron
-
   if $::etcd_discovery_token {
     $discovery = true
   } else {
@@ -85,7 +82,6 @@ node /^ct\d+/ {
   include rjil::zookeeper
   include rjil::haproxy
   include rjil::haproxy::contrail
-  include rjil::jiocloud::consul::agent
 }
 
 ##
@@ -98,7 +94,6 @@ node /^oc\d+/ {
   include rjil::memcached
   include rjil::keystone
   include rjil::glance
-  include rjil::jiocloud::consul::agent
 }
 
 #
@@ -111,7 +106,6 @@ node /^ocdb\d+/ {
   include rjil::db
   include rjil::keystone
   include rjil::glance
-  include rjil::jiocloud::consul::agent
   include openstack_extras::keystone_endpoints
   include rjil::keystone::test_user
   # ensure that we don't create keystone objects until
@@ -135,7 +129,6 @@ node /^oclb\d+/ {
   include rjil::keystone::test_user
   include rjil::haproxy
   include rjil::haproxy::openstack
-  include rjil::jiocloud::consul::agent
 }
 
 node /^cp\d+/ {
@@ -147,5 +140,4 @@ node /^haproxy\d+/ {
   include rjil::base
   include rjil::haproxy
   include rjil::haproxy::openstack
-  include rjil::jiocloud::consul::agent
 }

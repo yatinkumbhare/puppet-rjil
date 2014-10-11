@@ -9,6 +9,7 @@ describe 'rjil::ceph::mon' do
       'rjil::ceph::mon::key'        => 'AQBXRgNSQNCMAxAA/wSNgHmHwzjnl2Rk22P4jA==',
       'rjil::ceph::fsid'            => '94d178a4-cae5-43fa-b420-8ae1cfedb7dc',
       'ceph::conf::fsid'            => '94d178a4-cae5-43fa-b420-8ae1cfedb7dc',
+      'rjil::ceph::mon::mon_config::leader' => true,
     }
   end
 
@@ -21,14 +22,12 @@ describe 'rjil::ceph::mon' do
       'ipaddress_eth0'  => '10.1.0.2',
       'concat_basedir'  => '/tmp/',
       'hostname'        => 'host1',
+      'leader'          => true,
     }
   end
+
   context 'default resources' do
     it 'should contain default resources' do
-      should contain_rjil__ceph__mon__mon_config('mon_config_host1').with({
-        'public_if'        => 'eth0',
-        'mon_service_name' => 'stmon.service.consul',
-      })
       should contain_ceph__mon('host1').with({
         'monitor_secret'  => 'AQBXRgNSQNCMAxAA/wSNgHmHwzjnl2Rk22P4jA==',
         'mon_addr'        => '10.1.0.2',

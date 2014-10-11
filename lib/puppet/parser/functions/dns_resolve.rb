@@ -3,8 +3,8 @@
 ##
 module Puppet::Parser::Functions
   newfunction(
-    :dns_resolve, 
-    :type  => :rvalue, 
+    :dns_resolve,
+    :type  => :rvalue,
     :arity => 1,
     :doc   => <<-EOS
 
@@ -12,7 +12,7 @@ This function does dns forward lookup and returns a comma separated list of IP
 addresses
 Accepts one parameter which is the name to be resolved.
 
-Example: 
+Example:
   dns_resolve("google.com")
 
 The above example will return a comma separated list of IP addresses which

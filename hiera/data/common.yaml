@@ -202,8 +202,8 @@ rjil::keystone::radosgw::keystone_accepted_roles: ['Member', 'admin', 'swiftoper
 ########### Account settings
 ############################
 
-rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins]
-rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins]
+rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins, consul]
+rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins, consul]
 
 ########### Apt settings
 ############################
