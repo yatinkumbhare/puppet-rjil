@@ -40,10 +40,11 @@ class rjil::ceph::mon (
   # Add mon configuration on all mon nodes.
   ##
 
-  rjil::ceph::mon::mon_config {"mon_config_${::hostname}":
+  class { 'rjil::ceph::mon::mon_config':
     public_if       => $public_if,
     mon_service_name=> "${mon_service_name}.service.consul",
   }
+  contain 'rjil::ceph::mon::mon_config'
 
   ##
   # Setup ceph mons
