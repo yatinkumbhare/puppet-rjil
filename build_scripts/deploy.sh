@@ -35,15 +35,23 @@ fi
 cat <<EOF >userdata.txt
 #!/bin/bash
 release="\$(lsb_release -cs)"
+if [ -n "${env_http_proxy}" ]
+then
+	export http_proxy=${env_http_proxy}
+	echo http_proxy="'${env_http_proxy}'" >> /etc/environment
+fi
+if [ -n "${env_https_proxy}" ]
+then
+	export https_proxy=${env_https_proxy}
+	export ETCD_DISCOVERY_PROXY=${env_https_proxy}
+	echo ETCD_DISCOVERY_PROXY="'${env_https_proxy}'" >> /etc/environment
+	echo https_proxy="'${env_https_proxy}'" >> /etc/environment
+fi
 wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
-dpkg -i puppet.deb
+wget -O jiocloud.deb http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
+dpkg -i puppet.deb jiocloud.deb
 apt-get update
-apt-get install -y puppet
-apt-get install -y software-properties-common
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 85596F7A
-add-apt-repository "deb http://jiocloud.rustedhalo.com/ubuntu/ \${release} main"
-apt-get update
-apt-get install puppet-jiocloud
+apt-get install -y puppet software-properties-common puppet-jiocloud
 if [ -n "${puppet_modules_source_repo}" ]; then
   apt-get install -y git
   git clone ${puppet_modules_source_repo} /tmp/rjil
@@ -83,7 +91,7 @@ python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project
 
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_test${BUILD_NUMBER})
 
-$timeout 600 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} ping; do sleep 5; done"
+$timeout 1200 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} ping; do sleep 5; done"
 
 $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
 
