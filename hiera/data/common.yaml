@@ -219,7 +219,6 @@ rjil::system::apt::enable_puppetlabs: true
 rjil::system::apt::enable_ceph: true
 rjil::system::apt::enable_rustedhalo: true
 
-
 ########################################
 ########## Contrail Settings ###########
 ########################################
@@ -302,3 +301,14 @@ rjil::ceph::osd::storage_cluster_if: "%{hiera('rjil::ceph::storage_cluster_if')}
 ## staging, real disks will be used.
 
 #rjil::ceph::osd::autogenerate: true
+
+########### ntp  settings
+###############################
+# configure all systems to set their ntp service to
+# the service name set by consul. The etcd node will
+# provide this service and will be configured as a role
+# specific override
+
+ntp::servers:
+  - ntp.service.consul
+ntp::udlc: yes

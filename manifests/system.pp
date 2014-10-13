@@ -19,6 +19,7 @@ class rjil::system {
   rjil::test {'check_timezone.sh':}
 
   Anchor['rjil::system::start'] -> Class['::timezone'] -> Anchor['rjil::system::end']
+  contain rjil::system::ntp
 
   ## apt and accounts have circular dependancy, so making both of them dependant to anchors
   anchor { 'rjil::system::start':
@@ -27,7 +28,6 @@ class rjil::system {
   anchor { 'rjil::system::end':
     require => [Class['rjil::system::apt'],Class['rjil::system::accounts']],
   }
-
 
   ##
   ## Added security banner messages
