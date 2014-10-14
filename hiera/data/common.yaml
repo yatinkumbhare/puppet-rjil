@@ -135,7 +135,7 @@ keystone::admin_bind_host: 127.0.0.1
 rjil::test::keystone::admin_address: "%{hiera('keystone::admin_bind_host')}"
 keystone::public_bind_host: 127.0.0.1
 rjil::test::keystone::public_address: "%{hiera('keystone::public_bind_host')}"
-keyston::token_provider: keystone.token.providers.uuid.Provider
+keystone::token_provider: keystone.token.providers.uuid.Provider
 keystone::mysql_module: 2.3
 
 # these changes are just from our fork and need to be moved to the profile
