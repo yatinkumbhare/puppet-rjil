@@ -126,7 +126,6 @@ keystone::roles::admin::email: "%{hiera('admin_email')}"
 keystone::roles::admin::password: "%{hiera('admin_password')}"
 keystone::admin_password: "%{hiera('admin_password')}"
 keystone::admin_token: token123
-keystone::sql_connection: "mysql://keystone:%{hiera('keystone_db_password')}@%{hiera('db_host')}/keystone"
 keystone::database_connection: "mysql://keystone:%{hiera('keystone_db_password')}@%{hiera('db_host')}/keystone"
 keystone::debug: "%{hiera('debug')}"
 keystone::verbose: "%{hiera('verbose')}"
@@ -136,8 +135,7 @@ keystone::admin_bind_host: 127.0.0.1
 rjil::test::keystone::admin_address: "%{hiera('keystone::admin_bind_host')}"
 keystone::public_bind_host: 127.0.0.1
 rjil::test::keystone::public_address: "%{hiera('keystone::public_bind_host')}"
-#keystone::token_provider: keystone.token.providers.pki.Provider
-keystone::token_format: uuid
+keyston::token_provider: keystone.token.providers.uuid.Provider
 keystone::mysql_module: 2.3
 
 # these changes are just from our fork and need to be moved to the profile
@@ -162,11 +160,8 @@ glance::keystone::auth::internal_address: "%{hiera('glance_internal_address')}"
 glance::keystone::auth::region: "%{hiera('region')}"
 
 keystone::endpoint::password: keystone
-keystone::endpoint::admin_address: "%{hiera('keystone_private_address')}"
-keystone::endpoint::admin_port: "%{hiera('keystone::admin_port')}"
-keystone::endpoint::internal_address: "%{hiera('keystone_private_address')}"
-keystone::endpoint::public_address: "%{hiera('keystone_public_address')}"
-keystone::endpoint::public_port: "%{hiera('keystone::public_port')}"
+keystone::endpoint::public_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('keystone_public_address')}:%{hiera('keystone::public_port')}"
+keystone::endpoint::admin_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('keystone_private_address')}:%{hiera('keystone::admin_port')}"
 keystone::keystone::auth::region: "%{hiera('region')}"
 
 neutron::keystone::auth::password: neutron
@@ -312,3 +307,5 @@ rjil::ceph::osd::storage_cluster_if: "%{hiera('rjil::ceph::storage_cluster_if')}
 ntp::servers:
   - ntp.service.consul
 ntp::udlc: yes
+
+ssh::server::storeconfigs_enabled: false
