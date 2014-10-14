@@ -42,7 +42,8 @@ mod 'duritong/sysctl',
   :ref => '4a46338'
 
 mod 'msimonin/cassandra',
-  :git => "#{base_url}/msimonin/puppet-cassandra"
+  :git => "#{base_url}/msimonin/puppet-cassandra",
+  :ref => 'f781e1c87915eb8'
 
 mod 'saz/timezone',
   :git => "#{base_url}/saz/puppet-timezone",
@@ -71,7 +72,6 @@ mod 'puppetlabs/concat',
 mod 'enovance/ceph',
   :git => "#{base_url}/jiocloud/puppet-ceph",
   :ref => 'svn_to_git_2'
-
 
 mod 'stackforge/glance',
   :git => "#{base_url}/stackforge/puppet-glance",
