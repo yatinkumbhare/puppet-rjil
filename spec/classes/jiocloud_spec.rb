@@ -32,4 +32,12 @@ describe 'rjil::jiocloud' do
     end
   end
 
+  context 'puppetconf deprecation cleanup' do
+    it { should contain_ini_setting('templatedir').with({
+      'ensure'  => 'absent',
+      'path'    => '/etc/puppet/puppet.conf',
+      'section' => 'main',
+      'setting' => 'templatedir',
+    })}
+  end
 end

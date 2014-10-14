@@ -44,4 +44,11 @@ class rjil::jiocloud (
     user    => 'root',
     require => Package['run-one'],
   }
+
+  ini_setting { 'templatedir':
+    ensure  => absent,
+    path    => "/etc/puppet/puppet.conf",
+    section => 'main',
+    setting => 'templatedir',
+  }
 }
