@@ -12,9 +12,11 @@ class rjil::jiocloud::consul($config_hash) {
     ui_package_ensure => 'absent',
     bin_dir => '/usr/bin',
     config_hash => $config_hash,
-  } ~>
+  }
   exec { "reload-consul":
     command     => "/usr/bin/consul reload",
-    refreshonly => true
+    refreshonly => true,
+    subscribe   => Service['consul'],
   }
+
 }

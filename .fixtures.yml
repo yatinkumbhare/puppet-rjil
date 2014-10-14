@@ -42,6 +42,7 @@ fixtures:
       ref: 3b027e816818f2c1086075038ac9b4af1cadbc24
     cassandra:
       repo: https://github.com/msimonin/puppet-cassandra
+      ref: f781e1c87915eb8
     redis:
       repo: https://github.com/fsalum/puppet-redis
       ref: 0.0.12
@@ -59,7 +60,7 @@ fixtures:
       ref: 1.0.1
     ceph:
       repo: https://github.com/jiocloud/puppet-ceph
-      ref: 8f04335c0a
+      ref: 'origin/svn_to_git_2'
     apt:
       repo: https://github.com/puppetlabs/puppetlabs-apt
       ref: 1.6.0
@@ -102,3 +103,6 @@ fixtures:
     consul:
       repo: https://github.com/solarkennedy/puppet-consul
       ref: origin/master
+    ntp:
+      repo: https://github.com/puppetlabs/puppetlabs-ntp
+      ref: 3.0.1

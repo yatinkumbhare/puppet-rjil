@@ -1,0 +1,35 @@
+require 'spec_helper'
+
+describe 'rjil::jiocloud' do
+
+  let :facts do
+    {
+      'architecture'    => 'amd64',
+      'operatingsystem' => 'Ubuntu',
+      'lsbdistrelease'  => '14.04',
+      'lsbdistid'       => 'Ubuntu',
+      'lsbdistcodename' => 'precise',
+      'osfamily'        => 'Debian',
+    }
+  end
+
+  context 'consul default install' do
+    it 'should install consul agent by default' do
+      should contain_class('rjil::jiocloud::consul::agent')
+    end
+  end
+
+  context 'with invalid consul role' do
+    let :params do
+      {
+        'consul_role' => 'blah'
+      }
+    end
+    it 'should fail' do
+      expect do
+        subject
+      end.to raise_error(Puppet::Error, /consul role should be agent\|server\|bootstrapserver, not blah/)
+    end
+  end
+
+end

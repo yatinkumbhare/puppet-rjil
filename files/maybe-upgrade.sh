@@ -42,7 +42,6 @@ then
        apt-get update
        apt-get dist-upgrade -o Dpkg::Options::="--force-confold" -y
        run_puppet
-       python -m jiocloud.orchestrate local_version $pending_version
 elif [ $rv -eq 1 ]
 then
        :
@@ -56,4 +55,5 @@ then
        run_puppet
 fi
 validate_service
+python -m jiocloud.orchestrate local_version $pending_version
 python -m jiocloud.orchestrate --discovery_token=$discovery_token update_own_info

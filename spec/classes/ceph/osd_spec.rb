@@ -66,9 +66,9 @@ describe 'rjil::ceph::osd' do
   end
 
   context 'with autogenerate' do
-    let (:params) { {'autogenerate' => true, 'autodisk_size' => 20 } }
+    let (:params) { {'autogenerate' => true, 'autodisk_size' => 40 } }
     it  do
-      should contain_exec('make_disk_file').with_command(/dd if=\/dev\/zero of=\/var\/lib\/ceph\/disk-1 bs=4k[ \n]*count=5000000/)
+      should contain_exec('make_disk_file').with_command(/dd if=\/dev\/zero of=\/var\/lib\/ceph\/disk-1 bs=4k[ \n]*count=10000000/)
       should contain_exec('attach_loop').with({
       'command' => 'losetup /dev/loop0 /var/lib/ceph/disk-1',
       'unless'  => 'losetup /dev/loop0',
@@ -77,7 +77,7 @@ describe 'rjil::ceph::osd' do
 
       should contain_ceph__osd__device('/dev/loop0').with({
         'osd_journal_type'  => 'first_partition',
-        'osd_journal_size'  => 2,
+        'osd_journal_size'  => 10,
         'autogenerate'      => true,
       })
     end

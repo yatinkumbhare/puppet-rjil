@@ -1,5 +1,24 @@
-class rjil::jiocloud {
+class rjil::jiocloud (
+  $consul_role = 'agent'
+) {
+
+  if ! member(['agent', 'server', 'bootstrapserver'], $consul_role) {
+    fail("consul role should be agent|server|bootstrapserver, not ${consul_role}")
+  }
+
   include rjil::system::apt
+
+  if $consul_role == 'bootstrapserver' {
+    include rjil::jiocloud::consul::cron
+  } else {
+    $addr = "${::consul_discovery_token}.service.consuldiscovery.linux2go.dk"
+    dns_blocker {  $addr:
+      try_sleep     => 5,
+      tries         => 100,
+      before    => Class["rjil::jiocloud::consul::${consul_role}"]
+    }
+  }
+  include "rjil::jiocloud::consul::${consul_role}"
 
   package { 'run-one':
     ensure => present,
