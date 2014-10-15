@@ -4,20 +4,13 @@
 #  nodes.
 #  NOTE:: MON NODES WILL USE rjil::ceph::mon::mon_config
 #
-
+# [Parameters]
+#   Mon_config is array of IP addresses to be configured as mons.
+#   Defaults to the addresses that are A records for stmon.service.consul
+#
 class rjil::ceph::mon_config (
-  $mon_service_name = 'stmon.service.consul',
+  $mon_config = split(dns_resolve('stmon.service.consul'),','),
 ) {
-
-  ##
-  # mon_config is array of IP addresses which is resolved for
-  # stmon.service.consul
-  ##
-  $mon_config = split(dns_resolve($mon_service_name),',')
-
-  ##
-  # Configure mon details
-  ##
 
   if ! empty($mon_config) {
     ::ceph::conf::mon_config{ $mon_config: }

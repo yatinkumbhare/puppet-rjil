@@ -58,15 +58,6 @@ class rjil::ceph (
     require => Class['::ceph::conf']
   }
 
-
-  ##
-  ## Here is set of ceph nagios plugins (https://github.com/valerytschopp/ceph-nagios-plugins).
-  ## Ideally these plugins should be installed - we should make a deb package and install as part of initializing test
-  ## Just copied one script from this for now, which needs to be fixed.
-  ##
-
-  rjil::test { 'ceph_health.py': }
-
   if $storage_cluster_network {
     $storage_cluster_network_orig = $storage_cluster_network
   } elsif $storage_cluster_if {

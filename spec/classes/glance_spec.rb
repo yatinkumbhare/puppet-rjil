@@ -60,6 +60,7 @@ describe 'rjil::glance' do
     before do
       hiera_data.merge!({
         'rjil::ceph::fsid' => '123',
+        'rjil::ceph::mon_config::mon_config' => ['127.0.0.1']
       })
       facts.merge!({
         'concat_basedir'   => '/tmp',
@@ -72,9 +73,9 @@ describe 'rjil::glance' do
       }
     end
     it 'should contain rbd backend' do
-       should contain_class('rjil::ceph')
-       should contain_class('rjil::ceph::mon_config')
-       should contain_rjil__service_blocker('stmon')
+      should contain_class('rjil::ceph')
+      should contain_class('rjil::ceph::mon_config')
+      should contain_rjil__service_blocker('stmon')
       should contain_ceph__auth('glance_client').with({
         'mon_key'     => 'test_ceph_mon_key',
         'client'      => 'glance',
