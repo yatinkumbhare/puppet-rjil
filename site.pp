@@ -1,7 +1,6 @@
 Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/bin/","/usr/local/sbin/" ] }
 
 node /etcd/ {
-
   include rjil::base
   if $::etcd_discovery_token {
     $discovery = true
@@ -140,4 +139,10 @@ node /^haproxy\d+/ {
   include rjil::base
   include rjil::haproxy
   include rjil::haproxy::openstack
+}
+
+node /^uc\d+/ {
+  include rjil::base
+  include rjil::undercloud
+  include rjil::jiocloud::consul::agent
 }
