@@ -6,6 +6,6 @@ class rjil::jiocloud::consul::cron {
   }
 
   cron { "publish-consul-servers":
-    command => "python /usr/local/bin/publish-consul-servers.py ${::consul_discovery_token}"
+    command => "su -c 'python /usr/local/bin/publish-consul-servers.py ${::consul_discovery_token}'"
   }
 }
