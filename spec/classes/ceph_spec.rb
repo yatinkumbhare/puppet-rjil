@@ -26,7 +26,6 @@ describe 'rjil::ceph' do
   end
   context 'default resources' do
     it 'should contain default resources' do
-      should contain_file('/usr/lib/jiocloud/tests/ceph_health.py')
       should contain_file('/etc/ceph')
       should contain_class('ceph::conf').with({
         'fsid'                => '94d178a4-cae5-43fa-b420-8ae1cfedb7dc',

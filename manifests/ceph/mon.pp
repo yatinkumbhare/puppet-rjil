@@ -44,6 +44,7 @@ class rjil::ceph::mon (
     public_if       => $public_if,
     mon_service_name=> "${mon_service_name}.service.consul",
   }
+
   contain 'rjil::ceph::mon::mon_config'
 
   ##
@@ -68,6 +69,12 @@ class rjil::ceph::mon (
   # Add ceph mon test code
   ##
   rjil::test { 'check_ceph_mon.sh': }
+
+  #
+  # ensure ceph cluster is healthy
+  #
+  rjil::test { 'ceph_health.py': }
+
 
   ##
   # Add consul service, use test script as check_command.

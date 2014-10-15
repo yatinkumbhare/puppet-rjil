@@ -41,6 +41,7 @@ describe 'rjil::ceph::mon' do
         'port'          => 6789,
         'check_command' => '/usr/lib/jiocloud/tests/check_ceph_mon.sh'
       })
+      should contain_file('/usr/lib/jiocloud/tests/ceph_health.py')
     end
   end
 end
