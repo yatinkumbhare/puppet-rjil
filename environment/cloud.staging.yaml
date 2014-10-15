@@ -1,0 +1,21 @@
+resources:
+  etcd:
+    number: 1
+    flavor: 01ef3e3b-9ea9-4e1a-bc94-1132cbb88333
+    image: 2e262277-4ca9-4f59-99e2-a5011ce1ca4b
+  haproxy:
+    number: 1
+    flavor: 01ef3e3b-9ea9-4e1a-bc94-1132cbb88333
+    image: 2e262277-4ca9-4f59-99e2-a5011ce1ca4b
+  oc:
+    number: 2
+    flavor: 01ef3e3b-9ea9-4e1a-bc94-1132cbb88333
+    image: 2e262277-4ca9-4f59-99e2-a5011ce1ca4b
+  ocdb:
+    number: 1
+    flavor: 01ef3e3b-9ea9-4e1a-bc94-1132cbb88333
+    image: 2e262277-4ca9-4f59-99e2-a5011ce1ca4b
+  ct:
+    number: 1
+    flavor: 01ef3e3b-9ea9-4e1a-bc94-1132cbb88333
+    image: 2e262277-4ca9-4f59-99e2-a5011ce1ca4b
