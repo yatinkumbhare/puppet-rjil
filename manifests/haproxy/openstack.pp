@@ -1,10 +1,14 @@
+#
+# Class: rjil::haproxy::openstack
+#   Setup openstack services in haproxy.
+#
 class rjil::haproxy::openstack(
-  $horizon_ips           = [],
-  $keystone_ips          = [],
-  $keystone_internal_ips = [],
-  $glance_ips            = [],
-  $cinder_ips            = [],
-  $nova_ips              = [],
+  $horizon_ips           = values(service_discover_consul('horizon', 'real')),
+  $keystone_ips          = values(service_discover_consul('keystone', 'real')),
+  $keystone_internal_ips = values(service_discover_consul('keystone-admin', 'real')),
+  $glance_ips            = values(service_discover_consul('glance', 'real')),
+  $cinder_ips            = values(service_discover_consul('cinder', 'real')),
+  $nova_ips              = values(service_discover_consul('nova', 'real')),
   $horizon_port          = '80',
   $horizon_https_port    = '443',
   $novncproxy_port       = '6080',
@@ -17,8 +21,6 @@ class rjil::haproxy::openstack(
   $metadata_port         = '8775',
   $nova_ec2_port         = '8773',
 ) {
-
-  rjil::profile { 'controller_load_balancer': }
 
   class { 'rjil::test::haproxy_openstack':
     horizon_ips           => $horizon_ips,

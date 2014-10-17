@@ -68,7 +68,7 @@ rjil::keystone::test_user::password: test_password
 openstack_extras::auth_file::admin_password: "%{hiera('rjil::keystone::test_user::password')}"
 openstack_extras::auth_file::admin_user: test_user
 openstack_extras::auth_file::admin_tenant: test_tenant
-openstack_extras::auth_file::controller_node: "keystone.service.consul"
+openstack_extras::auth_file::controller_node: "lb.keystone.service.consul"
 
 ########### glance config
 ###################################
