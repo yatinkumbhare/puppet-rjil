@@ -20,8 +20,6 @@ class rjil::keystone(
 
   include rjil::test::keystone
 
-  rjil::profile { 'keystone': }
-
   if $public_address == '0.0.0.0' {
     $address = '127.0.0.1'
   } else {

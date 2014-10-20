@@ -24,6 +24,7 @@ describe 'rjil::ceph::osd' do
       'concat_basedir'  => '/tmp/',
       'hostname'        => 'host1',
       'blankorcephdisks' => 'sdh,sdi,sdx',
+      'processorcount'  => '4',
     }
   end
   context 'with default resources' do

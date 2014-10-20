@@ -2,6 +2,12 @@ require 'spec_helper'
 
 describe 'rjil::haproxy::openstack' do
 
+  let :facts do
+    {
+      'osfamily' => 'Debian',
+    }
+  end
+
   let :hiera_data do
     {
       'openstack_extras::auth_file::admin_password' => 'pass'
@@ -22,6 +28,17 @@ describe 'rjil::haproxy::openstack' do
       'nova' => '8774',
       'metadata' => '8775',
       'nova-ec2' => '8773',
+    }
+  end
+
+  let :params do
+    {
+      'horizon_ips'           => [],
+      'keystone_ips'          => [],
+      'keystone_internal_ips' => [],
+      'glance_ips'            => [],
+      'cinder_ips'            => [],
+      'nova_ips'              => [],
     }
   end
 

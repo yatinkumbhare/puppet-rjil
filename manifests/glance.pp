@@ -11,8 +11,6 @@ class rjil::glance (
   ## Add tests for glance api and registry
   include rjil::test::glance
 
-  rjil::profile { 'glance': }
-
   # ensure that we don't even try to configure the
   # database connection until the service is up
   ensure_resource( 'rjil::service_blocker', 'mysql', {})
