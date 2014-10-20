@@ -14,3 +14,9 @@ rjil::haproxy::openstack::keystone_internal_ips: "%{lookup_array('services::keys
 rjil::haproxy::openstack::glance_ips: "%{lookup_array('services::glance::eth2')}"
 
 rjil::keystone::public_address: "%{ipaddress_eth2}"
+
+rjil::ceph::storage_cluster_if: eth2
+rjil::ceph::public_if: eth2
+rjil::ceph::osd::autogenerate: true
+rjil::ceph::osd::autodisk_size: 50
+rjil::ceph::osd::osd_journal_size: 2
