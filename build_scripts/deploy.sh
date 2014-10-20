@@ -1,6 +1,5 @@
 #!/bin/bash -xe
 
-
 . ${env_file:-/var/lib/jenkins/cloud.${env}.env}
 
 if ! [ -e venv ]
@@ -35,6 +34,8 @@ fi
 cat <<EOF >userdata.txt
 #!/bin/bash
 release="\$(lsb_release -cs)"
+export no_proxy="127.0.0.1,localhost,consul"
+echo no_proxy="'127.0.0.1,localhost,consul'" >> /etc/environment
 if [ -n "${env_http_proxy}" ]
 then
 	export http_proxy=${env_http_proxy}
@@ -52,6 +53,22 @@ wget -O jiocloud.deb http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${relea
 dpkg -i puppet.deb jiocloud.deb
 apt-get update
 apt-get install -y puppet software-properties-common puppet-jiocloud
+### XXX These two lines need to go away:
+apt-get install -y python-glanceclient
+sed -i -e s/eth0/eth2/g /etc/puppet/hiera/data/env/staging.yaml 
+sed -i -e '2i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' /usr/local/bin/maybe-upgrade.sh
+cat <<EOF2 >> /etc/puppet/hiera/data/env/staging.yaml 
+rjil::ceph::storage_cluster_if: eth2
+rjil::ceph::public_if: eth2
+rjil::ceph::osd::autogenerate: true
+rjil::ceph::osd::autodisk_size: 50
+rjil::ceph::osd::osd_journal_size: 2
+EOF2
+cat <<EOF2 >> /etc/puppet/hiera/data/role_env/etcd-staging.yaml 
+ntp::servers:
+  - 10.135.121.138
+  - 10.135.121.107
+EOF2
 if [ -n "${puppet_modules_source_repo}" ]; then
   apt-get install -y git
   git clone ${puppet_modules_source_repo} /tmp/rjil
@@ -87,16 +104,16 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
 
-python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml userdata.txt
+time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml userdata.txt
 
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_test${BUILD_NUMBER})
 
-$timeout 1200 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} ping; do sleep 5; done"
+time $timeout 1200 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} ping; do sleep 5; done"
 
-$timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
+time $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
 
-$timeout 1200 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
-$timeout 1000 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 1800 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 2400 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
 # make sure that there are not any failures
 if ! python -m jiocloud.orchestrate --host ${ip} get_failures; then
   echo "Failures occurred"

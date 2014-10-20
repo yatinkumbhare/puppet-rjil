@@ -7,6 +7,8 @@ class rjil::test::glance(
 
   include rjil::test::base
 
+  ensure_resource('package', 'python-glanceclient')
+
   file { "/usr/lib/jiocloud/tests/glance-api.sh":
     source => "puppet:///modules/rjil/tests/glance-api.sh",
     owner  => 'root',
