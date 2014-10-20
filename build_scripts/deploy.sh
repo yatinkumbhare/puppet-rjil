@@ -2,6 +2,8 @@
 
 . ${env_file:-/var/lib/jenkins/cloud.${env}.env}
 
+project_tag=${project_tag:-test${BUILD_NUMBER}}
+
 if ! [ -e venv ]
 then
     virtualenv venv
@@ -92,15 +94,15 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
 
-time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml userdata.txt
+time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} environment/cloud.${env}.yaml userdata.txt
 
-ip=$(python -m jiocloud.utils get_ip_of_node etcd1_test${BUILD_NUMBER})
+ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag})
 
 time $timeout 1200 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} ping; do sleep 5; done"
 
 time $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
 
-time $timeout 1800 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=test${BUILD_NUMBER} environment/cloud.${env}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 1800 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/cloud.${env}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
 time $timeout 2400 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
 # make sure that there are not any failures
 if ! python -m jiocloud.orchestrate --host ${ip} get_failures; then
