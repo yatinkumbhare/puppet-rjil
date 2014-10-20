@@ -57,18 +57,6 @@ apt-get install -y puppet software-properties-common puppet-jiocloud
 apt-get install -y python-glanceclient
 sed -i -e s/eth0/eth2/g /etc/puppet/hiera/data/env/staging.yaml 
 sed -i -e '2i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' /usr/local/bin/maybe-upgrade.sh
-cat <<EOF2 >> /etc/puppet/hiera/data/env/staging.yaml 
-rjil::ceph::storage_cluster_if: eth2
-rjil::ceph::public_if: eth2
-rjil::ceph::osd::autogenerate: true
-rjil::ceph::osd::autodisk_size: 50
-rjil::ceph::osd::osd_journal_size: 2
-EOF2
-cat <<EOF2 >> /etc/puppet/hiera/data/role_env/etcd-staging.yaml 
-ntp::servers:
-  - 10.135.121.138
-  - 10.135.121.107
-EOF2
 if [ -n "${puppet_modules_source_repo}" ]; then
   apt-get install -y git
   git clone ${puppet_modules_source_repo} /tmp/rjil
