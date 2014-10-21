@@ -68,7 +68,8 @@ class rjil::jiocloud::undercloud(
   class { '::mysql::server':
     root_password    => $mysql_root_password,
     override_options => {
-      'mysqld' => { 'bind-address' => '0.0.0.0' }
+      'mysqld' => { 'bind-address' => '0.0.0.0',
+                    'max_connections' => 500 }
     }
   }
 

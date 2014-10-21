@@ -1,0 +1,4 @@
+rjil::jiocloud::consul_role: bootstrapserver
+rjil::system::ntp::server: true
+ntp::servers:
+  - pool.ntp.org

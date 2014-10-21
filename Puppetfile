@@ -150,3 +150,7 @@ mod 'solarkennedy/consul',
 
 mod 'jiocloud/openstack_zeromq',
   :git => "#{base_url}/jiocloud/puppet-openstack_zeromq"
+
+mod 'jtopjian/apt_mirror',
+  :git => "#{base_url}/jtopjian/puppet-apt_mirror",
+  :ref => 'origin/master'

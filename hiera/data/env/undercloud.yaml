@@ -1,0 +1,17 @@
+rjil::db::bind_address: "%{ipaddress_br_ctlplane}"
+
+keystone::admin_bind_host: "%{ipaddress_br_ctlplane}"
+keystone::public_bind_host: "%{ipaddress_br_ctlplane}"
+
+glance::bind_host: "%{ipaddress_br_ctlplane}"
+#glance::registry::bind_host: "%{ipaddress_eth0}"
+
+rjil::jiocloud::etcd::addr: "%{ipaddress_br_ctlplane}:4001"
+rjil::jiocloud::etcd::peer_addr: "%{ipaddress_br_ctlplane}:7001"
+
+rjil::keystone::public_address: "%{ipaddress_br_ctlplane}"
+
+rjil::ceph::storage_cluster_if: eth2
+rjil::ceph::public_if: eth2
+rjil::ceph::osd::autodetect: true
+rjil::ceph::osd::osd_journal_size: 2
