@@ -193,6 +193,27 @@ rjil::keystone::radosgw::port: 8143
 rjil::keystone::radosgw:region: "%{hiera('region')}"
 rjil::keystone::radosgw::keystone_accepted_roles: ['Member', 'admin', 'swiftoperator']
 
+########### Undercloud
+############################
+
+rjil::jiocloud::undercloud::nova_db_password: 'Bevf3okIn0'
+rjil::jiocloud::undercloud::nova_rabbit_password: 'wErryimFa'
+rjil::jiocloud::undercloud::nova_keystone_password: 'RuHaysIss'
+rjil::jiocloud::undercloud::glance_db_password: 'WupZund3owx'
+rjil::jiocloud::undercloud::glance_rabbit_password: 'Tapvvurc5'
+rjil::jiocloud::undercloud::glance_keystone_password: 'PirlebNeg'
+rjil::jiocloud::undercloud::ironic_db_password: 'LoHisGorn6'
+rjil::jiocloud::undercloud::ironic_rabbit_password: 'boedyawnyoa'
+rjil::jiocloud::undercloud::ironic_keystone_password: 'AyentAjUs'
+rjil::jiocloud::undercloud::neutron_db_password: 'AufsayPygha'
+rjil::jiocloud::undercloud::neutron_rabbit_password: 'CipMavakEed'
+rjil::jiocloud::undercloud::neutron_keystone_password: 'daOwnUt2'
+rjil::jiocloud::undercloud::keystone_db_password: 'InLyHyHakAs'
+rjil::jiocloud::undercloud::keystone_admin_token: 'JobUerepNo'
+rjil::jiocloud::undercloud::keystone_admin_password: 'NoevUjdets'
+rjil::jiocloud::undercloud::mysql_root_password: 'smgefgi'
+rjil::jiocloud::undercloud::verbose: "%{hiera('verbose')}"
+rjil::jiocloud::undercloud::debug: "%{hiera('debug')}"
 
 #########################################
 ###### System configuration #############

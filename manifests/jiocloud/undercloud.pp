@@ -72,11 +72,11 @@ class rjil::jiocloud::undercloud(
     }
   }
 
-  class { 'rabbitmq': }
+  class { '::rabbitmq': }
 
 
   # OpenStack components
-  class { 'nova':
+  class { '::nova':
     verbose            => $verbose,
     debug              => $debug,
     sql_connection     => "mysql://${nova_db_user}:${nova_db_password}@${::ipaddress}/${nova_db_name}?charset=utf8",
@@ -88,31 +88,31 @@ class rjil::jiocloud::undercloud(
     mysql_module       => 2.2,
   }
 
-  class { 'nova::compute':
+  class { '::nova::compute':
     enabled => true,
   }
 
-  class { 'nova::conductor':
+  class { '::nova::conductor':
     enabled => true,
   }
 
-  class { 'nova::scheduler':
+  class { '::nova::scheduler':
     enabled => true,
   }
 
-  class { 'nova::api':
+  class { '::nova::api':
     enabled        => true,
     admin_password => $nova_keystone_password,
   }
 
-  class { 'nova::compute::ironic':
+  class { '::nova::compute::ironic':
     keystone_user     => $ironic_keystone_user,
     keystone_tenant   => $keystone_service_tenant,
     keystone_password => $ironic_keystone_password,
     keystone_url      => "http://${::ipaddress}:35357/v2.0/",
   }
 
-  class { 'nova::network::neutron':
+  class { '::nova::network::neutron':
     neutron_admin_password    => $neutron_keystone_password,
     neutron_url               => "http://${::ipaddress}:9696/",
     neutron_admin_tenant_name => $keystone_service_tenant,
@@ -120,9 +120,9 @@ class rjil::jiocloud::undercloud(
     neutron_region_name       => $region_name,
   }
 
-  class { 'glance': }
+  class { '::glance': }
 
-  class { 'glance::api':
+  class { '::glance::api':
     verbose           => $verbose,
     debug             => $debug,
     keystone_tenant   => $keystone_service_tenant,
@@ -132,7 +132,7 @@ class rjil::jiocloud::undercloud(
     mysql_module      => 2.2,
   }
 
-  class { 'glance::registry':
+  class { '::glance::registry':
     verbose           => $verbose,
     debug             => $debug,
     keystone_tenant   => $keystone_service_tenant,
@@ -142,9 +142,9 @@ class rjil::jiocloud::undercloud(
     mysql_module      => 2.2,
   }
 
-  class { 'glance::backend::file': }
+  class { '::glance::backend::file': }
 
-  class { 'ironic':
+  class { '::ironic':
     verbose             => $verbose,
     debug               => $debug,
     database_connection => "mysql://${ironic_db_user}:${ironic_db_password}@${::ipaddress}/${ironic_db_name}",
@@ -152,21 +152,21 @@ class rjil::jiocloud::undercloud(
     rabbit_password     => $ironic_rabbit_password,
     rabbit_virtual_host => '/',
     rabbit_hosts        => ["${::ipaddress}:5672"],
-    neutron_url         => "http://${::ipaddress}:9696/",
+#   neutron_url         => "http://${::ipaddress}:9696/",
     glance_api_servers  => "${::ipaddress}:9292",
     glance_api_insecure => true,
-    mysql_module        => 2.2,
+#    mysql_module        => 2.2,
   }
 
-  class { 'ironic::api':
+  class { '::ironic::api':
     admin_password => $ironic_keystone_password,
   }
 
-  class { 'ironic::conductor': }
+  class { '::ironic::conductor': }
 
-  class { 'ironic::drivers::ipmi': }
+  class { '::ironic::drivers::ipmi': }
 
-  class { 'neutron':
+  class { '::neutron':
     enabled         => true,
     bind_host       => $::ipaddress,
     rabbit_host     => $::ipaddress,
@@ -176,7 +176,7 @@ class rjil::jiocloud::undercloud(
     debug           => $debug,
   }
 
-  class { 'neutron::server':
+  class { '::neutron::server':
     auth_host           => $::ipaddress,
     auth_password       => $neutron_keystone_password,
     database_connection => "mysql://${neutron_db_user}:${neutron_db_password}@${::ipaddress}/${neutron_db_name}?charset=utf8",
@@ -184,12 +184,12 @@ class rjil::jiocloud::undercloud(
     require             => File['/etc/default/neutron-server']
   }
 
-  class { 'neutron::agents::ovs':
+  class { '::neutron::agents::ovs':
     local_ip         => $::ipaddress,
     enable_tunneling => true,
   }
 
-  class { 'neutron::plugins::ovs':
+  class { '::neutron::plugins::ovs':
     tenant_network_type => 'vlan',
     network_vlan_ranges => 'ctlplane',
   }
@@ -198,13 +198,13 @@ class rjil::jiocloud::undercloud(
     'OVS/bridge_mappings':   value => 'ctlplane:br-ctlplane';
   }
 
-  class { 'neutron::agents::dhcp':
+  class { '::neutron::agents::dhcp':
     require => File['/etc/init/neutron-plugin-openvswitch-agent.conf']
   }
 
-  class { 'neutron::agents::l3': } # Is this needed at all? I don't think so. - Soren
+  class { '::neutron::agents::l3': } # Is this needed at all? I don't think so. - Soren
 
-  class { 'keystone':
+  class { '::keystone':
     verbose        => $verbose,
     debug          => $debug,
     catalog_type   => 'sql',
@@ -213,7 +213,7 @@ class rjil::jiocloud::undercloud(
     mysql_module   => 2.2,
   }
 
-  class { 'keystone::endpoint':
+  class { '::keystone::endpoint':
     public_url       => "http://${::ipaddress}:5000/",
     admin_url        => "http://${::ipaddress}:35357/",
     internal_url     => "http://${::ipaddress}:5000/",
@@ -221,45 +221,44 @@ class rjil::jiocloud::undercloud(
   }
 
   # Databases
-  class { 'nova::db::mysql':
+  class { '::nova::db::mysql':
     password      => $nova_db_password,
     host          => $::ipaddress,
     allowed_hosts => '%',
     mysql_module  => 2.2,
   }
 
-  class { 'glance::db::mysql':
+  class { '::glance::db::mysql':
     password      => $glance_db_password,
     host          => $::ipaddress,
     allowed_hosts => '%',
     mysql_module  => 2.2,
   }
 
-  class { 'ironic::db::mysql':
+  class { '::ironic::db::mysql':
     dbname        => $ironic_db_name,
     user          => $ironic_db_user,
     password      => $ironic_db_password,
     host          => $::ipaddress,
     allowed_hosts => '%',
     charset       => 'utf8',
-    mysql_module  => 2.2,
   }
 
-  class { 'neutron::db::mysql':
+  class { '::neutron::db::mysql':
     password      => $neutron_db_password,
     host          => $::ipaddress,
     allowed_hosts => '%',
     mysql_module  => 2.2,
   }
 
-  class { 'keystone::db::mysql':
+  class { '::keystone::db::mysql':
     password      => $keystone_db_password,
     allowed_hosts => '%',
     mysql_module  => 2.2,
   }
 
   # Keystone service users
-  class { 'nova::keystone::auth':
+  class { '::nova::keystone::auth':
     password         => $nova_keystone_password,
     email            => $keystone_service_email,
     public_address   => $::ipaddress,
@@ -268,7 +267,7 @@ class rjil::jiocloud::undercloud(
     region           => $region_name,
   }
 
-  class { 'glance::keystone::auth':
+  class { '::glance::keystone::auth':
     password         => $glance_keystone_password,
     email            => $keystone_service_email,
     public_address   => $::ipaddress,
@@ -277,7 +276,7 @@ class rjil::jiocloud::undercloud(
     region           => $region_name,
   }
 
-  class { 'ironic::keystone::auth':
+  class { '::ironic::keystone::auth':
     password         => $ironic_keystone_password,
     email            => $keystone_service_email,
     public_address   => $::ipaddress,
@@ -286,7 +285,7 @@ class rjil::jiocloud::undercloud(
     region           => $region_name,
   }
 
-  class { 'neutron::keystone::auth':
+  class { '::neutron::keystone::auth':
     password         => $neutron_keystone_password,
     email            => $keystone_service_email,
     public_address   => $::ipaddress,
@@ -296,7 +295,7 @@ class rjil::jiocloud::undercloud(
   }
 
   # Misc. OpenStack resources
-  class { 'keystone::roles::admin':
+  class { '::keystone::roles::admin':
     email        => $keystone_admin_email,
     password     => $keystone_admin_password,
   }
