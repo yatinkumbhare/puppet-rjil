@@ -53,7 +53,7 @@ class rjil::openstack_zeromq (
                         $cinder_scheduler_nodes,
                         $nova_scheduler_nodes,
                         $nova_consoleauth_nodes,
-                        $nova_conductor_node,
+                        $nova_conductor_nodes,
                         $nova_cert_nodes
                         )
 
