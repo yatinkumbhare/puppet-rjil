@@ -3,22 +3,22 @@
 #
 # == Parameters
 # [*cinder_scheduler_nodes*]
-#   A hash of hostname and ip paires 
+#   A hash of hostname and ip pairs
 #
 # [*cinder_volume_nodes*]
-#   A hash of hostname and ip paires 
+#   A hash of hostname and ip pairs
 #
 # [*nova_scheduler_nodes*]
-#   A hash of hostname and ip paires 
+#   A hash of hostname and ip pairs
 #
 # [*nova_consoleauth_nodes*]
-#   A hash of hostname and ip paires 
+#   A hash of hostname and ip pairs
 #
 # [*nova_conductor_nodes*]
-#   A hash of hostname and ip paires 
+#   A hash of hostname and ip pairs
 #
 # [*nova_cert_nodes*]
-#   A hash of hostname and ip paires 
+#   A hash of hostname and ip pairs
 #
 # == Action
 #   1. Resolve srv records for the names given,
@@ -34,24 +34,13 @@
 
 
 class rjil::openstack_zeromq (
-  $cinder_scheduler_nodes = service_discover_dns('cinder-scheduler.service.consul','both'),
-  $cinder_volume_nodes    = service_discover_dns('cinder-volume.service.consul','both'),
-  $nova_scheduler_nodes   = service_discover_dns('nova-scheduler.service.consul','both'),
-  $nova_consoleauth_nodes = service_discover_dns('nova-consoleauth.service.consul','both'),
-  $nova_conductor_nodes   = service_discover_dns('nova-conductor.service.consul','both'),
-  $nova_cert_nodes        = service_discover_dns('nova-cert.service.consul','both'),
+  $cinder_scheduler_nodes = service_discover_consul('cinder-scheduler'),
+  $cinder_volume_nodes    = service_discover_consul('cinder-volume'),
+  $nova_scheduler_nodes   = service_discover_consul('nova-scheduler'),
+  $nova_consoleauth_nodes = service_discover_consul('nova-consoleauth'),
+  $nova_conductor_nodes   = service_discover_consul('nova-conductor'),
+  $nova_cert_nodes        = service_discover_consul('nova-cert'),
 ) {
-
-  ##
-  # matchmaker entry must be matching hostname (output of hostname -s)
-  # So getting a hash of node fqdn and IP address from consul,
-  # Add /etc/hosts entries with fqdn and hostname, so the name will be resolved.
-  # (e.g if fqdn is node1.example.com, a host entry created as below.
-  #   10.1.1.1 node1.example.com node1
-  ##
-  # Resolve the SRV record and get a hash of name (fqdn) and IP address)
-  ##
-
 
   ##
   # Add hosts entries. This is required because zmq receiver need matchmaker
@@ -60,12 +49,15 @@ class rjil::openstack_zeromq (
   # to the system by zmq driver.
   ##
 
-  easy_host($cinder_volume_nodes)
-  easy_host($cinder_scheduler_nodes)
-  easy_host($nova_scheduler_nodes)
-  easy_host($nova_consoleauth_nodes)
-  easy_host($nova_conductor_nodes)
-  easy_host($nova_cert_nodes)
+  $merged_hosts = merge($cinder_volume_nodes,
+                        $cinder_scheduler_nodes,
+                        $nova_scheduler_nodes,
+                        $nova_consoleauth_nodes,
+                        $nova_conductor_node,
+                        $nova_cert_nodes
+                        )
+
+  easy_host($merged_hosts)
 
   ##
   # Extract hostname part from fqdn, which will be used to generate matchmaker
