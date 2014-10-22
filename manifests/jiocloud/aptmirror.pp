@@ -6,8 +6,9 @@ class rjil::jiocloud::aptmirror {
   apt_mirror::mirror { 'ubuntu':
     mirror     => 'archive.ubuntu.com',
     os         => 'ubuntu',
-    release    => ['trusty'],
+    release    => ['trusty', 'trustry-updates', 'trusty-security'],
     components => ['main', 'universe', 'restricted', 'multiverse'],
+    source     => true,
   }
 
   apt_mirror::mirror { 'rustedhalo':
@@ -15,5 +16,6 @@ class rjil::jiocloud::aptmirror {
     os         => 'ubuntu',
     release    => ['trusty'],
     components => ['main'],
+    source     => true,
   }
 }
