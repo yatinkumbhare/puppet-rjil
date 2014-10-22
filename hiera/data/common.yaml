@@ -148,9 +148,9 @@ rjil::keystone::ssl: false
 rjil::keystone::protocol: http
 rjil::keystone::version: v2.0
 rjil::keystone::admin_email: "%{hiera('admin_email')}"
-rjil::keystone::public_port: 80
+rjil::keystone::public_port: 5000
 rjil::keystone::public_port_internal: "%{hiera('keystone::public_port')}"
-rjil::keystone::admin_port: 81
+rjil::keystone::admin_port: 35357
 rjil::keystone::admin_port_internal: "%{hiera('keystone::admin_port')}"
 rjil::keystone::public_address: "%{hiera('public_address')}"
 keystone::roles::admin::email: "%{hiera('admin_email')}"

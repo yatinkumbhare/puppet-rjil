@@ -1,3 +1,6 @@
+rjil::system::accounts::active_users: [soren,bodepd,hkumar]
+rjil::system::accounts::sudo_users: [soren,bodepd,hkumar]
+
 rjil::db::bind_address: "%{ipaddress_br_ctlplane}"
 
 keystone::admin_bind_host: "%{ipaddress_br_ctlplane}"

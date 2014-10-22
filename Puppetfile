@@ -152,5 +152,9 @@ mod 'jiocloud/openstack_zeromq',
   :git => "#{base_url}/jiocloud/puppet-openstack_zeromq"
 
 mod 'jtopjian/apt_mirror',
-  :git => "#{base_url}/jtopjian/puppet-apt_mirror",
-  :ref => 'origin/master'
+  :git => "#{base_url}/sorenh/puppet-apt_mirror",
+  :ref => 'origin/sourcemirror'
+
+mod 'rtyler/jenkins',
+  :git => "#{base_url}/jenkinsci/puppet-jenkins",
+  :ref => 'v1.2.0'

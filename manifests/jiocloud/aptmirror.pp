@@ -6,7 +6,7 @@ class rjil::jiocloud::aptmirror {
   apt_mirror::mirror { 'ubuntu':
     mirror     => 'archive.ubuntu.com',
     os         => 'ubuntu',
-    release    => ['trusty', 'trustry-updates', 'trusty-security'],
+    release    => ['trusty', 'trusty-updates', 'trusty-security'],
     components => ['main', 'universe', 'restricted', 'multiverse'],
     source     => true,
   }
@@ -17,5 +17,26 @@ class rjil::jiocloud::aptmirror {
     release    => ['trusty'],
     components => ['main'],
     source     => true,
+  }
+
+  apt_mirror::mirror { 'jenkins':
+    mirror     => 'pkg.jenkins-ci.org',
+    os         => 'debian',
+    release    => ['binary/'],
+    components => [],
+  }
+
+  file { '/var/spool/apt-mirror/snapshots':
+    ensure => 'directory',
+    owner  => 'jenkins',
+  } ->
+  file { '/var/spool/apt-mirror/snapshots/snapshot.sh':
+    owner  => 'jenkins',
+	mode   => '0755',
+	source => 'puppet:///modules/rjil/snapshot.sh'
+  }
+
+  ::sudo::conf { 'jenkins-mirror':
+    content  => "#Managed By Puppet\njenkins ALL=(ALL) NOPASSWD: /usr/bin/apt-mirror /etc/apt/mirror.list",
   }
 }
