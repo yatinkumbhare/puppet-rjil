@@ -36,6 +36,13 @@ class rjil::jiocloud::aptmirror {
 	source => 'puppet:///modules/rjil/snapshot.sh'
   }
 
+  include ::apache
+
+  apache::vhost { 'snapshots.internal.jiocloud.com':
+    port => '80',
+	docroot => '/var/spool/apt-mirror/snapshots'
+  }
+
   ::sudo::conf { 'jenkins-mirror':
     content  => "#Managed By Puppet\njenkins ALL=(ALL) NOPASSWD: /usr/bin/apt-mirror /etc/apt/mirror.list",
   }
