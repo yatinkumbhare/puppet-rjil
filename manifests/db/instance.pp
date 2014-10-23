@@ -1,12 +1,12 @@
 ## This is to create databases, users, and grants
 define rjil::db::instance (
-  $db,
-  $pass = $db,
-  $user = $db,
+  $pass,
+  $db   = $name,
+  $user = $name,
   $grant = ['ALL'],
   $ensure = 'present',
   $charset = 'utf8',
-  $table = "${db}.*",
+  $table = "${name}.*",
 ) {
   ## Create databases
   mysql_database { $db:

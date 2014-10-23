@@ -3,12 +3,19 @@
 ###################################
 
 rjil::db::bind_address: "%{hiera('private_address')}"
-rjil::db::mysql_datadir: /data
 rjil::db::dbs:
-  novadb: { db: "%{hiera('rjil::openstack::nova_db_name')}", user: "%{hiera('rjil::openstack::nova_db_user')}", pass: "%{hiera('rjil::openstack::nova_db_password')}" }
-  keystonedb: { db: "%{hiera('rjil::openstack::keystone_db_name')}", user: "%{hiera('rjil::openstack::keystone_db_user')}", pass: "%{hiera('rjil::openstack::keystone_db_password')}" }
-  cinderdb: { db: "%{hiera('rjil::openstack::cinder_db_name')}", user: "%{hiera('rjil::openstack::cinder_db_user')}", pass: "%{hiera('rjil::openstack::cinder_db_password')}" }
-  glancedb: { db: "%{hiera('rjil::openstack::glance_db_name')}", user: "%{hiera('rjil::openstack::glance_db_user')}", pass: "%{hiera('rjil::openstack::glance_db_password')}" }
+  nova:
+    user: "%{hiera('nova_db_user')}"
+    pass: "%{hiera('nova_db_password')}"
+  keystone:
+    user: "%{hiera('keystone_db_user')}"
+    pass: "%{hiera('keystone_db_password')}"
+  cinder:
+    user: "%{hiera('cinder_db_user')}"
+    pass: "%{hiera('cinder_db_password')}"
+  glance:
+    user: "%{hiera('glance_db_user')}"
+    pass: "%{hiera('glance_db_password')}"
 
 # Gets overridden for ocdb role
 rjil::keystone::disable_db_sync: true
@@ -31,19 +38,6 @@ glance_internal_address: real.glance.service.consul
 
 cinder_public_address: lb.cinder.service.consul
 cinder_internal_address: real.cinder.service.consul
-
-rjil::openstack::keystone_db_user: "%{hiera('keystone_db_user')}"
-rjil::openstack::keystone_db_password: "%{hiera('keystone_db_password')}"
-rjil::openstack::keystone_db_name: keystone
-rjil::openstack::glance_db_user: "%{hiera('glance_db_user')}"
-rjil::openstack::glance_db_password: "%{hiera('glance_db_password')}"
-rjil::openstack::glance_db_name: glance
-rjil::openstack::nova_db_user: "%{hiera('nova_db_user')}"
-rjil::openstack::nova_db_password: "%{hiera('nova_db_password')}"
-rjil::openstack::nova_db_name: nova
-rjil::openstack::cinder_db_user: "%{hiera('cinder_db_user')}"
-rjil::openstack::cinder_db_password: "%{hiera('cinder_db_password')}"
-rjil::openstack::cinder_db_name: cinder
 
 ########### Openstack Common config
 ###################################
@@ -231,7 +225,6 @@ rjil::system::apt::enable_rustedhalo: true
 rabbitmq::manage_repos: false
 rabbitmq::admin_enable: false
 
-
 ###########################################
 ############ Ceph Configuration ###########
 ###########################################
@@ -243,7 +236,6 @@ rabbitmq::admin_enable: false
 
 ## fsid: unique uuid
 rjil::ceph::fsid: fac04d85-db48-4564-b821-deebda046261
-
 
 rjil::ceph::storage_cluster_if: "%{hiera('private_interface')}"
 rjil::ceph::public_if: "%{hiera('public_interface')}"
