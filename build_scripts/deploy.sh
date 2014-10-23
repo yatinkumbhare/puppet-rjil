@@ -8,6 +8,7 @@ if ! [ -e venv ]
 then
     virtualenv venv
     . venv/bin/activate
+	pip install -U pip
     pip install -e git+https://github.com/JioCloud/python-jiocloud#egg=jiocloud
     deactivate
 fi
