@@ -15,6 +15,8 @@ class rjil::jiocloud::jenkins {
                'pkg-config',
                'bundler',
                'libxml2-utils',
+               'build-essential',
+               'libffi-dev',
                'python-virtualenv']
 
   package { $packages:
