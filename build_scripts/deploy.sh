@@ -1,5 +1,11 @@
 #!/bin/bash -xe
 
+if [ -z "${env}" ]
+then
+    echo '$env must be defined'
+    exit 1
+fi
+
 # Load credentials (openrc style)
 . ${env_file:-/var/lib/jenkins/cloud.${env}.env}
 
