@@ -9,6 +9,7 @@ class rjil::jiocloud::jenkins::master {
     "external-monitor-job":      version => "1.2";
     "git-client":                version => "1.11.0";
     "git":                       version => "2.2.7";
+    "greenballs":                version => "1.14";
     "javadoc":                   version => "1.2";
     "junit":                     version => "1.1";
     "ldap":                      version => "1.11";
@@ -19,6 +20,7 @@ class rjil::jiocloud::jenkins::master {
     "maven-plugin":              version => "2.7";
     "antisamy-markup-formatter": version => "1.2";
     "pam-auth":                  version => "1.2";
+    "parameterized-trigger":     version => "2.25";
     "scm-api":                   version => "0.2";
     "ssh-credentials":           version => "1.10";
     "ssh-slaves":                version => "1.8";
