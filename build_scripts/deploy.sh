@@ -5,11 +5,14 @@
 
 # Load map from generic image, flavor and network names to
 # cloud specific ids
-if [ -e "environment/${env}.map.yaml" ]
+if [ -n "${mapping}" ]
 then
-	default_mapping="environment/${env}.map.yaml"
+	mappings_arg="--mappings=${mapping}"
+elif [ -e "environment/${env}.map.yaml" ]
+then
+	mappings_arg="--mapping=senvironment/${env}.map.yaml"
 else
-	default_mapping="/dev/null"
+	mappings_arg=""
 fi
 
 project_tag=${project_tag:-test${BUILD_NUMBER}}
@@ -102,7 +105,7 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
 
-time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} --mappings="${mapping:-${default_mapping}}" environment/${layout:-full}.yaml userdata.txt
+time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
 
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag})
 
