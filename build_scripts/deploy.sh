@@ -21,8 +21,13 @@ if ! [ -e venv ]
 then
     virtualenv venv
     . venv/bin/activate
-	pip install -U pip
-    pip install -e git+https://github.com/JioCloud/python-jiocloud#egg=jiocloud
+    # This can go away with the next release of Pip (which will include a
+    # version of python-requests newer than 2.4.0.)
+    pip install -e git+http://github.com/pypa/pip#egg=pip
+
+    # This speeds the whole process up *a lot*
+    pip install pip-accel
+    pip-accel install -e git+https://github.com/JioCloud/python-jiocloud#egg=jiocloud
     deactivate
 fi
 
