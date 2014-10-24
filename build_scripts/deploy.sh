@@ -27,7 +27,7 @@ then
 
     # This speeds the whole process up *a lot*
     pip install pip-accel
-    pip-accel install -e git+https://github.com/JioCloud/python-jiocloud#egg=jiocloud
+    pip-accel install -e git+https://github.com/sorenh/python-jiocloud@mapping#egg=jiocloud
     deactivate
 fi
 
