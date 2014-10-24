@@ -1,6 +1,16 @@
 #!/bin/bash -xe
 
+# Load credentials (openrc style)
 . ${env_file:-/var/lib/jenkins/cloud.${env}.env}
+
+# Load map from generic image, flavor and network names to
+# cloud specific ids
+if [ -e "environment/${env}.map.yaml" ]
+then
+	default_mapping="environment/${env}.map.yaml"
+else
+	default_mapping="/dev/null"
+fi
 
 project_tag=${project_tag:-test${BUILD_NUMBER}}
 
@@ -19,6 +29,8 @@ fi
 # the timeout function just incase it happens to be gtimeout
 timeout=${timeout_command:-timeout}
 
+# If these aren't yet set (from credentials file, typically),
+# create new ones.
 if [ -z "${etcd_discovery_token}" ]
 then
     etcd_discovery_token=$(python -m jiocloud.orchestrate new_discovery_token)
@@ -27,11 +39,6 @@ fi
 if [ -z "${consul_discovery_token}" ]
 then
     consul_discovery_token=$(curl http://consuldiscovery.linux2go.dk/new)
-fi
-
-if [ -z "${env}" ]
-then
-    env='acceptance'
 fi
 
 cat <<EOF >userdata.txt
@@ -95,7 +102,7 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
 
-time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} environment/cloud.${env}.yaml userdata.txt
+time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} --mappings="${mapping:-${default_mapping}}" environment/${layout:-full}.yaml userdata.txt
 
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag})
 
@@ -105,6 +112,7 @@ time $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o Strict
 
 time $timeout 2400 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/cloud.${env}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
 time $timeout 2400 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
+
 # make sure that there are not any failures
 if ! python -m jiocloud.orchestrate --host ${ip} get_failures; then
   echo "Failures occurred"
