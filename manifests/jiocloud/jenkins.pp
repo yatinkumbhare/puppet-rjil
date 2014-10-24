@@ -22,4 +22,6 @@ class rjil::jiocloud::jenkins {
   package { $packages:
     ensure => 'installed'
   }
+
+  include rjil::jiocloud::jenkins::cloudenvs
 }
