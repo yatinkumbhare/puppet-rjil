@@ -1,5 +1,5 @@
 rjil::jiocloud::consul_role: bootstrapserver
 # etcd serves as the ntp server
 rjil::system::ntp::server: true
-ntp::servers:
-  - pool.ntp.org
+
+ntp::servers: "%{lookup_array('upstream_ntp_servers')}"

@@ -9,7 +9,6 @@
   - user
   - services
   - "secrets/%{env}"
-  - "role_env/%{jiocloud_role}-%{env}"
   - "role/%{jiocloud_role}"
   - "env/%{env}"
   - "secrets/common"
