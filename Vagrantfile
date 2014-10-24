@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
   # which effect the hiera hierarchy and the
   # cloud file that is used
   environment = ENV['env'] || 'vagrant'
+  layout = ENV['layout'] || 'full'
 
 
   config.vm.provider :virtualbox do |vb, override|
@@ -20,7 +21,7 @@ Vagrant.configure("2") do |config|
   end
 
   last_octet = 41
-  env_data = YAML.load_file("environment/cloud.#{environment}.yaml")
+  env_data = YAML.load_file("environment/#{layout}.yaml")
 
   machines = {}
   env_data['resources'].each do |name, info|
