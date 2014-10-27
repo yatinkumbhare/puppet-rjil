@@ -1,6 +1,25 @@
 #!/bin/bash -xe
 
+if [ -z "${env}" ]
+then
+    echo '$env must be defined'
+    exit 1
+fi
+
+# Load credentials (openrc style)
 . ${env_file:-/var/lib/jenkins/cloud.${env}.env}
+
+# Load map from generic image, flavor and network names to
+# cloud specific ids
+if [ -n "${mapping}" ]
+then
+	mappings_arg="--mappings=${mapping}"
+elif [ -e "environment/${env}.map.yaml" ]
+then
+	mappings_arg="--mappings=environment/${env}.map.yaml"
+else
+	mappings_arg=""
+fi
 
 project_tag=${project_tag:-test${BUILD_NUMBER}}
 
@@ -8,8 +27,13 @@ if ! [ -e venv ]
 then
     virtualenv venv
     . venv/bin/activate
-	pip install -U pip
-    pip install -e git+https://github.com/JioCloud/python-jiocloud#egg=jiocloud
+    # This can go away with the next release of Pip (which will include a
+    # version of python-requests newer than 2.4.0.)
+    pip install -e git+http://github.com/pypa/pip#egg=pip
+
+    # This speeds the whole process up *a lot*
+    pip install pip-accel
+    pip-accel install -e git+https://github.com/JioCloud/python-jiocloud#egg=jiocloud
     deactivate
 fi
 
@@ -19,6 +43,8 @@ fi
 # the timeout function just incase it happens to be gtimeout
 timeout=${timeout_command:-timeout}
 
+# If these aren't yet set (from credentials file, typically),
+# create new ones.
 if [ -z "${etcd_discovery_token}" ]
 then
     etcd_discovery_token=$(python -m jiocloud.orchestrate new_discovery_token)
@@ -27,11 +53,6 @@ fi
 if [ -z "${consul_discovery_token}" ]
 then
     consul_discovery_token=$(curl http://consuldiscovery.linux2go.dk/new)
-fi
-
-if [ -z "${env}" ]
-then
-    env='acceptance'
 fi
 
 cat <<EOF >userdata.txt
@@ -95,7 +116,7 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
 
-time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} environment/cloud.${env}.yaml userdata.txt
+time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
 
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag})
 
@@ -103,8 +124,9 @@ time $timeout 1200 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} 
 
 time $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
 
-time $timeout 2400 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/cloud.${env}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 2400 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/${layout:-full}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
 time $timeout 2400 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
+
 # make sure that there are not any failures
 if ! python -m jiocloud.orchestrate --host ${ip} get_failures; then
   echo "Failures occurred"

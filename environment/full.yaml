@@ -1,0 +1,38 @@
+resources:
+  etcd:
+    number: 1
+    flavor: small
+    image: trusty
+    networks: default
+    assign_floating_ip: true
+  haproxy:
+    number: 1
+    flavor: small
+    image: trusty
+    networks: default
+    assign_floating_ip: true
+  oc:
+    number: 2
+    flavor: small
+    image: trusty
+    networks: default
+  ocdb:
+    number: 1
+    flavor: medium
+    image: trusty
+    networks: default
+  ct:
+    number: 1
+    flavor: medium
+    image: trusty
+    networks: default
+  stmonleader:
+    number: 1
+    flavor: medium
+    image: trusty
+    networks: default
+  stmon:
+    number: 2
+    flavor: medium
+    image: trusty
+    networks: default
