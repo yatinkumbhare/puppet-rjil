@@ -16,7 +16,7 @@ then
 	mappings_arg="--mappings=${mapping}"
 elif [ -e "environment/${env}.map.yaml" ]
 then
-	mappings_arg="--mapping=senvironment/${env}.map.yaml"
+	mappings_arg="--mappings=environment/${env}.map.yaml"
 else
 	mappings_arg=""
 fi
