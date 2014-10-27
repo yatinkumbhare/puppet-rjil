@@ -11,6 +11,14 @@ class rjil::jiocloud::aptmirror {
     source     => true,
   }
 
+  apt_mirror::mirror { 'internal':
+    mirror     => 'jiocloud.rustedhalo.com',
+    os         => 'ubuntu',
+    release    => ['trusty'],
+    components => ['main'],
+    source     => true,
+  }
+
   apt_mirror::mirror { 'rustedhalo':
     mirror     => 'jiocloud.rustedhalo.com',
     os         => 'ubuntu',
