@@ -261,7 +261,7 @@ class rjil::jiocloud::undercloud(
   # Keystone service users
   class { '::nova::keystone::auth':
     password         => $nova_keystone_password,
-    email            => $keystone_service_email,
+    email            => $admin_email,
     public_address   => $::ipaddress,
     admin_address    => $::ipaddress,
     internal_address => $::ipaddress,
@@ -270,7 +270,7 @@ class rjil::jiocloud::undercloud(
 
   class { '::glance::keystone::auth':
     password         => $glance_keystone_password,
-    email            => $keystone_service_email,
+    email            => $admin_email,
     public_address   => $::ipaddress,
     admin_address    => $::ipaddress,
     internal_address => $::ipaddress,
@@ -279,7 +279,7 @@ class rjil::jiocloud::undercloud(
 
   class { '::ironic::keystone::auth':
     password         => $ironic_keystone_password,
-    email            => $keystone_service_email,
+    email            => $admin_email,
     public_address   => $::ipaddress,
     admin_address    => $::ipaddress,
     internal_address => $::ipaddress,
@@ -288,7 +288,7 @@ class rjil::jiocloud::undercloud(
 
   class { '::neutron::keystone::auth':
     password         => $neutron_keystone_password,
-    email            => $keystone_service_email,
+    email            => $admin_email,
     public_address   => $::ipaddress,
     admin_address    => $::ipaddress,
     internal_address => $::ipaddress,
@@ -297,7 +297,7 @@ class rjil::jiocloud::undercloud(
 
   # Misc. OpenStack resources
   class { '::keystone::roles::admin':
-    email        => $keystone_admin_email,
+    email        => $admin_email,
     password     => $keystone_admin_password,
   }
 
@@ -344,33 +344,33 @@ class rjil::jiocloud::undercloud(
     content => template('rjil/undercloud_etc_network_interfaces.tmpl'),
     notify => Exec['network-down']
   } ~>
-  exec { "network-down":
-    command     => "/sbin/ifdown -a",
+  exec { 'network-down':
+    command     => '/sbin/ifdown -a',
     refreshonly => true,
   } ->
-  file { "/etc/network/interfaces":
-    source => "/etc/network/interfaces.new"
+  file { '/etc/network/interfaces':
+    source => '/etc/network/interfaces.new'
   } ~>
-  exec { "network-up":
-    command     => "/sbin/ifup -a",
+  exec { 'network-up':
+    command     => '/sbin/ifup -a',
     refreshonly => true,
   }
 
-  neutron_network { "ctlplane":
-    tenant_name               => "openstack",
-    provider_network_type     => "flat",
-    provider_physical_network => "ctlplane"
+  neutron_network { 'ctlplane':
+    tenant_name               => 'openstack',
+    provider_network_type     => 'flat',
+    provider_physical_network => 'ctlplane'
   }
 
-  neutron_subnet { "ctlplane":
+  neutron_subnet { 'ctlplane':
     cidr             => $ctlplane_cidr,
     ip_version       => '4',
     allocation_pools => ["start=${ctlplane_dhcp_start},end=${ctlplane_dhcp_end}"],
     gateway_ip       => $ctlplane_gateway,
     enable_dhcp      => true,
     host_routes      => ["destination=169.254.169.254/32,nexthop=${::ipaddress}"],
-    network_name     => "ctlplane",
-    tenant_name      => "openstack",
+    network_name     => 'ctlplane',
+    tenant_name      => 'openstack',
   }
 
   file { '/etc/init/neutron-plugin-openvswitch-agent.conf':

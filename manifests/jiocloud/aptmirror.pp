@@ -1,3 +1,6 @@
+#
+# sets up rustedhalo apt mirror
+#
 class rjil::jiocloud::aptmirror {
 
   class { 'apt_mirror':
@@ -41,15 +44,15 @@ class rjil::jiocloud::aptmirror {
   } ->
   file { '/var/spool/apt-mirror/snapshots/snapshot.sh':
     owner  => 'jenkins',
-	  mode   => '0755',
-	  source => 'puppet:///modules/rjil/snapshot.sh'
+    mode   => '0755',
+    source => 'puppet:///modules/rjil/snapshot.sh'
   }
 
   include ::apache
 
   apache::vhost { 'snapshots.internal.jiocloud.com':
-    port => '80',
-	docroot => '/var/spool/apt-mirror/snapshots'
+    port    => '80',
+    docroot => '/var/spool/apt-mirror/snapshots'
   }
 
   ::sudo::conf { 'jenkins-mirror':
