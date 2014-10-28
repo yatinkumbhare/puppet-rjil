@@ -115,6 +115,32 @@ cinder::volume::rbd::volume_tmp_dir: /tmp
 rjil::cinder::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
 rjil::cinder::rbd_user: cinder_volume
 
+########### Nova config
+###################################
+
+nova::api::debug: "%{hiera('debug')}"
+nova::api::verbose: "%{hiera('verbose')}"
+nova::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
+nova::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
+nova::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+nova::api::keystone_password: "%{hiera('nova::keystone::auth::password')}"
+nova::api::database_connection: "mysql://%{hiera('nova_db_user')}:%{hiera('nova_db_password')}@%{hiera('db_host')}/glance"
+nova::api::mysql_module: 2.3
+
+
+########### Ironic config
+###################################
+
+ironic::api::debug: "%{hiera('debug')}"
+ironic::api::verbose: "%{hiera('verbose')}"
+ironic::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
+ironic::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
+ironic::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('ironic::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+ironic::api::keystone_password: "%{hiera('ironic::keystone::auth::password')}"
+ironic::api::database_connection: "mysql://%{hiera('ironic_db_user')}:%{hiera('ironic_db_password')}@%{hiera('db_host')}/glance"
+ironic::api::mysql_module: 2.3
+
+
 ########### Keystone config
 ###################################
 
@@ -122,9 +148,9 @@ rjil::keystone::ssl: false
 rjil::keystone::protocol: http
 rjil::keystone::version: v2.0
 rjil::keystone::admin_email: "%{hiera('admin_email')}"
-rjil::keystone::public_port: 80
+rjil::keystone::public_port: 5000
 rjil::keystone::public_port_internal: "%{hiera('keystone::public_port')}"
-rjil::keystone::admin_port: 81
+rjil::keystone::admin_port: 35357
 rjil::keystone::admin_port_internal: "%{hiera('keystone::admin_port')}"
 rjil::keystone::public_address: "%{hiera('public_address')}"
 keystone::roles::admin::email: "%{hiera('admin_email')}"
@@ -193,6 +219,27 @@ rjil::keystone::radosgw::port: 8143
 rjil::keystone::radosgw:region: "%{hiera('region')}"
 rjil::keystone::radosgw::keystone_accepted_roles: ['Member', 'admin', 'swiftoperator']
 
+########### Undercloud
+############################
+
+rjil::jiocloud::undercloud::nova_db_password: 'Bevf3okIn0'
+rjil::jiocloud::undercloud::nova_rabbit_password: 'wErryimFa'
+rjil::jiocloud::undercloud::nova_keystone_password: 'RuHaysIss'
+rjil::jiocloud::undercloud::glance_db_password: 'WupZund3owx'
+rjil::jiocloud::undercloud::glance_rabbit_password: 'Tapvvurc5'
+rjil::jiocloud::undercloud::glance_keystone_password: 'PirlebNeg'
+rjil::jiocloud::undercloud::ironic_db_password: 'LoHisGorn6'
+rjil::jiocloud::undercloud::ironic_rabbit_password: 'boedyawnyoa'
+rjil::jiocloud::undercloud::ironic_keystone_password: 'AyentAjUs'
+rjil::jiocloud::undercloud::neutron_db_password: 'AufsayPygha'
+rjil::jiocloud::undercloud::neutron_rabbit_password: 'CipMavakEed'
+rjil::jiocloud::undercloud::neutron_keystone_password: 'daOwnUt2'
+rjil::jiocloud::undercloud::keystone_db_password: 'InLyHyHakAs'
+rjil::jiocloud::undercloud::keystone_admin_token: 'JobUerepNo'
+rjil::jiocloud::undercloud::keystone_admin_password: 'NoevUjdets'
+rjil::jiocloud::undercloud::mysql_root_password: 'smgefgi'
+rjil::jiocloud::undercloud::verbose: "%{hiera('verbose')}"
+rjil::jiocloud::undercloud::debug: "%{hiera('debug')}"
 
 #########################################
 ###### System configuration #############

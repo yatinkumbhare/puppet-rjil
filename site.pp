@@ -149,6 +149,8 @@ node /^haproxy\d+/ {
 
 node /^uc\d+/ {
   include rjil::base
-  include rjil::undercloud
-  include rjil::jiocloud::consul::agent
+  include rjil::jiocloud::undercloud
+  include rjil::jiocloud::aptmirror
+  include rjil::jiocloud::jenkins::master
+  include rjil::jiocloud::aptrepo
 }

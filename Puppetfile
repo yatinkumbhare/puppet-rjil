@@ -65,6 +65,14 @@ mod 'stackforge/cinder',
   :git => "#{base_url}/stackforge/puppet-cinder",
   :ref => 'stable/icehouse'
 
+mod 'stackforge/openstacklib',
+  :git => "#{base_url}/stackforge/puppet-openstacklib",
+  :ref => 'master'
+
+mod 'stackforge/ironic',
+  :git => "#{base_url}/stackforge/puppet-ironic",
+  :ref => 'master'
+
 mod 'puppetlabs/concat',
   :git => "#{base_url}/puppetlabs/puppetlabs-concat",
   :ref => '1.1.1'
@@ -83,16 +91,15 @@ mod 'puppetlabs/keystone',
 
 mod 'puppetlabs/mysql',
   :git => "#{base_url}/puppetlabs/puppetlabs-mysql",
-  :ref => '2.3.1'
+  :ref => '2.2.x'
 
 mod 'stackforge/neutron',
   :git => "#{base_url}/jiocloud/puppet-neutron",
-  # this needs to be updated
-  :ref => 'svn_git_port'
+  :ref => 'master'
 
 mod 'stackforge/nova',
-  :git => "#{base_url}/jiocloud/puppet-nova",
-  :ref => 'svn_to_git_2'
+  :git => "#{base_url}/sorenh/puppet-nova",
+  :ref => 'ironic'
 
 mod 'puppetlabs/rabbitmq',
   :git => "#{base_url}/puppetlabs/puppetlabs-rabbitmq",
@@ -143,3 +150,15 @@ mod 'solarkennedy/consul',
 
 mod 'jiocloud/openstack_zeromq',
   :git => "#{base_url}/jiocloud/puppet-openstack_zeromq"
+
+mod 'jtopjian/apt_mirror',
+  :git => "#{base_url}/jtopjian/puppet-apt_mirror",
+  :ref => 'origin/master'
+
+mod 'rtyler/jenkins',
+  :git => "#{base_url}/jenkinsci/puppet-jenkins",
+  :ref => 'v1.2.0'
+
+mod 'jtopjian/reprepro',
+  :git => "#{base_url}/jtopjian/puppet-reprepro",
+  :ref => 'origin/master'
