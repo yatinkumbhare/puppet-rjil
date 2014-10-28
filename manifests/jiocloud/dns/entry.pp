@@ -12,11 +12,11 @@ define rjil::jiocloud::dns::entry (
     $ip_real = $ip
   } else {
     $ips = dns_a($cname)
-	$ip_real = $ips[0]
+    $ip_real = $ips[0]
   }
 
   host { $name:
     ip     => $ip_real,
-	notify => Class['Dnsmasq::Reload']
+    notify => Class['Dnsmasq::Reload']
   }
 }
