@@ -162,3 +162,7 @@ mod 'rtyler/jenkins',
 mod 'jtopjian/reprepro',
   :git => "#{base_url}/jtopjian/puppet-reprepro",
   :ref => 'origin/master'
+
+mod 'dalen/dnsquery',
+  :git => "#{base_url}/dalen/puppet-dnsquery",
+  :ref => 'origin/master'
