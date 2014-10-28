@@ -6,11 +6,11 @@ define rjil::jiocloud::aptrepo::publish(
     owner  => 'root',
     group  => 'root',
     mode   => '0755'
-  } ->
+  }
   file { "/srv/www/apt/${name}/dists":
     ensure => 'link',
     target => "${basedir}/${name}/dists",
-  } ->
+  }
   file { "/srv/www/apt/${name}/pool":
     ensure => 'link',
     target => "${basedir}/${name}/pool",

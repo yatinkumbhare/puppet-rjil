@@ -1,4 +1,5 @@
 class rjil::jiocloud::aptmirror {
+
   class { 'apt_mirror':
     enabled => false
   }
@@ -40,8 +41,8 @@ class rjil::jiocloud::aptmirror {
   } ->
   file { '/var/spool/apt-mirror/snapshots/snapshot.sh':
     owner  => 'jenkins',
-	mode   => '0755',
-	source => 'puppet:///modules/rjil/snapshot.sh'
+	  mode   => '0755',
+	  source => 'puppet:///modules/rjil/snapshot.sh'
   }
 
   include ::apache

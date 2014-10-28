@@ -67,6 +67,12 @@ fixtures:
     cinder:
       repo: https://github.com/stackforge/puppet-cinder
       ref: 4.0.0
+    openstacklib:
+      repo: https://github.com/stackforge/puppet-openstacklib
+      ref: origin/master
+    ironic:
+      repo: https://github.com/stackforge/puppet-ironic
+      ref: origin/master
     concat:
       repo: https://github.com/puppetlabs/puppetlabs-concat
       ref: 1.1.0
@@ -108,3 +114,12 @@ fixtures:
       ref: 3.0.1
     openstack_zeromq:
       repo: https://github.com/JioCloud/puppet-openstack_zeromq
+    apt_mirror:
+      repo: https://github.com/jtopjian/puppet-apt_mirror
+      ref: origin/master
+    jenkins:
+      repo: https://github.com/jenkinsci/puppet-jenkins
+      ref: v1.2.0
+    reprepro:
+      repo: https://github.com/jtopjian/puppet-reprepro
+      ref: origin/master
