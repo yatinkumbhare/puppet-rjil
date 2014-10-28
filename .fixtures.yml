@@ -123,3 +123,6 @@ fixtures:
     reprepro:
       repo: https://github.com/jtopjian/puppet-reprepro
       ref: origin/master
+    dnsquery:
+      repo: https://github.com/dalen/puppet-dnsquery
+      ref: origin/master
