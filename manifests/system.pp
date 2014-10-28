@@ -1,7 +1,9 @@
 ## Class: rjil::system
 ## Purpose: to group all system level configuration together.
 
-class rjil::system {
+class rjil::system(
+  $proxies = {},
+) {
 
   ##
   ## It is decided to keep all devices in UTC timezone
@@ -42,4 +44,6 @@ class rjil::system {
     mode          => 644,
     source        => "puppet:///modules/${module_name}/_etc_issue",
   }
+
+  create_resources(rjil::system::proxy, $proxies)
 }

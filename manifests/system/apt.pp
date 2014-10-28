@@ -5,6 +5,7 @@ class rjil::system::apt (
   $enable_puppetlabs = true,
   $enable_ceph       = true,
   $enable_rustedhalo = true,
+  $proxy             = false,
 ) {
 
   ## two settings to be overrided here in hiera
@@ -30,5 +31,17 @@ class rjil::system::apt (
     include rjil::system::apt::repo::ubuntu
   }
 
+  if ($proxy) {
+    file { '/etc/apt/apt.conf.d/90proxy':
+      content => "Acquire::Http::Proxy \"${proxy}\";",
+      owner => 'root',
+      group => 'root',
+      mode => '0644'
+    }
+  } else {
+    file { '/etc/apt/apt.conf.d/90proxy':
+      ensure => 'absent'
+    }
+  }
 }
 
