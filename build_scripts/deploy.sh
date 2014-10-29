@@ -40,10 +40,6 @@ then
 fi
 apt-get update
 apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate
-### XXX These two lines need to go away:
-apt-get install -y python-glanceclient
-sed -i -e s/eth0/eth2/g /etc/puppet/hiera/data/env/staging.yaml 
-sed -i -e '2i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' /usr/local/bin/maybe-upgrade.sh
 if [ -n "${puppet_modules_source_repo}" ]; then
   apt-get install -y git
   git clone ${puppet_modules_source_repo} /tmp/rjil
