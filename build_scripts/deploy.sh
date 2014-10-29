@@ -34,8 +34,12 @@ fi
 wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
 wget -O jiocloud.deb http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
 dpkg -i puppet.deb jiocloud.deb
+if http_proxy= wget -O internal.deb http://apt.internal.jiocloud.com/internal.deb
+then
+       dpkg -i internal.deb
+fi
 apt-get update
-apt-get install -y puppet software-properties-common puppet-jiocloud
+apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate
 ### XXX These two lines need to go away:
 apt-get install -y python-glanceclient
 sed -i -e s/eth0/eth2/g /etc/puppet/hiera/data/env/staging.yaml 
