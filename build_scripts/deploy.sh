@@ -1,47 +1,6 @@
 #!/bin/bash -xe
 
-if [ -z "${env}" ]
-then
-    echo '$env must be defined'
-    exit 1
-fi
-
-# Load credentials (openrc style)
-. ${env_file:-/var/lib/jenkins/cloud.${env}.env}
-
-# Load map from generic image, flavor and network names to
-# cloud specific ids
-if [ -n "${mapping}" ]
-then
-	mappings_arg="--mappings=${mapping}"
-elif [ -e "environment/${env}.map.yaml" ]
-then
-	mappings_arg="--mappings=environment/${env}.map.yaml"
-else
-	mappings_arg=""
-fi
-
-project_tag=${project_tag:-test${BUILD_NUMBER}}
-
-if ! [ -e venv ]
-then
-    virtualenv venv
-    . venv/bin/activate
-    # This can go away with the next release of Pip (which will include a
-    # version of python-requests newer than 2.4.0.)
-    pip install -e git+http://github.com/pypa/pip#egg=pip
-
-    # This speeds the whole process up *a lot*
-    pip install pip-accel
-    pip-accel install -e git+https://github.com/JioCloud/python-jiocloud#egg=jiocloud
-    deactivate
-fi
-
-. venv/bin/activate
-
-# this is here to allow a user to override the command used for
-# the timeout function just incase it happens to be gtimeout
-timeout=${timeout_command:-timeout}
+. $(dirname $0)/common.sh
 
 # If these aren't yet set (from credentials file, typically),
 # create new ones.
@@ -75,12 +34,12 @@ fi
 wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
 wget -O jiocloud.deb http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
 dpkg -i puppet.deb jiocloud.deb
+if http_proxy= wget -O internal.deb http://apt.internal.jiocloud.com/internal.deb
+then
+       dpkg -i internal.deb
+fi
 apt-get update
-apt-get install -y puppet software-properties-common puppet-jiocloud
-### XXX These two lines need to go away:
-apt-get install -y python-glanceclient
-sed -i -e s/eth0/eth2/g /etc/puppet/hiera/data/env/staging.yaml 
-sed -i -e '2i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' /usr/local/bin/maybe-upgrade.sh
+apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate
 if [ -n "${puppet_modules_source_repo}" ]; then
   apt-get install -y git
   git clone ${puppet_modules_source_repo} /tmp/rjil
