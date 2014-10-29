@@ -39,6 +39,11 @@ validate_service() {
 if [ $rv -eq 0 ]
 then
        pending_version=$(python -m jiocloud.orchestrate --host=etcd.service.consul current_version)
+       echo current_version=$pending_version > /etc/facter/facts.d/current_version.txt
+
+       # Update apt sources to point to new snapshot version
+       puppet apply --logdest=syslog -e 'include rjil::system::apt'
+
        apt-get update
        apt-get dist-upgrade -o Dpkg::Options::="--force-confold" -y
        run_puppet
