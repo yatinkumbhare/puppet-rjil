@@ -37,9 +37,8 @@ class rjil::haproxy::openstack(
     balancer_ports    => $horizon_port,
     cluster_addresses => $horizon_ips,
     listen_options   =>  {
-      'tcpka'        => '',
-      'abortonclose' => '',
       'balance'      => 'source',
+      'option'       => ['tcpka','abortonclose']
     },
   }
 
@@ -92,10 +91,8 @@ class rjil::haproxy::openstack(
     balancer_ports    => $metadata_port,
     cluster_addresses => $nova_ips,
     listen_options   =>  {
-      'tcpka'        => '',
-      'abortonclose' => '',
       'balance'      => 'roundrobin',
-      'option'       => 'ssl-hello-chk',
+      'option'       => ['ssl-hello-chk','tcpka','abortonclose']
     },
   }
 
