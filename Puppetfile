@@ -166,3 +166,7 @@ mod 'jtopjian/reprepro',
 mod 'dalen/dnsquery',
   :git => "#{base_url}/dalen/puppet-dnsquery",
   :ref => 'origin/master'
+
+mod 'nvpuppet/gitolite',
+  :git => "#{base_url}/nvalentine-puppetlabs/puppet-gitolite",
+  :ref => 'origin/master'
