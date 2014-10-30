@@ -10,6 +10,8 @@ describe 'rjil::neutron' do
       :hostname         => 'node1',
       :interfaces       => 'eth0,lo',
       :ipaddress_eth0   => '10.1.1.100',
+      :lsbdistid        => 'ubuntu',
+      :lsbdistcodename  => 'trusty',
     }
   end
   let :hiera_data do

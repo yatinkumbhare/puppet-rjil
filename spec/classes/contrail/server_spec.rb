@@ -8,6 +8,8 @@ describe 'rjil::contrail::server' do
       :osfamily        => 'Debian',
       :ipaddress_eth0  => '10.1.1.1',
       :interfaces      => 'eth0,lo',
+      :lsbdistid        => 'ubuntu',
+      :lsbdistcodename  => 'trusty',
     }
   end
   let :hiera_data do
