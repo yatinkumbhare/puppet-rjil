@@ -12,7 +12,7 @@ resources:
     networks: default
     assign_floating_ip: true
   oc:
-    number: 2
+    number: 1
     flavor: small
     image: trusty
     networks: default
@@ -23,7 +23,7 @@ resources:
     networks: default
   ct:
     number: 1
-    flavor: medium
+    flavor: large
     image: trusty
     networks: default
   stmonleader:
