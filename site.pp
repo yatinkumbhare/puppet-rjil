@@ -155,4 +155,5 @@ node /^uc\d+/ {
   include rjil::jiocloud::aptmirror
   include rjil::jiocloud::jenkins::master
   include rjil::jiocloud::aptrepo
+  include rjil::jiocloud::gitolite
 }
