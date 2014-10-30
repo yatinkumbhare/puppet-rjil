@@ -23,6 +23,14 @@ class rjil::jiocloud::aptmirror {
     source     => false,
   }
 
+  apt_mirror::mirror { 'datastax':
+    mirror     => 'debian.datastax.com',
+    os         => 'community',
+    release    => ['stable'],
+    components => ['main'],
+    source     => false,
+  }
+
   apt_mirror::mirror { 'rustedhalo':
     mirror     => 'jiocloud.rustedhalo.com',
     os         => 'ubuntu',
