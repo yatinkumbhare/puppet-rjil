@@ -3,6 +3,7 @@ image:
 flavor:
   small: 100
   medium: 101
+  large: 102
 networks:
   default:
     - d7c83218-276b-4e4c-8ed1-1165b44c3a44
