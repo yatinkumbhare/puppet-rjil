@@ -58,7 +58,7 @@ class rjil::haproxy () {
     },
   }
 
-  package { 'nagios-plugins-contrib':
+  package { ['nagios-plugins-contrib', 'libwww-perl', 'libnagios-plugin-perl']:
     ensure => 'present'
   }
 
