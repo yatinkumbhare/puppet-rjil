@@ -38,6 +38,7 @@ describe 'rjil::neutron' do
       should contain_package('python-six').with_ensure('latest').that_comes_before('Class[neutron::server]')
       should contain_class('neutron')
       should contain_class('neutron::server')
+      should contain_class('neutron::quota')
       should contain_neutron_config('DEFAULT/api_extensions_path').with_value('extensionspath')
       should contain_neutron_config('service_providers/service_provider').with_value('serviceprovider')
       should contain_rjil__jiocloud__consul__service('neutron').with({

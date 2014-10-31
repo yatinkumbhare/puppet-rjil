@@ -36,6 +36,7 @@ class rjil::neutron (
   include ::neutron
   include ::neutron::server
   include rjil::contrail::server
+  include ::neutron::quota
 
   package {'python-six':
     ensure  => latest,
