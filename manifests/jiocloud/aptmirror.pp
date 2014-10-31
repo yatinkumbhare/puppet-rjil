@@ -23,6 +23,30 @@ class rjil::jiocloud::aptmirror {
     source     => false,
   }
 
+  apt_mirror::mirror { 'ceph':
+    mirror     => 'ceph.com',
+    os         => 'debian',
+    release    => ['trusty'],
+    components => ['main'],
+    source     => false,
+  }
+
+  apt_mirror::mirror { 'puppetlabs':
+    mirror     => 'apt.puppetlabs.com',
+    os         => '',
+    release    => ['trusty'],
+    components => ['main', 'dependencies'],
+    source     => false,
+  }
+
+  apt_mirror::mirror { 'datastax':
+    mirror     => 'debian.datastax.com',
+    os         => 'community',
+    release    => ['stable'],
+    components => ['main'],
+    source     => false,
+  }
+
   apt_mirror::mirror { 'rustedhalo':
     mirror     => 'jiocloud.rustedhalo.com',
     os         => 'ubuntu',

@@ -27,4 +27,8 @@ class rjil::jiocloud::jenkins {
   }
 
   include rjil::jiocloud::jenkins::cloudenvs
+
+  ::sudo::conf { 'jenkins_reprepro':
+    content => 'jenkins ALL = (reprepro) NOPASSWD: /usr/bin/reprepro'
+  }
 }
