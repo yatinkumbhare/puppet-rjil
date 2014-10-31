@@ -8,6 +8,15 @@ class rjil::jiocloud (
 
   include rjil::system::apt
 
+  # ensure that python-jiocloud is installed before
+  # consul and dnsmasq. This is b/c these packages
+  # can introduce race conditions that effect dns
+  # and we cannot currently recover if we fail to
+  # install python-jiocloud
+  package { 'python-jiocloud':
+    before => [Package['dnsmasq'], Package['consul']]
+  }
+
   if $consul_role == 'bootstrapserver' {
     include rjil::jiocloud::consul::cron
   } else {
@@ -30,8 +39,6 @@ class rjil::jiocloud (
     owner => 'root',
     group => 'root'
   }
-
-  package { 'python-jiocloud': }
 
   file { '/usr/local/bin/maybe-upgrade.sh':
     source => 'puppet:///modules/rjil/maybe-upgrade.sh',
