@@ -304,7 +304,7 @@ apt::purge_sources_list_d: true
 rjil::system::apt::enable_puppetlabs: true
 rjil::system::apt::repositories:
   ceph:
-    location: 'http://ceph.com/debian'
+    location: 'http://ceph.com/debian-firefly'
     release: 'trusty'
     repos: 'main'
     include_src: false
