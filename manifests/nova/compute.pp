@@ -16,6 +16,8 @@ class rjil::nova::compute (
   # Add tests for nova compute
   ##
 
+  include rjil::test::compute
+
 
   ##
   # service blocker to stmon before mon_config to be run.
