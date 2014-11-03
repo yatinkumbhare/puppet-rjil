@@ -27,6 +27,10 @@ class rjil::nova::compute (
   ensure_resource('rjil::service_blocker', 'stmon', {})
   Rjil::Service_blocker['stmon']  ->
   Class['rjil::ceph::mon_config'] ->
+  Ceph::Conf::Clients['cinder_volume'] ->
+  Exec['secret_set_value_cinder_volume']
+
+  Concat['/etc/ceph/ceph.conf'] ->
   Exec['secret_set_value_cinder_volume']
 
   Class['::nova'] ->
@@ -34,6 +38,7 @@ class rjil::nova::compute (
 
   Package['libvirt'] ->
   Exec['secret_define_cinder_volume']
+
 
   ensure_resource('package','python-six', { ensure => 'latest' })
 
