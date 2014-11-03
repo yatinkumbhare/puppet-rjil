@@ -32,6 +32,10 @@ class rjil::nova::compute (
   Ceph::Conf::Clients['cinder_volume'] ->
   Exec['secret_set_value_cinder_volume']
 
+
+  ##
+  # This will fix the failure on puppet first run.
+  ##
   Concat['/etc/ceph/ceph.conf'] ->
   Exec['secret_set_value_cinder_volume']
 
@@ -44,6 +48,7 @@ class rjil::nova::compute (
 
   ensure_resource('package','python-six', { ensure => 'latest' })
 
+  include ::ceph::conf
   include rjil::ceph::mon_config
   include rjil::nova::zmq_config
   include ::nova::client

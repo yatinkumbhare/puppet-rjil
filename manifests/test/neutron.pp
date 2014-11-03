@@ -16,4 +16,11 @@ class rjil::test::neutron(
     group  => 'root',
     mode   => '0755',
   }
+
+  file { '/usr/lib/jiocloud/tests/floating_ip.sh':
+    source => 'puppet:///modules/rjil/tests/floating_ip.sh',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
 }

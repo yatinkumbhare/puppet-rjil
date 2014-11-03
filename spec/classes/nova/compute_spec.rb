@@ -21,13 +21,13 @@ describe 'rjil::nova::compute' do
 
   let :hiera_data do
     {
-      'rjil::ceph::mon_config::mon_config' => 'foo',
-      'nova::network::neutron::neutron_admin_password' => 'pw'
+      'rjil::ceph::mon_config::mon_config'             => 'foo',
+      'nova::network::neutron::neutron_admin_password' => 'pw',
+      'ceph::conf::fsid'                                     => 'fsid',
     }
   end
 
   it 'should deploy defaults' do
-
     should contain_file('/usr/lib/jiocloud/tests/nova-compute.sh').with({
       'source' => 'puppet:///modules/rjil/tests/nova-compute.sh',
     })
