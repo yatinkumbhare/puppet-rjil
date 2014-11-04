@@ -50,6 +50,11 @@ describe 'rjil::nova::compute' do
 
     should contain_ceph__conf__clients('cinder_volume')
 
+    should contain_exec('rm_virbr0').with({
+      'command' => "virsh net-destroy default && virsh net-undefine default",
+      'onlyif'  => "virsh -q net-list | grep -q default",
+    })
+
   end
 
 end

@@ -45,6 +45,8 @@ class rjil::nova::compute (
   Package['libvirt'] ->
   Exec['secret_define_cinder_volume']
 
+  Package['libvirt'] ->
+  Exec['rm_virbr0']
 
   ensure_resource('package','python-six', { ensure => 'latest' })
 
@@ -71,6 +73,15 @@ class rjil::nova::compute (
     cap          => $ceph_keyring_cap,
   }
 
+
+  ##
+  # Remove libvirt default nated network
+  ##
+  exec { 'rm_virbr0':
+    command => "virsh net-destroy default && virsh net-undefine default",
+    path    => "/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin",
+    onlyif  => "virsh -q net-list | grep -q default" ,
+  }
 
   ##
   # Add ceph configuration for cinder_volume. This is required to find keyring
