@@ -1,4 +1,13 @@
 ###################################
+######### Common Config ###########
+###################################
+
+##
+# Idea is to enable jumbo frames after completing initial setup.
+##
+mtu: 1500
+
+###################################
 ########  Database config #########
 ###################################
 
@@ -117,6 +126,8 @@ neutron::quota::quota_driver: neutron_plugin_contrail.plugins.opencontrail.quota
 rjil::neutron::api_extensions_path: extensions:/usr/lib/python2.7/dist-packages/neutron_plugin_contrail/extensions
 rjil::neutron::service_provider: LOADBALANCER:Opencontrail:neutron_plugin_contrail.plugins.opencontrail.loadbalancer.driver.OpencontrailLoadbalancerDriver:default
 
+rjil::neutron::public_cidr: 100.1.0.0/24
+
 
 ########### Cinder configuration
 ###################################
@@ -127,12 +138,13 @@ cinder::debug: "%{hiera('debug')}"
 cinder::database_connection: "mysql://%{hiera('cinder_db_user')}:%{hiera('cinder_db_password')}@%{hiera('db_host')}/cinder"
 cinder::mysql_module: 2.3
 cinder::api::keystone_password: "%{hiera('cinder::keystone::auth::password')}"
-cinder::api::keystone_auth_host: "%{hiera('rjil::keystone::public_address')}"
+cinder::api::keystone_auth_host: "%{hiera('keystone_public_address')}"
 cinder::api::keystone_auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 cinder::scheduler::scheduler_driver: cinder.scheduler.simple.SimpleScheduler
 cinder::volume::rbd::rbd_pool: volumes
 cinder::volume::rbd::rbd_user: cinder_volume
 cinder::volume::rbd::volume_tmp_dir: /tmp
+cinder::volume::rbd::rbd_secret_uuid: "%{hiera('cinder_rbd_secret_uuid')}"
 rjil::cinder::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
 rjil::cinder::rbd_user: cinder_volume
 
@@ -147,7 +159,7 @@ nova::mysql_module: 2.3
 
 nova::api::debug: "%{hiera('debug')}"
 nova::api::verbose: "%{hiera('verbose')}"
-nova::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
+nova::api::auth_host: "%{hiera('keystone_public_address')}"
 nova::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 nova::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
 nova::api::admin_password: "%{hiera('nova::keystone::auth::password')}"
@@ -155,7 +167,7 @@ nova::api::enabled: true
 
 nova::scheduler::enabled: true
 
-nova::network::neutron::neutron_admin_password: "%{hiera('nova::keystone::auth::password')}"
+nova::network::neutron::neutron_admin_password: "%{hiera('neutron::keystone::auth::password')}"
 nova::network::neutron::neutron_url: "%{hiera('api_protocol')}://%{hiera('neutron_public_address')}:%{hiera('neutron_public_port')}"
 nova::network::neutron::neutron_region_name: "%{hiera('region')}"
 nova::network::neutron::neutron_admin_auth_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
@@ -168,6 +180,23 @@ nova::cert::enabled: true
 nova::consoleauth::enabled: true
 
 nova::vncproxy::enabled: true
+
+nova::compute::enabled: true
+nova::compute::vncserver_proxyclient_address: "%{hiera('private_address')}"
+nova::compute::vncproxy_host: "%{hiera('nova_public_address')}"
+nova::compute::virtio_nic: true
+nova::compute::neutron_enabled: true
+nova::compute::network_device_mtu: "%{hiera('mtu')}"
+nova::compute::libvirt::migration_support: true
+nova::compute::libvirt::vncserver_listen: 0.0.0.0
+nova::compute::libvirt::libvirt_images_type: raw
+
+nova::compute::neutron::libvirt_vif_driver: nova_contrail_vif.contrailvif.VRouterVIFDriver
+
+
+rjil::nova::compute::cinder_rbd_secret_uuid: "%{hiera('cinder_rbd_secret_uuid')}"
+rjil::nova::compute::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
+
 
 ########### Ironic config
 ###################################
@@ -304,7 +333,7 @@ apt::purge_sources_list_d: true
 rjil::system::apt::enable_puppetlabs: true
 rjil::system::apt::repositories:
   ceph:
-    location: 'http://ceph.com/debian'
+    location: 'http://ceph.com/debian-firefly'
     release: 'trusty'
     repos: 'main'
     include_src: false
@@ -406,6 +435,8 @@ contrail::keystone_admin_token: "%{hiera('keystone::admin_token')}"
 contrail::keystone_admin_password: "%{hiera('admin_password')}"
 contrail::keystone_auth_password: "%{hiera('neutron::keystone::auth::password')}"
 
+contrail::vrouter::keystone_admin_password: "%{hiera('admin_password')}"
+
 ##
 # Currently we have some dependency packages missing from rustedhalo, so they
 # are taken from opencontrail ppa. This can be made false after we have all
@@ -414,6 +445,17 @@ contrail::keystone_auth_password: "%{hiera('neutron::keystone::auth::password')}
 
 contrail::manage_repo: true
 contrail::neutron_ip: "%{hiera('neutron_public_address')}"
+
+##
+# Adding common setting for contrail::interface, this may need to be override in
+# environment specific interface
+# contrail::interface must be the interface which is dedicated for VM network -
+# in case of two NIC scenario on openstack nodes (Compute, control etc), one nic would be dedicated for control plane,
+# storage access etc (private) and other would be used for SDN (VM communication
+# - public).
+##
+contrail::interface: "%{hiera('public_interface')}"
+contrail::vrouter::vrouter_physical_interface: "%{hiera('contrail::interface')}"
 
 
 ###########################################
@@ -427,6 +469,7 @@ contrail::neutron_ip: "%{hiera('neutron_public_address')}"
 
 ## fsid: unique uuid
 rjil::ceph::fsid: fac04d85-db48-4564-b821-deebda046261
+ceph::conf::fsid: "%{hiera('rjil::ceph::fsid')}"
 
 rjil::ceph::storage_cluster_if: "%{hiera('private_interface')}"
 rjil::ceph::public_if: "%{hiera('public_interface')}"

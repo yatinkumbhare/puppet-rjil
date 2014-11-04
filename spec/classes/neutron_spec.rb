@@ -29,18 +29,29 @@ describe 'rjil::neutron' do
       'neutron::quota::quota_driver'                => 'contraildriver',
       'rjil::neutron::api_extensions_path'          => 'extensionspath',
       'rjil::neutron::service_provider'             => 'serviceprovider',
+      'rjil::neutron::public_cidr'                  => '1.1.1.0/24',
     }
   end
 
   context 'with defaults' do
     it  do
       should contain_file('/usr/lib/jiocloud/tests/neutron.sh')
+      should contain_file('/usr/lib/jiocloud/tests/floating_ip.sh')
       should contain_package('python-six').with_ensure('latest').that_comes_before('Class[neutron::server]')
       should contain_class('neutron')
       should contain_class('neutron::server')
       should contain_class('neutron::quota')
       should contain_neutron_config('DEFAULT/api_extensions_path').with_value('extensionspath')
       should contain_neutron_config('service_providers/service_provider').with_value('serviceprovider')
+      should contain_neutron_network('public').with({
+        'ensure'          => 'present',
+        'router_external' => true
+      })
+      should contain_neutron_subnet('pub_subnet1').with({
+        'ensure'       => 'present',
+        'cidr'         => '1.1.1.0/24',
+        'network_name' => 'public'
+      })
       should contain_rjil__jiocloud__consul__service('neutron').with({
         'tags'      => ['real'],
         'port'      => 9696,

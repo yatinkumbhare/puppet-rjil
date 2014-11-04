@@ -46,4 +46,23 @@ class rjil::system(
   }
 
   create_resources(rjil::system::proxy, $proxies)
+
+  ##
+  # Add domain search in resolvconf.
+  # This is required to get matchmaker working - matchmaker ring driver need the
+  # hostname without domain name to be resolved.
+  ##
+
+  file_line {'domain_search':
+    path  => '/etc/resolvconf/resolv.conf.d/base',
+    line  => 'search node.consul service.consul',
+    match => 'search .*'
+  }
+
+  exec {'resolvconf':
+    command     => 'resolvconf -u',
+    refreshonly => true,
+    subscribe   => File_line['domain_search'],
+  }
+
 }

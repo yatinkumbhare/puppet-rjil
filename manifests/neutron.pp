@@ -1,9 +1,16 @@
 #
 # Class: rjil::neutron
 #
+# [* public_subnets *]
+#   is a hash of subnetlogicalname => cidr
+#   e.g { pub_subnet1 => '100.1.0.0/16'}
+
 class rjil::neutron (
   $api_extensions_path = undef,
   $service_provider    = undef,
+  $public_network_name = 'public',
+  $public_subnet_name  = 'pub_subnet1',
+  $public_cidr         = undef,
 ) {
 
   ##
@@ -77,6 +84,23 @@ class rjil::neutron (
   if $service_provider {
     neutron_config { 'service_providers/service_provider':
       value => $service_provider
+    }
+  }
+
+  ##
+  # Add floating IPs
+  ##
+
+  neutron_network {$public_network_name:
+    ensure          => present,
+    router_external => true,
+  }
+
+  if $public_cidr {
+    neutron_subnet {$public_subnet_name:
+      ensure       => present,
+      cidr         => $public_cidr,
+      network_name => $public_network_name,
     }
   }
 
