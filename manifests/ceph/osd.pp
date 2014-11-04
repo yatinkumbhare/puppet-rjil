@@ -102,7 +102,7 @@ class rjil::ceph::osd (
       fail("Autodisk size must be at least 10GB (current size: ${autodisk_size})")
     }
 
-    if $osd_journal_size > $autodisk_size/$::processorcount {
+    if $osd_journal_size > $autodisk_size/4 {
       fail("Your journal size ${osd_journal_size} should not be greater than your autodisk_size/${::processorcount} ${autodisk_size}/${::processorcount}.")
     }
     $osd_journal_size_orig = $osd_journal_size
