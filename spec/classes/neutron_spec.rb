@@ -30,6 +30,7 @@ describe 'rjil::neutron' do
       'rjil::neutron::api_extensions_path'          => 'extensionspath',
       'rjil::neutron::service_provider'             => 'serviceprovider',
       'rjil::neutron::public_cidr'                  => '1.1.1.0/24',
+      'rjil::neutron::keystone_admin_password'      => 'pass',
     }
   end
 
@@ -47,20 +48,32 @@ describe 'rjil::neutron' do
         'ensure'          => 'present',
         'router_external' => true
       })
+
       should contain_neutron_subnet('pub_subnet1').with({
         'ensure'       => 'present',
         'cidr'         => '1.1.1.0/24',
         'network_name' => 'public'
       })
+
       should contain_rjil__jiocloud__consul__service('neutron').with({
         'tags'      => ['real'],
         'port'      => 9696,
         'check_command' => "/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 9696",
       })
+
       should contain_exec('empty_neutron_conf').with({
         'command'     => 'mv /etc/neutron/neutron.conf /etc/neutron/neutron.conf.bak_puppet',
         'refreshonly' => true,
         'subscribe'   => 'Package[neutron-server]',
+      })
+
+      should contain_contrail_rt('default-domain:services:public').with({
+        'ensure'             => 'present',
+        'rt_number'          => 10000,
+        'router_asn'         => 64512,
+        'api_server_address' => 'real.neutron.service.consul',
+        'admin_password'     => 'pass',
+        'require'            => 'Neutron_network[public]',
       })
     end
   end

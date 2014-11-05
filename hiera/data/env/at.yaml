@@ -15,3 +15,5 @@ nova::compute::libvirt::libvirt_virt_type: qemu
 # compute node if required.
 ##
 contrail::vrouter::autoreboot: true
+
+rjil::neutron::public_cidr: 100.1.0.0/24

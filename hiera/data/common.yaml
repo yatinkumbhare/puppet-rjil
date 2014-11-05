@@ -125,8 +125,8 @@ neutron::quota::quota_driver: neutron_plugin_contrail.plugins.opencontrail.quota
 # profile for now.
 rjil::neutron::api_extensions_path: extensions:/usr/lib/python2.7/dist-packages/neutron_plugin_contrail/extensions
 rjil::neutron::service_provider: LOADBALANCER:Opencontrail:neutron_plugin_contrail.plugins.opencontrail.loadbalancer.driver.OpencontrailLoadbalancerDriver:default
-
-rjil::neutron::public_cidr: 100.1.0.0/24
+rjil::neutron::keystone_admin_password: "%{hiera('admin_password')}"
+rjil::neutron::contrail_api_server: "%{hiera('neutron_internal_address')}"
 
 
 ########### Cinder configuration

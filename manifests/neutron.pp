@@ -5,12 +5,20 @@
 #   is a hash of subnetlogicalname => cidr
 #   e.g { pub_subnet1 => '100.1.0.0/16'}
 
+# NOTE: Public network will be created on services tenant. In order to specify
+# specific tenant name on which public network created, keystone.conf required
+# on neutron server which is not the case as of now.
+
 class rjil::neutron (
-  $api_extensions_path = undef,
-  $service_provider    = undef,
-  $public_network_name = 'public',
-  $public_subnet_name  = 'pub_subnet1',
-  $public_cidr         = undef,
+  $keystone_admin_password,
+  $api_extensions_path  = undef,
+  $service_provider     = undef,
+  $public_network_name  = 'public',
+  $public_subnet_name   = 'pub_subnet1',
+  $public_cidr          = undef,
+  $public_rt_number     = 10000,
+  $router_asn           = 64512,
+  $contrail_api_server  = 'real.neutron.service.consul',
 ) {
 
   ##
@@ -102,6 +110,18 @@ class rjil::neutron (
       cidr         => $public_cidr,
       network_name => $public_network_name,
     }
+  }
+
+  ##
+  # Add route target in contrail config database.
+  ##
+  contrail_rt {"default-domain:services:${public_network_name}":
+    ensure             => present,
+    rt_number          => $public_rt_number,
+    router_asn         => $router_asn,
+    api_server_address => $contrail_api_server,
+    admin_password     => $keystone_admin_password,
+    require            => Neutron_network[$public_network_name],
   }
 
   rjil::jiocloud::consul::service { 'neutron':
