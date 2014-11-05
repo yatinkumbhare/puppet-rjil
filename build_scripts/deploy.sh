@@ -17,8 +17,8 @@ fi
 cat <<EOF >userdata.txt
 #!/bin/bash
 release="\$(lsb_release -cs)"
-export no_proxy="127.0.0.1,localhost,consul"
-echo no_proxy="'127.0.0.1,localhost,consul'" >> /etc/environment
+export no_proxy="127.0.0.1,localhost,consul,jiocloud.com"
+echo no_proxy="'127.0.0.1,localhost,consul,jiocloud.com'" >> /etc/environment
 if [ -n "${env_http_proxy}" ]
 then
 	export http_proxy=${env_http_proxy}
