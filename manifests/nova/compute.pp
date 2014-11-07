@@ -117,4 +117,18 @@ class rjil::nova::compute (
     interval      => $consul_check_interval,
   }
 
+  ensure_resource(package, 'ethtool')
+
+  Package <| name == 'ethtool' |> ->
+  file { "/etc/init/disable-gro.conf":
+    source => 'puppet:///modules/rjil/disable-gro.conf',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644'
+  } ~>
+  exec { "disable-gro":
+    command     => 'true ; cd /sys/class/net ; for x in *; do ethtool -K $x gro off || true; done',
+    path        => "/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin",
+    refreshonly => true
+  }
 }
