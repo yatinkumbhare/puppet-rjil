@@ -23,3 +23,4 @@ rjil::jiocloud::consul::service::interval: 120s
 contrail::vrouter::autoreboot: true
 
 rjil::neutron::public_cidr: 100.1.0.0/24
+rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop]
