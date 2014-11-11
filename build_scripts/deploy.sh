@@ -71,6 +71,7 @@ fi
 sudo mkdir -p /etc/facter/facts.d
 echo 'etcd_discovery_token='${etcd_discovery_token} > /etc/facter/facts.d/etcd.txt
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
+echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
