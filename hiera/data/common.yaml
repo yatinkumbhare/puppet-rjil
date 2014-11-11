@@ -436,8 +436,8 @@ contrail::keystone_admin_token: "%{hiera('keystone::admin_token')}"
 contrail::keystone_admin_password: "%{hiera('admin_password')}"
 contrail::keystone_auth_password: "%{hiera('neutron::keystone::auth::password')}"
 contrail::nova_metadata_address: "lb.nova.service.consul"
-contrail::metadata_proxy_secret: "%{hiera('nova_metadata_proxy_secret')}"
 
+contrail::vrouter::metadata_proxy_secret: "%{hiera('nova_metadata_proxy_secret')}"
 contrail::vrouter::keystone_admin_password: "%{hiera('admin_password')}"
 
 ##
