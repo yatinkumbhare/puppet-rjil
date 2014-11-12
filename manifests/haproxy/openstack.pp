@@ -90,10 +90,6 @@ class rjil::haproxy::openstack(
   rjil::haproxy_service { 'metadata':
     balancer_ports    => $metadata_port,
     cluster_addresses => $nova_ips,
-    listen_options   =>  {
-      'balance'      => 'roundrobin',
-      'option'       => ['ssl-hello-chk','tcpka','abortonclose']
-    },
   }
 
   rjil::haproxy_service { 'nova-ec2':
