@@ -1,5 +1,5 @@
 public_address: "%{ipaddress_eth1}"
-public_interface: eth2
+public_interface: eth1
 private_address: "%{ipaddress_eth1}"
 private_interface: eth1
 

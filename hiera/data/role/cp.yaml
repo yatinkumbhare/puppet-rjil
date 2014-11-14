@@ -1,0 +1,1 @@
+rjil::jiocloud::consul::agent::bind_addr: "%{ipaddress_vhost0}"
