@@ -76,7 +76,7 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 puppet apply --debug -e "include rjil::jiocloud"
 EOF
 
-time python -m jiocloud.apply_resources apply --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
+time python -m jiocloud.apply_resources apply ${EXTRA_APPLY_RESOURCES_OPTS} --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
 
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag})
 
