@@ -85,8 +85,7 @@ Vagrant.configure("2") do |config|
       config.vm.provision 'shell', :inline =>
         'puppet apply --debug -e "include rjil::jiocloud"'
 
-      config.vm.network "private_network", :ip => "10.22.3.#{number}"
-      config.vm.network "private_network", :ip => "10.22.4.#{number}"
+      config.vm.network "private_network", :type => "dhcp"
     end
   end
 end
