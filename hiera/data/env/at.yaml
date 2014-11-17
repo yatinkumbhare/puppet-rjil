@@ -10,11 +10,5 @@ rjil::ceph::osd::osd_journal_size: 2
 # Only Qemu is supported on virtual testing environment
 nova::compute::libvirt::libvirt_virt_type: qemu
 
-##
-# Enable auto reboot on contrail vrouter - this will enable automatic reboot of
-# compute node if required.
-##
-contrail::vrouter::autoreboot: true
-
 rjil::neutron::public_cidr: 100.1.0.0/24
 rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop]
