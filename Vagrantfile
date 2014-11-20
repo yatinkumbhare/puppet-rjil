@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   # allow users to set their own environment
   # which effect the hiera hierarchy and the
   # cloud file that is used
-  environment = ENV['env'] || 'vagrant'
+  environment = ENV['env'] || 'vagrant-vbox'
   layout = ENV['layout'] || 'full'
 
 
