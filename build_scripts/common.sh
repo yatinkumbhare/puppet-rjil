@@ -7,7 +7,14 @@ then
 fi
 
 # Load credentials (openrc style)
+if set -o | grep xtrace | grep on; then
+  xtrace_was_on=1
+  set +x
+fi
 . ${env_file:-/var/lib/jenkins/cloud.${env}.env}
+if [ -n "${xtrace_was_on}" ]; then
+  set -x
+fi
 
 # Load map from generic image, flavor and network names to
 # cloud specific ids
