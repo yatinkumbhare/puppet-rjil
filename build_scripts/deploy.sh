@@ -78,9 +78,7 @@ EOF
 
 time python -m jiocloud.apply_resources apply ${EXTRA_APPLY_RESOURCES_OPTS} --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
 
-ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag})
-
-time $timeout 1200 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} ping; do sleep 5; done"
+time $timeout 1200 bash -c "while ! bash -c \"ip=\$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag});python -m jiocloud.orchestrate --host \${ip} ping\"; do sleep 5; done"
 
 time $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
 
