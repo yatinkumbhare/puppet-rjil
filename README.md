@@ -340,6 +340,8 @@ verified until glance has registered (maybe this is actually not a problem...)
 It is possible that you can use lxc for this, but it is not fully validating.
 
 [Install vagrant](https://docs.vagrantup.com/v2/installation/)
+This setup has been tested with the 1.6.5 installer from [Vagrant Home Page](https://www.vagrantup.com/downloads.html)
+The default version of Vagrant in the Ubuntu 14.04 Repo is 1.4.3 which causes an [issue](https://github.com/mitchellh/vagrant/pull/3349).
 
 ## Using vagrant
 
