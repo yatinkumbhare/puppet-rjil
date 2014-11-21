@@ -1,7 +1,7 @@
 image:
   trusty: 4c5427fc-fa6f-48fa-a528-5bd36bea3ae1
 flavor:
-  small: 1
+  small: 2
   medium: 2
   large: 3
 networks:
