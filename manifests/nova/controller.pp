@@ -5,10 +5,13 @@ class rjil::nova::controller (
   $api_bind_port        = 8774,
   $vncproxy_bind_port   = 6080,
   $consul_check_interval= '120s',
+  $default_floating_pool = 'public'
 ) {
 
 # Tests
   include rjil::test::nova_controller
+
+  nova_config { 'DEFAULT/default_floating_pool': value => $default_floating_pool }
 
   ##
   # Adding service blocker for mysql which make sure mysql is avaiable before
