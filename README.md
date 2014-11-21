@@ -1,5 +1,16 @@
 [![Build Status](https://travis-ci.org/JioCloud/puppet-rjil.svg?branch=master)](https://travis-ci.org/JioCloud/puppet-rjil)
 
+puppet-rjil
+===========
+
+### Table of Contents
+
+1. [Overview - What is puppet-rjil module?](#overview)
+2. [Details - how does it work?](#details)
+3. [Orchestration - how cross host dependencies work](#cross-host-dependencies)
+4. [Development Workflow](#development-environment)
+5. [Build script - command line tool for generating test deployments](#build-script)
+
 # Overview
 
 This project is the top level project where most of the deployment coding
@@ -154,7 +165,7 @@ realistically say that the combination of the
 
 Understanding hiera is a requirement for using this system. Please get started [here](https://docs.puppetlabs.com/hiera/1/).
 
-# supporting cross host dependencies
+# Cross host dependencies
 
 This document is intended to capture the orchestration requirements for our current Openstack installation.
 
@@ -320,7 +331,7 @@ verified until glance has registered (maybe this is actually not a problem...)
    cardinality is for a service. Perhaps this should be configured as a validation check (ie: haproxy is only
    validated when it has the same number of members as there should be configured services.)
 
-# using vagrant for development
+# Development environment
 
 ## installing vagrant
 
@@ -460,13 +471,15 @@ be added to the following location.
 ./hiera/data/env/<env_name>.yaml
 ````
 
-# Running the build script
+# Build script
 
-To run the build script, invoke
+This project contains the following script that is used to deploy out openstack
+environments.
 
 ````
-bash -x build\_scripts/deploy.sh
+build\_scripts/deploy.sh
 ````
+## build script environment variables
 
 The script can be configured using the following environment variables:
 
@@ -583,7 +596,9 @@ that libffi is available:
 export CFLAGS="-I/usr/local/opt/libffi/lib/libffi-3.0.13/include/"
 ````
 
-# supporting devs
+# TODO
+
+## supporting devs
 
 we want to better support project devs.
 
