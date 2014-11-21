@@ -333,13 +333,14 @@ verified until glance has registered (maybe this is actually not a problem...)
 
 # Development environment
 
-## installing vagrant
+## Installing vagrant
 
 [Install Virtualbox](http://www.virtualbox.org/manual/ch01.html#intro-installing)
 
 It is possible that you can use lxc for this, but it is not fully validating.
 
 [Install vagrant](https://docs.vagrantup.com/v2/installation/)
+
 This setup has been tested with the 1.6.5 installer from [Vagrant Home Page](https://www.vagrantup.com/downloads.html)
 The default version of Vagrant in the Ubuntu 14.04 Repo is 1.4.3 which causes an [issue](https://github.com/mitchellh/vagrant/pull/3349).
 
@@ -352,6 +353,8 @@ on localized VMs in real time.
 
 We have designed a vagrant based solution that can be used to create VMs that
 very closely resemble the openstack environments that we are deploying.
+
+When spinning up VMs for local development, Vagrant/VBox would need to be run on the physical host that has VT-x  enabled in its BIOS. Currently, this setup cannot be provisioned and tested inside a VM itself (KVM/VBox).
 
 ### getting setup
 
