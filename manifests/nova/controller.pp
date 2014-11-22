@@ -20,7 +20,7 @@ class rjil::nova::controller (
   $api_bind_port        = 8774,
   $vncproxy_bind_port   = 6080,
   $consul_check_interval= '120s',
-  $default_floating_pool = 'public'
+  $default_floating_pool = 'public',
   $memcached_servers    = service_discover_dns('memcached.service.consul','ip'),
   $memcached_port       = 11211,
 ) {
@@ -29,6 +29,23 @@ class rjil::nova::controller (
   include rjil::test::nova_controller
 
   nova_config { 'DEFAULT/default_floating_pool': value => $default_floating_pool }
+
+  ##
+  # The problem with fail function is that , as funtions are evaluated on comple
+  # time, the execution will fail during that time, so if the condition
+  # evaluates a resource or outcome of a resource execution  which create on the
+  # same role/node will cause the execution always fail as the puppet execution
+  # willl never happen. So using a type here.
+  ##
+
+  if ! empty($memcached_servers) {
+    $fail = false
+  }
+
+  runtime_fail {'fail_before_nova':
+    fail    => $fail,
+    message => 'Memcache serverlist cannot be empty',
+  }
 
   ##
   # Adding service blocker for mysql which make sure mysql is avaiable before
@@ -45,6 +62,7 @@ class rjil::nova::controller (
   ##
   ensure_resource('rjil::service_blocker','memcached',{})
   Rjil::Service_blocker['memcached'] ->
+  Runtime_fail['fail_before_nova'] ->
   Nova_config<| title == 'DEFAULT/memcached_servers' |>
 
   ##
@@ -69,7 +87,6 @@ class rjil::nova::controller (
 
   Package['python-six'] -> Class['nova::api']
 
-
   ##
   # Python-memcache is a dependancy to use memcache, but not handled in the
   # package. Installing that package.
@@ -78,9 +95,6 @@ class rjil::nova::controller (
 
   Package['python-memcache'] -> Class['nova']
 
-  if empty($memcached_servers) {
-    fail("Memcache servers cannot be empty")
-  }
 
   $memcache_url = split(inline_template('<%= @memcached_servers.map{ |ip| "#{ip}:#{@memcached_port}" }.join(",") %>'),',')
 

@@ -44,8 +44,8 @@ describe 'rjil::nova::controller' do
       should contain_file('/usr/lib/jiocloud/tests/nova-consoleauth.sh')
       should contain_file('/usr/lib/jiocloud/tests/nova-vncproxy.sh')
       should contain_class('rjil::test::nova_controller')
-
-      should contain_rjil__service_blocker('memcached').that_comes_before('Nova_config[DEFAULT/memcached_servers]')
+      should contain_runtime_fail('fail_before_nova').that_comes_before('Nova_config[DEFAULT/memcached_servers]')
+      should contain_rjil__service_blocker('memcached').that_comes_before('Runtime_fail[fail_before_nova]')
       should contain_package('python-memcache').that_comes_before('Class[nova]')
       should contain_Nova_config('database/connection').that_requires('Rjil::Service_blocker[mysql]')
       should contain_nova_config('DEFAULT/rpc_zmq_bind_address').with_value('*')
