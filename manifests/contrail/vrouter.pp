@@ -44,10 +44,5 @@ class rjil::contrail::vrouter (
   # validation checks
   ##
 
-  class {'rjil::test::contrail_vrouter':
-    vrouter_interface => $contrail::vrouter::vrouter_interface,
-    vgw_interface     => $contrail::vrouter::vgw_interface,
-    vgw_enabled       => $contrail::vrouter::vgw_enabled,
-    require           => Class['Contrail::Vrouter'],
-  }
+  include rjil::test::contrail_vrouter
 }
