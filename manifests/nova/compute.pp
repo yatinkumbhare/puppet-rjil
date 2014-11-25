@@ -115,9 +115,9 @@ class rjil::nova::compute (
     command => "virsh secret-set-value --secret $cinder_rbd_secret_uuid \
                 --base64 $(ceph --name mon. --key ${ceph_mon_key} auth get-key \
                 client.cinder_volume)",
-    unless => "ceph --name mon. --key ${ceph_mon_key} auth get-key \
-                client.cinder_volume | grep \"$(virsh -q secret-get-value \
-                $cinder_rbd_secret_uuid)\"",
+    unless => "virsh -q secret-get-value $cinder_rbd_secret_uuid | \
+	           grep \"$(grep ceph --name mon. --key ${ceph_mon_key} auth get-key \
+                        client.cinder_volume)\"",
     require => Exec["secret_define_cinder_volume"],
     notify => Service ['libvirt'],
   }
