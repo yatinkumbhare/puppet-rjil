@@ -28,7 +28,7 @@ else
 	mappings_arg=""
 fi
 
-project_tag=${project_tag:-test${BUILD_NUMBER}}
+export project_tag=${project_tag:-test${BUILD_NUMBER}}
 
 if ! [ -e venv ]
 then
