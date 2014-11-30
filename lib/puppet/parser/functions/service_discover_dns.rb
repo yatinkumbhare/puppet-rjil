@@ -31,12 +31,12 @@ EOS
     raise(ArgumentError, "name must be specified") unless name
     Resolv::DNS.open do |dns|
       ress = dns.getresources(name, Resolv::DNS::Resource::IN::SRV)
-      names = ress.empty? ? []: ress.map { |r| r.target }.join(',').split(',')
+      names = ress.empty? ? []: ress.map { |r| r.target }.join(',').split(',').sort
       if output == 'name'
         return names
       elsif output == 'ip'
         ips = names.map {|name| dns.getresources(name,Resolv::DNS::Resource::IN::A).map{|a| a.address}.join}
-        return ips
+        return ips.sort
       elsif output == 'both'
         names.inject({}) do |srv,name|
           srv.update( name => dns.getresources(name,Resolv::DNS::Resource::IN::A).map{|a| a.address}.join)
