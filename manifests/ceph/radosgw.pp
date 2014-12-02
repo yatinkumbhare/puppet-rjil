@@ -7,6 +7,7 @@
 
 class rjil::ceph::radosgw {
 
+  include ::ceph::conf
   include ::ceph::radosgw
 
   ##

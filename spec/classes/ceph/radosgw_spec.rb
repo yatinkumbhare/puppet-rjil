@@ -5,6 +5,7 @@ describe 'rjil::ceph::radosgw' do
 
   let :hiera_data do
     {
+      'ceph::conf::fsid'                            => '6827a7ec-9538-4168-a10c-f44e18f7abaf',
       'ceph::radosgw::keystone_url'                 => 'http://server:port/test',
       'ceph::radosgw::keystone_admin_token'         => 'token',
       'ceph::radosgw::mon_key'                      => 'mon-key',
