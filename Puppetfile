@@ -86,8 +86,8 @@ mod 'puppetlabs/concat',
   :ref => '1.1.1'
 
 mod 'enovance/ceph',
-  :git => "#{base_url}/hkumarmk/puppet-ceph",
-  :ref => 'radosgw'
+  :git => "#{base_url}/JioCloud/puppet-ceph",
+  :ref => 'svn_to_git_2'
 
 mod 'stackforge/glance',
   :git => "#{base_url}/stackforge/puppet-glance",
