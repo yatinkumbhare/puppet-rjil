@@ -16,6 +16,7 @@ fi
 
 cat <<EOF >userdata.txt
 #!/bin/bash
+set -x
 release="\$(lsb_release -cs)"
 export git_protocol="${git_protocol}"
 export no_proxy="127.0.0.1,169.254.169.254,localhost,consul,jiocloud.com"
