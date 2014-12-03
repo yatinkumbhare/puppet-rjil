@@ -74,7 +74,18 @@ echo 'etcd_discovery_token='${etcd_discovery_token} > /etc/facter/facts.d/etcd.t
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
-puppet apply --debug -e "include rjil::jiocloud"
+while true
+do
+    puppet apply --detailed-exitcodes --debug -e "include rjil::jiocloud"
+    ret_code=$?
+    if [[ $ret_code = 1 || $ret_code = 4 || $ret_code = 6 ]]
+    then
+        echo "Puppet failed. Will retry in 5 seconds"
+        sleep 5
+    else
+        break
+    fi
+done
 EOF
 
 time python -m jiocloud.apply_resources apply ${EXTRA_APPLY_RESOURCES_OPTS} --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
