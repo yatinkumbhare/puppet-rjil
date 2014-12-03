@@ -78,7 +78,7 @@ while true
 do
     puppet apply --detailed-exitcodes --debug -e "include rjil::jiocloud"
     ret_code=$?
-    if [[ $ret_code = 1 || $ret_code = 4 || $ret_code = 6 ]]
+    if [[ \$ret_code = 1 || \$ret_code = 4 || \$ret_code = 6 ]]
     then
         echo "Puppet failed. Will retry in 5 seconds"
         sleep 5
