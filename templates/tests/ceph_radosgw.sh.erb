@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+function fail {
+  echo "CRITICAL: $@"
+  exit 2
+}
+
+/usr/lib/nagios/plugins/check_http -H localhost || fail 'radosgw is not up'
+
+source /root/openrc || fail 'Cannot source /root/openrc'
+
+# Swift checks ##
+
+# create container
+swift post <%= @hostname %> || fail 'Cannot create container'
+
+# upload an object
+pushd /root
+swift upload <%= @hostname %> openrc || fail 'Cannot upload object'
+
+# Download the object
+pushd /tmp
+swift download <%= @hostname %> openrc || fail 'Cannot download the object'
+
+# Delete the object
+swift delete <%= @hostname %> openrc || fail 'Cannot delete the object'
+
+# Delete the container
+swift delete <%= @hostname %> || fail 'Cannot delete the container'
