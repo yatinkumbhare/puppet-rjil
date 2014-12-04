@@ -3,7 +3,8 @@
 ##
 class rjil::system::ntp(
   $server       = false,
-  $server_array = hiera('ntp::servers')
+  $server_array = hiera('ntp::servers'),
+  $run_ntpdate  = true,
 ) {
 
   $servers = join($server_array, '')
@@ -27,16 +28,23 @@ class rjil::system::ntp(
     }
   }
 
-  if($servers =~ /ntp.service.consul/) {
-    rjil::service_blocker { 'ntp':
-      before => Exec['ntpdate'],
+  if $run_ntpdate {
+    if($servers =~ /ntp.service.consul/) {
+      rjil::service_blocker { 'ntp':
+        before => Exec['ntpdate'],
+      }
     }
-  }
-
-  exec { "ntpdate":
-    command => "/usr/sbin/ntpdate $servers",
-    unless  => '/usr/bin/pkill -0 ntpd',
-    before  => Package[ntp]
+    exec { "ntpdate":
+      command => "/usr/sbin/ntpdate $servers",
+      unless  => '/usr/bin/pkill -0 ntpd',
+      before  => Package[ntp]
+    }
+  } else {
+    if($servers =~ /ntp.service.consul/) {
+      rjil::service_blocker { 'ntp':
+        before => Package[ntp],
+      }
+    }
   }
 
   ##

@@ -75,6 +75,7 @@ echo 'etcd_discovery_token='${etcd_discovery_token} > /etc/facter/facts.d/etcd.t
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
+echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
 while true
 do
     puppet apply --detailed-exitcodes --debug -e "include rjil::jiocloud"
