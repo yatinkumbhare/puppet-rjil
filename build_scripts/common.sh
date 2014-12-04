@@ -6,12 +6,17 @@ then
     exit 1
 fi
 
+if [ -z "${cloud_provider}" ]; then
+  # defaulting it to env for backwards compatibility
+  cloud_provider=$env
+fi
+
 # Load credentials (openrc style)
 if set -o | grep xtrace | grep on; then
   xtrace_was_on=1
   set +x
 fi
-. ${env_file:-/var/lib/jenkins/cloud.${env}.env}
+. ${env_file:-/var/lib/jenkins/cloud.${cloud_provider}.env}
 if [ -n "${xtrace_was_on}" ]; then
   set -x
 fi
@@ -21,9 +26,9 @@ fi
 if [ -n "${mapping}" ]
 then
 	mappings_arg="--mappings=${mapping}"
-elif [ -e "environment/${env}.map.yaml" ]
+elif [ -e "environment/${cloud_provider}.map.yaml" ]
 then
-	mappings_arg="--mappings=environment/${env}.map.yaml"
+	mappings_arg="--mappings=environment/${cloud_provider}.map.yaml"
 else
 	mappings_arg=""
 fi

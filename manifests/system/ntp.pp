@@ -2,8 +2,12 @@
 ## Class rjil::system::ntp
 ##
 class rjil::system::ntp(
-  $server = false,
+  $server       = false,
+  $server_array = hiera('ntp::servers'),
+  $run_ntpdate  = true,
 ) {
+
+  $servers = join($server_array, '')
 
   ## hiera_configs required
   ## There will be two internal ntp servers which would be used for timesync on other servers
@@ -17,18 +21,29 @@ class rjil::system::ntp(
 
   include ::ntp
 
-  $servers = join($::ntp::servers, ' ')
-
-  exec { "ntpdate":
-    command => "/usr/sbin/ntpdate $servers",
-    unless  => '/usr/bin/pkill -0 ntpd',
-    before  => Package[ntp]
-  }
-
   if $server {
     rjil::jiocloud::consul::service { 'ntp':
       port          => 123,
       check_command => '/usr/lib/jiocloud/tests/ntp.sh',
+    }
+  }
+
+  if $run_ntpdate {
+    if($servers =~ /ntp.service.consul/) {
+      rjil::service_blocker { 'ntp':
+        before => Exec['ntpdate'],
+      }
+    }
+    exec { "ntpdate":
+      command => "/usr/sbin/ntpdate $servers",
+      unless  => '/usr/bin/pkill -0 ntpd',
+      before  => Package[ntp]
+    }
+  } else {
+    if($servers =~ /ntp.service.consul/) {
+      rjil::service_blocker { 'ntp':
+        before => Package[ntp],
+      }
     }
   }
 

@@ -10,6 +10,7 @@
   - services
   - "secrets/%{env}"
   - "role/%{jiocloud_role}"
+  - "cloud_provider/%{cloud_provider}"
   - "env/%{env}"
   - "secrets/common"
   - common

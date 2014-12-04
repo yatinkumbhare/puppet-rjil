@@ -33,10 +33,10 @@ then
 	echo ETCD_DISCOVERY_PROXY="'${env_https_proxy}'" >> /etc/environment
 	echo https_proxy="'${env_https_proxy}'" >> /etc/environment
 fi
-wget -O puppet.deb -t 2 -T 5 http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
-wget -O jiocloud.deb -t 2 -T 5 http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
+wget -O puppet.deb -t 2 -T 30 http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
+wget -O jiocloud.deb -t 2 -T 30 http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
 dpkg -i puppet.deb jiocloud.deb
-if http_proxy= wget -t 2 -T 5 -O internal.deb http://apt.internal.jiocloud.com/internal.deb
+if http_proxy= wget -t 2 -T 30 -O internal.deb http://apt.internal.jiocloud.com/internal.deb
 then
        dpkg -i internal.deb
 fi
@@ -75,6 +75,7 @@ echo 'etcd_discovery_token='${etcd_discovery_token} > /etc/facter/facts.d/etcd.t
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
+echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
 while true
 do
     puppet apply --detailed-exitcodes --debug -e "include rjil::jiocloud"
