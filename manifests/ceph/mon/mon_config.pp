@@ -23,7 +23,7 @@ class rjil::ceph::mon::mon_config (
   #   resolveable, will not work.
   # Because of above reason, mon_config is done in two step
   # 1. configure the node's own configuration with mon_name -> hostname and
-  # mon_addr -> puublic interface IP address.
+  # mon_addr -> public interface IP address.
   # 2. Configure other mon's configuration with mon_name and mon_addr as IP
   # addresses
   ##
@@ -47,7 +47,12 @@ class rjil::ceph::mon::mon_config (
   if ! empty($other_mons) {
     ::ceph::conf::mon_config{ $other_mons: }
   } elsif ! $leader {
-    fail("External Mon list cannot be empty when we are not the leader")
+    runtime_fail {'monlist_empty_fail':
+      fail    => $fail,
+      message => 'External Mon list cannot be empty for non-leader mon nodes',
+      # this the exact dependency that we are waiting for...
+      before  => Exec['ceph-mon-keyring'],
+    }
   }
 
 }
