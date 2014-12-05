@@ -59,6 +59,14 @@ then
        # Let's just run Puppet and see if things normalize
        run_puppet
 fi
+python -m jiocloud.orchestrate local_health
+rv=$?
+if [ $rv -ne 0 ]
+then
+  # if we are failing, run puppet to see if it fixes itself
+  run_puppet
+  consul reload
+fi
 validate_service
 python -m jiocloud.orchestrate local_version $pending_version
 python -m jiocloud.orchestrate update_own_info
