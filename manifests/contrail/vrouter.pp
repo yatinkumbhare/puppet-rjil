@@ -1,15 +1,15 @@
 ###
 # Class: rjil::contrail::vrouter
 #
-# $discovery_ip: ideally this should be resolved from
+# $discovery_address: ideally this should be resolved from
 # lb.discovery.service.consul, but for this it need some more work to see the
 # impact of moving haproxy to lb. This will be worked on with multi-node
 # contrail setup.
 ###
 
 class rjil::contrail::vrouter (
-  $discovery_ip = join(service_discover_dns('real.neutron.service.consul','ip')),
-  $api_ip       = undef,
+  $discovery_address = join(service_discover_dns('real.neutron.service.consul','name')),
+  $api_address       = undef,
 ) {
 
 
@@ -37,8 +37,8 @@ class rjil::contrail::vrouter (
   }
 
   class {'::contrail::vrouter':
-    discovery_ip => $discovery_ip,
-    api_ip       => $api_ip,
+    discovery_address => $discovery_address,
+    api_address       => $api_address,
   }
   ##
   # validation checks

@@ -9,7 +9,8 @@ puppet-rjil
 2. [Details - how does it work?](#details)
 3. [Orchestration - how cross host dependencies work](#cross-host-dependencies)
 4. [Development Workflow](#development-environment)
-5. [Build script - command line tool for generating test deployments](#build-script)
+5. [Running Behind Proxy Server](#running-behind-proxy-server)
+6. [Build script - command line tool for generating test deployments](#build-script)
 
 # Overview
 
@@ -474,6 +475,49 @@ be added to the following location.
 
 ````
 ./hiera/data/env/<env_name>.yaml
+````
+
+# Running Behind Proxy Server
+
+In order to run the system behind proxy server, the following extra configuration is required.
+
+* While running Vagrant or deploy.sh, export http_proxy and https_proxy variables on the
+   system where running them. This will make sure those scripts will use system wide proxy
+   settings.
+
+example
+````
+export http_proxy=http://10.135.121.138:3128
+export https_proxy=http://10.135.121.138:3128
+
+where the proxy url is http://10.135.121.138:3128.
+````
+
+* Set rjil::system::proxies hiera data, preferably in hiera/data/env/<env_name>.yaml as below.
+    If this is configured, puppet will configure system wide proxy settings on all systems.
+
+````
+rjil::system::proxies:
+  "no":
+    url: "127.0.0.1,localhost,consul,jiocloud.com"
+  "http":
+    url: "http://10.135.121.138:3128"
+  "https":
+    url: "http://10.135.121.138:3128"
+
+where the proxy url is http://10.135.121.138:3128.
+````
+
+* Sometimes, the systems will not have access to upstream ntp servers, in which case that setting
+ have to be changed to internal ntp server (By default, it take pool.ntp.org).
+
+Configure appropriate ntp server in hiera/data/env/<env_name>.yaml.
+
+example:
+
+````
+upstream_ntp_servers:
+ - 10.135.121.138
 ````
 
 # Build script
