@@ -3,12 +3,6 @@
 . $(dirname $0)/common.sh
 
 # If these aren't yet set (from credentials file, typically),
-# create new ones.
-if [ -z "${etcd_discovery_token}" ]
-then
-    etcd_discovery_token=$(python -m jiocloud.orchestrate new_discovery_token)
-fi
-
 if [ -z "${consul_discovery_token}" ]
 then
     consul_discovery_token=$(curl http://consuldiscovery.linux2go.dk/new)
@@ -18,7 +12,9 @@ cat <<EOF >userdata.txt
 #!/bin/bash
 set -x
 release="\$(lsb_release -cs)"
-export git_protocol="${git_protocol}"
+if [ -n "${git_protocol}" ]; then
+  export git_protocol="${git_protocol}"
+fi
 export no_proxy="127.0.0.1,169.254.169.254,localhost,consul,jiocloud.com"
 echo no_proxy="'127.0.0.1,169.254.169.254,localhost,consul,jiocloud.com'" >> /etc/environment
 if [ -n "${env_http_proxy}" ]
@@ -42,6 +38,10 @@ then
 fi
 apt-get update
 apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate
+if [ -n "${python_jiocloud_source_repo}" ]; then
+  apt-get install -y python-pip python-jiocloud python-dev libffi-dev libssl-dev git
+  pip install -e "${python_jiocloud_source_repo}@${python_jiocloud_source_branch}#egg=jiocloud"
+fi
 if [ -n "${puppet_modules_source_repo}" ]; then
   apt-get install -y git
   git clone ${puppet_modules_source_repo} /tmp/rjil
@@ -71,7 +71,6 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   puppet apply -e "ini_setting { manifestdir: path => \"/etc/puppet/puppet.conf\", section => main, setting => manifestdir, value => \"/etc/puppet/manifests.overrides\" }"
 fi
 sudo mkdir -p /etc/facter/facts.d
-echo 'etcd_discovery_token='${etcd_discovery_token} > /etc/facter/facts.d/etcd.txt
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
@@ -92,17 +91,12 @@ EOF
 
 time python -m jiocloud.apply_resources apply ${EXTRA_APPLY_RESOURCES_OPTS} --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
 
-time $timeout 1200 bash -c 'while ! bash -c "ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag});python -m jiocloud.orchestrate --host \${ip} ping"; do sleep 5; done'
+time $timeout 1200 bash -c 'while ! bash -c "ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag});ssh -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \${ssh_user:-jenkins}@\${ip} python -m jiocloud.orchestrate ping"; do sleep 5; done'
 
 ip=$(python -m jiocloud.utils get_ip_of_node etcd1_${project_tag})
 
-time $timeout 600 bash -c "while ! ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
+time $timeout 600 bash -c "while ! ssh -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
 
-time $timeout 3000 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/${layout:-full}.yaml | sed -e 's/_/-/g' | python -m jiocloud.orchestrate --host ${ip} verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
-time $timeout 2400 bash -c "while ! python -m jiocloud.orchestrate --host ${ip} check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
-
-# make sure that there are not any failures
-if ! python -m jiocloud.orchestrate --host ${ip} get_failures; then
-  echo "Failures occurred"
-  exit 1
-fi
+time $timeout 3000 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/${layout:-full}.yaml | sed -e 's/_/-/g' | ssh -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 2400 bash -c "while ! ssh -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 600 bash -c "while ! ssh -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate get_failures --hosts; do sleep 5; done"
