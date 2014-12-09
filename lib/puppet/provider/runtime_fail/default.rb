@@ -6,6 +6,7 @@ Puppet::Type.type(:runtime_fail).provide(
     if resource[:fail]
       fail(resource[:message])
     end
+    true
   end
 
   def ready=(val)
