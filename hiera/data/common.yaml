@@ -565,8 +565,6 @@ rjil::jiocloud::consul::agent::bind_addr: "%{hiera('private_address')}"
 ntp::servers:
   - ntp.service.consul
 
-ntp::udlc: yes
-
 upstream_ntp_servers:
   - pool.ntp.org
 
