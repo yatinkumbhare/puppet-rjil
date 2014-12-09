@@ -30,7 +30,13 @@ then
 	echo https_proxy="'${env_https_proxy}'" >> /etc/environment
 fi
 wget -O puppet.deb -t 2 -T 30 http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
-wget -O jiocloud.deb -t 2 -T 30 http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
+if [ "${env}" == "at" ]
+then
+	jiocloud_repo_deb_url=http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}-testing.deb
+else
+	jiocloud_repo_deb_url=http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
+fi
+wget -O jiocloud.deb -t 2 -T 30 \${jiocloud_repo_deb_url}
 dpkg -i puppet.deb jiocloud.deb
 if http_proxy= wget -t 2 -T 30 -O internal.deb http://apt.internal.jiocloud.com/internal.deb
 then
