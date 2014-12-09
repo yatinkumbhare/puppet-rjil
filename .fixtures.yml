@@ -134,3 +134,6 @@ fixtures:
     orchestration_utils:
       repo: https://github.com/jiocloud/puppet-orchestration_utils
       ref: origin/master
+    squid3:
+      repo: https://github.com/bodepd/puppet-squid3
+      ref: origin/master
