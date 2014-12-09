@@ -55,3 +55,34 @@ rustedhalo_apt_repo_release: 'trusty-testing'
 #    url: "http://10.135.121.138:3128"
 #  "https":
 #    url: "http://10.135.121.138:3128"
+
+rjil::jiocloud::dhcp::interfaces:
+  - eth1
+
+##
+# There must be dhcppools entries for subnets which are configured on
+# rjil::jiocloud::dhcp::interfaces, otherwise dhcp server will fail to start.
+##
+
+rjil::jiocloud::dhcp::dhcppools:
+  localnet:
+    network: "%{network_eth1}"
+    mask: "%{netmask_eth1}"
+  net1:
+    network: 10.10.10.0
+    mask: 255.255.255.0
+    range:
+      - 10.10.10.10
+      - 10.10.10.254
+    gateway: 10.10.10.1
+    oncommit_script: /usr/bin/python
+    oncommit:
+      - 'set cip = binary-to-ascii(10, 8, ".", leased-address)'
+      - 'execute("python -m jiocloud.enroll --ilo_username ilo_user
+                  --ilo_password ILO_PASSWORD
+                  --os_username OS_USERNAME
+                  --os_tenant OS_TENANT
+                  --os_password OS_PASSWORD
+                  --os_auth_url OS_AUTH_URL
+                  --nic eth0
+                  --ilo_address ","commit", cip)'
