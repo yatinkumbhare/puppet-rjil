@@ -174,3 +174,7 @@ mod 'dalen/dnsquery',
 mod 'nvpuppet/gitolite',
   :git => "#{base_url}/nvalentine-puppetlabs/puppet-gitolite",
   :ref => 'origin/master'
+
+mod 'jiocloud/orchestration_utils',
+  :git => "#{base_url}/jiocloud/puppet-orchestration_utils",
+  :ref => 'origin/master'
