@@ -75,13 +75,17 @@ Vagrant.configure("2") do |config|
       end
 
       # upgrade puppet
+      if ENV['http_proxy']
+        config.vm.provision 'shell', :inline =>
+          "test -e puppet.deb && exit 0; release=$(lsb_release -cs);http_proxy=#{ENV['http_proxy']} wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1"
+      else
+        config.vm.provision 'shell', :inline =>
+          "test -e puppet.deb && exit 0; release=$(lsb_release -cs);wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1"
+      end
       config.vm.provision 'shell', :inline =>
-        'test -e puppet.deb && exit 0; release=$(lsb_release -cs);wget -O puppet.deb http://apt.puppetlabs.com/puppetlabs-release-${release}.deb;dpkg -i puppet.deb;apt-get update;apt-get install -y puppet-common=3.6.2-1puppetlabs1'
+        'puppet apply --detailed-exitcodes --debug -e "include rjil::jiocloud"; if [[ $? = 1 || $? = 4 || $? = 6 ]]; then apt-get update; puppet apply --detailed-exitcodes --debug -e "include rjil::jiocloud"; fi'
 
-      config.vm.provision 'shell', :inline =>
-        'puppet apply --debug -e "include rjil::jiocloud"'
-
-      config.vm.network "private_network", :type => "dhcp"
+      config.vm.network "private_network", :type => :dhcp
     end
   end
 end

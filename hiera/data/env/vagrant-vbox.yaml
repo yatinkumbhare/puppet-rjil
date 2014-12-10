@@ -20,3 +20,21 @@ rjil::neutron::public_cidr: 100.1.0.0/24
 rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet]
 rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet]
 ceph::conf::mon_timecheck_interval: 30
+
+##
+# Running the system behind proxy need certain extra entries to be added
+# 1. to add proxy server configuration.
+# 2. To add internal ntp servers if default upstream_ntp_servers (public ntp servers)
+#    are not reachable.
+##
+
+#upstream_ntp_servers:
+# - 10.135.121.138
+
+#rjil::system::proxies:
+#  "no":
+#    url: "127.0.0.1,localhost,consul,jiocloud.com"
+#  "http":
+#    url: "http://10.135.121.138:3128"
+#  "https":
+#    url: "http://10.135.121.138:3128"

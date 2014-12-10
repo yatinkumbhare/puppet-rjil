@@ -234,10 +234,6 @@ keystone::debug: "%{hiera('debug')}"
 keystone::verbose: "%{hiera('verbose')}"
 keystone::admin_port: '35357'
 keystone::public_port: '5000'
-keystone::admin_bind_host: "%{hiera('private_address')}"
-rjil::test::keystone::admin_address: "%{hiera('keystone::admin_bind_host')}"
-keystone::public_bind_host: "%{hiera('public_address')}"
-rjil::test::keystone::public_address: "%{hiera('keystone::public_bind_host')}"
 keystone::token_provider: keystone.token.providers.uuid.Provider
 keystone::mysql_module: 2.3
 
