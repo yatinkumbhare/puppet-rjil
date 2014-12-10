@@ -17,8 +17,8 @@ nova::compute::libvirt::libvirt_virt_type: qemu
 rjil::jiocloud::consul::service::interval: 120s
 
 rjil::neutron::public_cidr: 100.1.0.0/24
-rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet]
-rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet]
+rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek]
+rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek]
 ceph::conf::mon_timecheck_interval: 30
 
 ##
