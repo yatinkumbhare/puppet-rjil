@@ -587,11 +587,14 @@ tempest::tenant_name: tempest
 tempest::username: tempest
 tempest::password: tempest
 tempest::identity_uri: "%{hiera('keystone::endpoint::public_url')}/%{hiera('rjil::keystone::version')}"
+tempest::identity_uri_v3: "%{hiera('keystone::endpoint::public_url')}/v3"
 tempest::neutron_available: true
 tempest::public_network_name: "%{hiera('public_network_name')}"
 tempest::fixed_network_name: net_tempest
 tempest::setup_venv: true
 tempest::swift_available: true
+tempest::tempest_clone_path: /home/jenkins/tempest
+tempest::tempest_clone_owner: jenkins
 
 rjil::tempest::keystone_admin_token: "%{hiera('keystone::admin_token')}"
 
