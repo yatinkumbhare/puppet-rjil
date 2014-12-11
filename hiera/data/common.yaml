@@ -309,7 +309,11 @@ rjil::jiocloud::undercloud::keystone_admin_password: 'NoevUjdets'
 rjil::jiocloud::undercloud::mysql_root_password: 'smgefgi'
 rjil::jiocloud::undercloud::verbose: "%{hiera('verbose')}"
 rjil::jiocloud::undercloud::debug: "%{hiera('debug')}"
+rjil::jiocloud::undercloud::ironic_keystone_user: ironic
+rjil::jiocloud::undercloud::keystone_service_tenant: services
 
+ilo_user: hpadmin
+ilo_password: hpinvent
 #########################################
 ###### System configuration #############
 #########################################
