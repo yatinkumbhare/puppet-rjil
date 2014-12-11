@@ -53,7 +53,7 @@ Vagrant.configure("2") do |config|
          'cp /vagrant/hiera/hiera.yaml /etc/puppet'
 
       config.vm.host_name = "#{node_name}.domain.name"
-      ['consul', 'etcd'].each do |x|
+      ['consul'].each do |x|
         config.vm.provision 'shell', :inline =>
           "[ -e '/etc/facter/facts.d/#{x}.txt' -o -n '#{ENV["#{x}_discovery_token"]}' ] || (echo 'No #{x} discovery token set. Bailing out. Use \". newtokens.sh\" to get tokens.' ; exit 1)"
         config.vm.provision 'shell', :inline =>
