@@ -173,3 +173,8 @@ node /^uc\d+/ {
   include rjil::jiocloud::aptrepo
   include rjil::jiocloud::gitolite
 }
+
+node /^httpproxy\d+/ {
+  include rjil::base
+  include rjil::http_proxy
+}
