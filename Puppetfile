@@ -82,7 +82,7 @@ mod 'stackforge/openstacklib',
   :ref => 'master'
 
 mod 'stackforge/ironic',
-  :git => "#{base_url}/stackforge/puppet-ironic",
+  :git => "#{base_url}/JioCloud/puppet-ironic",
   :ref => 'master'
 
 mod 'puppetlabs/concat',
