@@ -169,9 +169,6 @@ node /^uc\d+/ {
   include rjil::base
   include rjil::jiocloud::undercloud
   include rjil::jiocloud::aptmirror
-  include rjil::jiocloud::jenkins::master
-  include rjil::jiocloud::aptrepo
-  include rjil::jiocloud::gitolite
 }
 
 node /^httpproxy\d+/ {
