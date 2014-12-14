@@ -7,7 +7,7 @@ class rjil::system::ntp(
   $run_ntpdate  = true,
 ) {
 
-  $servers = join($server_array, '')
+  $servers = join($server_array, ' ')
 
   ## hiera_configs required
   ## There will be two internal ntp servers which would be used for timesync on other servers
