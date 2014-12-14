@@ -15,6 +15,14 @@ class rjil::jiocloud::aptmirror {
     source     => true,
   }
 
+  apt_mirror::mirror { 'ubuntu-di':
+    mirror     => 'archive.ubuntu.com',
+    os         => 'ubuntu',
+    release    => ['trusty', 'trusty-updates', 'trusty-security'],
+    components => ['main/debian-installer', 'universe/debian-installer', 'restricted/debian-installer'],
+    source     => false,
+  }
+
   apt_mirror::mirror { 'internal':
     mirror     => 'apt.internal.jiocloud.com',
     os         => 'internal',
