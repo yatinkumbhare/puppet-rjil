@@ -55,3 +55,41 @@ rustedhalo_apt_repo_release: 'trusty-testing'
 #    url: "http://10.135.121.138:3128"
 #  "https":
 #    url: "http://10.135.121.138:3128"
+
+rjil::jiocloud::dhcp::interfaces:
+  - eth1
+
+##
+# There must be dhcppools entries for subnets which are configured on
+# rjil::jiocloud::dhcp::interfaces, otherwise dhcp server will fail to start.
+##
+
+##
+# It seems this is becoming more complex so would need to move to manifests.
+# Just adding here to make sure this is functional, which would be moved to
+# manifests. Also currently undercloud controller is not added to consul, which
+# would also need to be added.
+##
+rjil::jiocloud::dhcp::dhcppools:
+  localnet:
+    network: "%{network_eth1}"
+    mask: "%{netmask_eth1}"
+  net1:
+    network: 10.10.10.0
+    mask: 255.255.255.0
+    range:
+      - 10.10.10.10
+      - 10.10.10.254
+    gateway: 10.10.10.1
+    oncommit_script: /usr/bin/python2.7
+    oncommit:
+      - 'set cip = binary-to-ascii(10, 8, ".", leased-address)'
+      - 'execute("/usr/bin/python2.7", "-m", "jiocloud.enroll",
+                  "--ilo_username", "%{hiera(''ilo_user'')}",
+                  "--ilo_password", "%{hiera(''ilo_password'')}",
+                  "--os_username", "%{hiera(''rjil::jiocloud::undercloud::ironic_keystone_user'')}",
+                  "--os_tenant", "%{hiera(''rjil::jiocloud::undercloud::keystone_service_tenant'')}",
+                  "--os_password", "%{hiera(''rjil::jiocloud::undercloud::ironic_keystone_password'')}",
+                  "--os_auth_url", "%{hiera(''rjil::keystone::protocol'')}://%{ipaddress}:5000/%{hiera(''rjil::keystone::version'')}",
+                  "--nic", "eth0",
+                  "--ilo_address ","commit", cip)'

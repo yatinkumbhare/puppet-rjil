@@ -169,6 +169,7 @@ node /^uc\d+/ {
   include rjil::base
   include rjil::jiocloud::undercloud
   include rjil::jiocloud::aptmirror
+  include rjil::jiocloud::dhcp
 }
 
 node /^httpproxy\d+/ {
