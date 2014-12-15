@@ -32,13 +32,16 @@ Vagrant.configure("2") do |config|
   end
   machines.each do |node_name, number|
 
-    config.vm.provider :virtualbox do |vb, override|
-      if node_name =~ /(ct|cp)/
-        vb.memory = 4096
-      end
-    end
-
     config.vm.define(node_name) do |config|
+
+      config.vm.provider :virtualbox do |vb, override|
+        if node_name =~ /(cp)/
+          vb.memory = ENV['COMPUTE_MEMORY_GB'] || 4096
+        end
+        if node_name =~ /(ct|ocdb|oc)/
+          vb.memory = 4096
+        end
+      end
 
       config.vm.synced_folder("hiera/", '/etc/puppet/hiera/')
       config.vm.synced_folder("modules/", '/etc/puppet/modules/')
