@@ -186,6 +186,11 @@ mod 'nvpuppet/gitolite',
 mod 'jiocloud/orchestration_utils',
   :git => "#{base_url}/jiocloud/puppet-orchestration_utils",
   :ref => 'origin/master'
+
 mod 'thias/squid3',
   :git => "#{base_url}/bodepd/puppet-squid3",
+  :ref => 'origin/master'
+
+mod 'puppetlabs/dhcp',
+  :git => "#{base_url}/JioCloud/puppetlabs-dhcp",
   :ref => 'origin/master'
