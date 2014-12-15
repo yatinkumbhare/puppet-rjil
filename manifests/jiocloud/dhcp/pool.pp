@@ -16,11 +16,11 @@ define rjil::jiocloud::dhcp::pool (
 ) {
 
 
-  ::dhcp::pool{ $name:                              
-    network   => $network,                        
-    mask      => $mask,                      
+  ::dhcp::pool{ $name:
+    network   => $network,
+    mask      => $mask,
     range     => $range,
-    gateway   => $gateway,                        
+    gateway   => $gateway,
     oncommit  => $oncommit,
     onrelease => $onrelease,
     onexpiry  => $onexpiry,
@@ -44,10 +44,10 @@ define rjil::jiocloud::dhcp::pool (
     if ! $onrelease_script {
       fail('onrelease_script Parameter is required if onrelease is set')
     } else {
-      file_line {$onrelease_script:                     
-        line => "${onrelease_script} rwix,",            
+      file_line {$onrelease_script:
+        line => "${onrelease_script} rwix,",
         path => '/etc/apparmor.d/local/usr.sbin.dhcpd',
-        notify  => Exec['reload-apparmor-dhcpd'],            
+        notify  => Exec['reload-apparmor-dhcpd'],
       }
     }
   }
@@ -56,14 +56,14 @@ define rjil::jiocloud::dhcp::pool (
     if ! $onexpiry_script {
       fail('onexpiry_script Parameter is required if onexpiry is set')
     } else {
-      file_line {$onexpiry_script:                     
-        line => "${onexpiry_script} rwix,",            
+      file_line {$onexpiry_script:
+        line => "${onexpiry_script} rwix,",
         path => '/etc/apparmor.d/local/usr.sbin.dhcpd',
-        notify  => Exec['reload-apparmor-dhcpd'],            
+        notify  => Exec['reload-apparmor-dhcpd'],
       }
     }
   }
- 
+
   ensure_resource(exec,'reload-apparmor-dhcpd',{
       command     => '/sbin/apparmor_parser -r -T -W /etc/apparmor.d/usr.sbin.dhcpd',
       refreshonly => true
