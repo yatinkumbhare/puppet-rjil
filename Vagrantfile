@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
     override.vm.box = 'ubuntu/trusty64'
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-    vb.memory = 2048
+    vb.memory = 1024
   end
 
   config.vm.provider "lxc" do |v, override|
