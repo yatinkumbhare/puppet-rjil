@@ -1,45 +1,15 @@
 #
 # Class: rjil::neutron
 #
-# [* public_subnets *]
-#   is a hash of subnetlogicalname => cidr
-#   e.g { pub_subnet1 => '100.1.0.0/16'}
-
-# NOTE: Public network will be created on services tenant. In order to specify
-# specific tenant name on which public network created, keystone.conf required
-# on neutron server which is not the case as of now.
-
 class rjil::neutron (
-  $keystone_admin_password,
   $api_extensions_path  = undef,
   $service_provider     = undef,
-  $public_network_name  = 'public',
-  $public_subnet_name   = 'pub_subnet1',
-  $public_cidr          = undef,
-  $public_rt_number     = 10000,
-  $router_asn           = 64512,
-  $contrail_api_server  = 'real.neutron.service.consul',
 ) {
 
   ##
   # Rjil tests
   ##
   include rjil::test::neutron
-
-  ##
-  # Database connection is not required for neutron
-  ##
-
-  Neutron_config<| title == 'database/connection' |> {
-    ensure => absent
-  }
-
-  ##
-  # Subscribe neutron-server to contrailplugin.ini
-  ##
-
-  File['/etc/neutron/plugins/opencontrail/ContrailPlugin.ini'] ~>
-    Service['neutron-server']
 
   ##
   # Python-six version >= 1.8.x is required for neutron server, and not handled in package. So
@@ -50,12 +20,9 @@ class rjil::neutron (
 
   include ::neutron
   include ::neutron::server
-  include rjil::contrail::server
   include ::neutron::quota
 
-  package {'python-six':
-    ensure  => latest,
-  }
+  ensure_resource('package','python-six', { ensure => 'latest' })
 
   ##
   # neutron_config is making multiple entries for service_provider
@@ -88,47 +55,10 @@ class rjil::neutron (
     }
   }
 
-
   if $service_provider {
     neutron_config { 'service_providers/service_provider':
       value => $service_provider
     }
-  }
-
-  ##
-  # Add floating IPs
-  ##
-
-  neutron_network {$public_network_name:
-    ensure          => present,
-    router_external => true,
-  }
-
-  if $public_cidr {
-    neutron_subnet {$public_subnet_name:
-      ensure       => present,
-      cidr         => $public_cidr,
-      network_name => $public_network_name,
-      before       => Contrail_rt["default-domain:services:${public_network_name}"],
-    }
-  }
-
-  ##
-  # Add route target in contrail config database.
-  ##
-  contrail_rt {"default-domain:services:${public_network_name}":
-    ensure             => present,
-    rt_number          => $public_rt_number,
-    router_asn         => $router_asn,
-    api_server_address => $contrail_api_server,
-    admin_password     => $keystone_admin_password,
-    require            => Neutron_network[$public_network_name],
-  }
-
-
-  consul_kv{'neutron/floatingip_pool/status':
-    value   => 'ready',
-    require => Contrail_rt["default-domain:services:${public_network_name}"],
   }
 
   rjil::jiocloud::consul::service { 'neutron':
