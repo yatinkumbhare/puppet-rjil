@@ -10,6 +10,7 @@ fi
 
 cat <<EOF >userdata.txt
 #!/bin/bash
+date
 set -x
 release="\$(lsb_release -cs)"
 if [ -n "${git_protocol}" ]; then
@@ -64,7 +65,7 @@ if [ -n "${puppet_modules_source_repo}" ]; then
     git merge -m 'Merging Pull Request' test_${pull_request_id}
     popd
   fi
-  gem install librarian-puppet-simple --no-ri --no-rdoc;
+  time gem install librarian-puppet-simple --no-ri --no-rdoc;
   mkdir -p /etc/puppet/manifests.overrides
   cp /tmp/rjil/site.pp /etc/puppet/manifests.overrides/
   mkdir -p /etc/puppet/hiera
@@ -72,7 +73,7 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   cp -Rvf /tmp/rjil/hiera/data /etc/puppet/hiera
   mkdir -p /etc/puppet/modules.overrides/rjil
   cp -Rvf /tmp/rjil/* /etc/puppet/modules.overrides/rjil/
-  librarian-puppet install --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
+  time librarian-puppet install --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
   puppet apply -e "ini_setting { modulepath: path => \"/etc/puppet/puppet.conf\", section => main, setting => modulepath, value => \"/etc/puppet/modules.overrides:/etc/puppet/modules\" }"
   puppet apply -e "ini_setting { manifestdir: path => \"/etc/puppet/puppet.conf\", section => main, setting => manifestdir, value => \"/etc/puppet/manifests.overrides\" }"
 fi
@@ -83,9 +84,13 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
 while true
 do
+    # first install all packages to make the build as fast as possible
+    puppet apply --detailed-exitcodes \`puppet config print manifestdir\`/site.pp --tags package
+    ret_code_package=\$?
+    # now perform base config
     puppet apply --detailed-exitcodes -e "include rjil::jiocloud"
-    ret_code=\$?
-    if [[ \$ret_code = 1 || \$ret_code = 4 || \$ret_code = 6 ]]
+    ret_code_jio=\$?
+    if [[ \$ret_code_jio = 1 || \$ret_code_jio = 4 || \$ret_code_jio = 6 || \$ret_code_package = 1 || \$ret_code_package = 4 || \$ret_code_package = 6 ]]
     then
         echo "Puppet failed. Will retry in 5 seconds"
         sleep 5
@@ -93,6 +98,7 @@ do
         break
     fi
 done
+date
 EOF
 
 time python -m jiocloud.apply_resources apply ${EXTRA_APPLY_RESOURCES_OPTS} --key_name=${KEY_NAME:-soren} --project_tag=${project_tag} ${mappings_arg} environment/${layout:-full}.yaml userdata.txt
