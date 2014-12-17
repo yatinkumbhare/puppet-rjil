@@ -1,4 +1,4 @@
-class rjil::jiocloud::ironic
+class rjil::ironic
 {
   class { '::rabbitmq': }
 
