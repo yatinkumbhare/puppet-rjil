@@ -28,6 +28,9 @@ rjil::db::dbs:
   ironic:
     user: "%{hiera('ironic_db_user')}"
     pass: "%{hiera('ironic_db_password')}"
+  neutron:
+    user: "%{hiera('neutron_db_user')}"
+    pass: "%{hiera('neutron_db_password')}"
 
 # Gets overridden for ocdb role
 rjil::keystone::disable_db_sync: true
@@ -122,9 +125,11 @@ neutron_public_port: 9696
 
 neutron::verbose: "%{hiera('verbose')}"
 neutron::debug: "%{hiera('debug')}"
+neutron::server::database_connection: "mysql://%{hiera('neutron_db_user')}:%{hiera('neutron_db_password')}@%{hiera('db_host')}/neutron"
 neutron::server::auth_password: "%{hiera('neutron::keystone::auth::password')}"
 neutron::server::auth_host: "%{hiera('keystone_public_address')}"
 neutron::server::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
+neutron::server::mysql_module: 2.3
 neutron::rabbit_password: guest
 neutron::core_plugin: neutron_plugin_contrail.plugins.opencontrail.contrail_plugin.NeutronPluginContrailCoreV2
 neutron::service_plugins:
