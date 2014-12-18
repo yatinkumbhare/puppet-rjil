@@ -81,6 +81,15 @@ openstack_extras::auth_file::admin_tenant: "%{hiera('test_user_tenant')}"
 openstack_extras::auth_file::admin_password: "%{hiera('test_user_password')}"
 openstack_extras::auth_file::controller_node: "lb.keystone.service.consul"
 
+########### Openstack ports
+##################################
+localbind_host: 127.0.0.1
+keystone_localbind_port: 15000
+keystone_port: 5000
+keystone_admin_localbind_port: 35358
+keystone_admin_port: 35357
+
+
 ########### glance config
 ###################################
 
@@ -103,7 +112,7 @@ glance::api::registry_host: "localhost"
 glance::api::registry_protocol: "http"
 glance::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
 glance::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
-glance::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+glance::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
 glance::api::keystone_password: "%{hiera('glance::keystone::auth::password')}"
 glance::api::database_connection: "mysql://%{hiera('glance_db_user')}:%{hiera('glance_db_password')}@%{hiera('db_host')}/glance"
 glance::api::mysql_module: 2.3
@@ -112,7 +121,7 @@ glance::registry::debug: "%{hiera('debug')}"
 glance::registry::verbose: "%{hiera('verbose')}"
 glance::registry::auth_host: "%{hiera('rjil::keystone::public_address')}"
 glance::registry::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
-glance::registry::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::registry::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+glance::registry::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::registry::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
 glance::registry::keystone_password: "%{hiera('glance::keystone::auth::password')}"
 glance::registry::database_connection: "%{hiera('glance::api::database_connection')}"
 glance::registry::mysql_module: 2.3
@@ -178,7 +187,7 @@ nova::api::debug: "%{hiera('debug')}"
 nova::api::verbose: "%{hiera('verbose')}"
 nova::api::auth_host: "%{hiera('keystone_public_address')}"
 nova::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
-nova::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+nova::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
 nova::api::admin_password: "%{hiera('nova::keystone::auth::password')}"
 nova::api::enabled: true
 nova::api::neutron_metadata_proxy_shared_secret: "%{hiera('nova_metadata_proxy_secret')}"
@@ -188,7 +197,7 @@ nova::scheduler::enabled: true
 nova::network::neutron::neutron_admin_password: "%{hiera('neutron::keystone::auth::password')}"
 nova::network::neutron::neutron_url: "%{hiera('api_protocol')}://%{hiera('neutron_public_address')}:%{hiera('neutron_public_port')}"
 nova::network::neutron::neutron_region_name: "%{hiera('region')}"
-nova::network::neutron::neutron_admin_auth_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+nova::network::neutron::neutron_admin_auth_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
 
 nova::conductor::enabled: true
 
@@ -235,7 +244,7 @@ ironic::api::debug: "%{hiera('debug')}"
 ironic::api::verbose: "%{hiera('verbose')}"
 ironic::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
 ironic::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
-ironic::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('ironic::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
+ironic::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('ironic::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
 ironic::api::admin_password: "%{hiera('ironic::keystone::auth::password')}"
 ironic::api::admin_tenant_name: services
 ironic::api::mysql_module: 2.3
@@ -251,21 +260,31 @@ rjil::keystone::ssl: false
 rjil::keystone::protocol: http
 rjil::keystone::version: v2.0
 rjil::keystone::admin_email: "%{hiera('admin_email')}"
-rjil::keystone::public_port: 5000
-rjil::keystone::public_port_internal: "%{hiera('keystone::public_port')}"
-rjil::keystone::admin_port: 35357
-rjil::keystone::admin_port_internal: "%{hiera('keystone::admin_port')}"
+rjil::keystone::public_port: "%{hiera('keystone_port')}"
+rjil::keystone::public_port_internal: "%{hiera('keystone_localbind_port')}"
+rjil::keystone::admin_port: "%{hiera('keystone_admin_port')}"
+rjil::keystone::admin_port_internal: "%{hiera('keystone_admin_localbind_port')}"
 rjil::keystone::public_address: "%{hiera('public_address')}"
+rjil::keystone::server_name: "%{hiera('keystone_public_address')}"
 keystone::roles::admin::email: "%{hiera('admin_email')}"
 keystone::roles::admin::password: "%{hiera('admin_password')}"
 keystone::admin_password: "%{hiera('admin_password')}"
 keystone::database_connection: "mysql://keystone:%{hiera('keystone_db_password')}@%{hiera('db_host')}/keystone"
 keystone::debug: "%{hiera('debug')}"
 keystone::verbose: "%{hiera('verbose')}"
-keystone::admin_port: '35357'
-keystone::public_port: '5000'
+keystone::admin_port: "%{hiera('keystone_admin_localbind_port')}"
+keystone::public_port: "%{hiera('keystone_localbind_port')}"
 keystone::token_provider: keystone.token.providers.uuid.Provider
 keystone::mysql_module: 2.3
+keystone::public_bind_host: "%{hiera('localbind_host')}"
+keystone::admin_bind_host: "%{hiera('localbind_host')}"
+
+##
+# without endpoint configuration, keystone will return local bind address to
+# client requests which will break the system.
+##
+keystone::admin_endpoint: "%{hiera('api_protocol')}://%{hiera('keystone_private_address')}:%{hiera('keystone_admin_port')}"
+keystone::public_endpoint: "%{hiera('api_protocol')}://%{hiera('keystone_public_address')}:%{hiera('keystone_port')}"
 
 # these changes are just from our fork and need to be moved to the profile
 rjil::keystone::cache_enabled: true
@@ -289,8 +308,8 @@ glance::keystone::auth::internal_address: "%{hiera('glance_internal_address')}"
 glance::keystone::auth::region: "%{hiera('region')}"
 
 keystone::endpoint::password: keystone
-keystone::endpoint::public_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('keystone_public_address')}:%{hiera('keystone::public_port')}"
-keystone::endpoint::admin_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('keystone_private_address')}:%{hiera('keystone::admin_port')}"
+keystone::endpoint::public_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('keystone_public_address')}:%{hiera('keystone_port')}"
+keystone::endpoint::admin_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('keystone_private_address')}:%{hiera('keystone_admin_port')}"
 keystone::keystone::auth::region: "%{hiera('region')}"
 
 neutron::keystone::auth::password: neutron

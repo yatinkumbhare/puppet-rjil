@@ -4,6 +4,7 @@
 class rjil::keystone(
   $admin_email            = 'root@localhost',
   $public_address         = '0.0.0.0',
+  $server_name            = 'localhost',
   $public_port            = '443',
   $public_port_internal   = '5000',
   $admin_port             = '35357',
@@ -49,41 +50,37 @@ class rjil::keystone(
     }
   }
 
-  if $ssl {
-    include rjil::apache
-  }
-
-  class { '::keystone': }
-  # class { 'keystone::cron::token_flush': }
+  include rjil::apache
+  include ::keystone
 
   if $ceph_radosgw_enabled {
     include rjil::keystone::radosgw
   }
 
-  if $ssl {
-    ## Configure apache reverse proxy
-    apache::vhost { 'keystone':
-      servername      => $public_address,
-      serveradmin     => $admin_email,
-      port            => $public_port,
-      ssl             => $ssl,
-      docroot         => '/usr/lib/cgi-bin/keystone',
-      error_log_file  => 'keystone.log',
-      access_log_file => 'keystone.log',
-      proxy_pass      => [ { path => '/', url => "http://localhost:${public_port_internal}/"  } ],
-    }
+  ## Configure apache reverse proxy
+  apache::vhost { 'keystone':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/keystone',
+    error_log_file  => 'keystone.log',
+    access_log_file => 'keystone.log',
+    proxy_pass      => [ { path => '/', url => "http://localhost:${public_port_internal}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
 
-    ## Configure apache reverse proxy
-    apache::vhost { 'keystone-admin':
-      servername      => $public_address,
-      serveradmin     => $admin_email,
-      port            => $admin_port,
-      ssl             => $ssl,
-      docroot         => '/usr/lib/cgi-bin/keystone',
-      error_log_file  => 'keystone.log',
-      access_log_file => 'keystone.log',
-      proxy_pass      => [ { path => '/', url => "http://localhost:${admin_port_internal}/"  } ],
-    }
+  ## Configure apache reverse proxy
+  apache::vhost { 'keystone-admin':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $admin_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/keystone',
+    error_log_file  => 'keystone.log',
+    access_log_file => 'keystone.log',
+    proxy_pass      => [ { path => '/', url => "http://localhost:${admin_port_internal}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
   }
 
   ## Keystone cache configuration
