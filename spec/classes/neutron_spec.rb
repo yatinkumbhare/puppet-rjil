@@ -19,18 +19,12 @@ describe 'rjil::neutron' do
       'neutron::server::auth_host'                  => '10.1.1.10',
       'neutron::server::auth_password'              => 'pass',
       'openstack_extras::auth_file::admin_password' => 'pw',
-      'contrail::keystone_host'                     => '10.1.1.1',
-      'contrail::keystone_admin_token'              => 'token',
-      'contrail::keystone_admin_password'           => 'pass',
-      'contrail::keystone_auth_password'           => 'pass',
       'neutron::rabbit_password'                    => 'guest',
       'neutron::core_plugin'                        => 'coreplugin',
       'neutron::service_plugins'                    => ['serviceplugin1'],
       'neutron::quota::quota_driver'                => 'contraildriver',
       'rjil::neutron::api_extensions_path'          => 'extensionspath',
       'rjil::neutron::service_provider'             => 'serviceprovider',
-      'rjil::neutron::public_cidr'                  => '1.1.1.0/24',
-      'rjil::neutron::keystone_admin_password'      => 'pass',
     }
   end
 
@@ -44,16 +38,6 @@ describe 'rjil::neutron' do
       should contain_class('neutron::quota')
       should contain_neutron_config('DEFAULT/api_extensions_path').with_value('extensionspath')
       should contain_neutron_config('service_providers/service_provider').with_value('serviceprovider')
-      should contain_neutron_network('public').with({
-        'ensure'          => 'present',
-        'router_external' => true
-      })
-
-      should contain_neutron_subnet('pub_subnet1').with({
-        'ensure'       => 'present',
-        'cidr'         => '1.1.1.0/24',
-        'network_name' => 'public'
-      })
 
       should contain_rjil__jiocloud__consul__service('neutron').with({
         'tags'      => ['real'],
@@ -67,14 +51,6 @@ describe 'rjil::neutron' do
         'subscribe'   => 'Package[neutron-server]',
       })
 
-      should contain_contrail_rt('default-domain:services:public').with({
-        'ensure'             => 'present',
-        'rt_number'          => 10000,
-        'router_asn'         => 64512,
-        'api_server_address' => 'real.neutron.service.consul',
-        'admin_password'     => 'pass',
-        'require'            => 'Neutron_network[public]',
-      })
     end
   end
 end
