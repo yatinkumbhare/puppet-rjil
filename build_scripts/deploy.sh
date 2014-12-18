@@ -12,6 +12,9 @@ cat <<EOF >userdata.txt
 #!/bin/bash
 date
 set -x
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
 release="\$(lsb_release -cs)"
 if [ -n "${git_protocol}" ]; then
   export git_protocol="${git_protocol}"
