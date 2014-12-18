@@ -25,6 +25,12 @@ rjil::db::dbs:
   glance:
     user: "%{hiera('glance_db_user')}"
     pass: "%{hiera('glance_db_password')}"
+  ironic:
+    user: "%{hiera('ironic_db_user')}"
+    pass: "%{hiera('ironic_db_password')}"
+  neutron:
+    user: "%{hiera('neutron_db_user')}"
+    pass: "%{hiera('neutron_db_password')}"
 
 # Gets overridden for ocdb role
 rjil::keystone::disable_db_sync: true
@@ -48,6 +54,9 @@ cinder_internal_address: real.cinder.service.consul
 
 radosgw_public_address: lb.radosgw.service.consul
 radosgw_internal_address: real.radosgw.service.consul
+
+ironic_public_address: lb.ironic.service.consul
+ironic_internal_address: real.ironic.service.consul
 
 ########### Openstack Common config
 ###################################
@@ -116,9 +125,11 @@ neutron_public_port: 9696
 
 neutron::verbose: "%{hiera('verbose')}"
 neutron::debug: "%{hiera('debug')}"
+neutron::server::database_connection: "mysql://%{hiera('neutron_db_user')}:%{hiera('neutron_db_password')}@%{hiera('db_host')}/neutron"
 neutron::server::auth_password: "%{hiera('neutron::keystone::auth::password')}"
 neutron::server::auth_host: "%{hiera('keystone_public_address')}"
 neutron::server::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
+neutron::server::mysql_module: 2.3
 neutron::rabbit_password: guest
 neutron::core_plugin: neutron_plugin_contrail.plugins.opencontrail.contrail_plugin.NeutronPluginContrailCoreV2
 neutron::service_plugins:
@@ -208,14 +219,29 @@ rjil::nova::compute::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
 ########### Ironic config
 ###################################
 
+ironic_rabbit_user: guest
+ironic_rabbit_password: guest
+ironic::verbose: "%{hiera('verbose')}"
+ironic::debug: "%{hiera('debug')}"
+ironic::rabbit_user: "%{hiera('ironic_rabbit_user')}"
+ironic::rabbit_password: "%{hiera('ironic_rabbit_password')}"
+ironic::rabbit_virtual_host: "%{hiera('ironic_rabbit_virtual_host')}"
+ironic::database_connection: "mysql://%{hiera('ironic_db_user')}:%{hiera('ironic_db_password')}@%{hiera('db_host')}/ironic"
+
+ironic::glance_api_servers: "%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
+ironic::glance_api_insecure: true
+
 ironic::api::debug: "%{hiera('debug')}"
 ironic::api::verbose: "%{hiera('verbose')}"
 ironic::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
 ironic::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 ironic::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('ironic::api::auth_host')}:%{hiera('rjil::keystone::public_port')}/%{hiera('rjil::keystone::version')}"
-ironic::api::keystone_password: "%{hiera('ironic::keystone::auth::password')}"
-ironic::api::database_connection: "mysql://%{hiera('ironic_db_user')}:%{hiera('ironic_db_password')}@%{hiera('db_host')}/glance"
+ironic::api::admin_password: "%{hiera('ironic::keystone::auth::password')}"
+ironic::api::admin_tenant_name: services
 ironic::api::mysql_module: 2.3
+
+nova::compute::ironic::keystone_password: "%{hiera('ironic::api::keystone_password')}"
+nova::compute::ironic::keystone_url: "%{hiera('ironic::api::auth_uri')}"
 
 
 ########### Keystone config
@@ -291,32 +317,21 @@ rjil::keystone::radosgw::public_address: "%{hiera('radosgw_public_address')}"
 rjil::keystone::radosgw::port: "%{hiera('radosgw_port')}"
 rjil::keystone::radosgw:region: "%{hiera('region')}"
 
+ironic::keystone::auth::password: ironic
+ironic::keystone::auth::admin_address: "%{hiera('ironic_internal_address')}"
+ironic::keystone::auth::internal_address: "%{hiera('ironic_internal_address')}"
+ironic::keystone::auth::public_protocol: http
+ironic::keystone::auth::public_address: "%{hiera('ironic_public_address')}"
+ironic::keystone::auth::public_port: 6385
+ironic::keystone::auth::region: "%{hiera('region')}"
+
+
 ########### Undercloud
 ############################
 
-rjil::jiocloud::undercloud::nova_db_password: 'Bevf3okIn0'
-rjil::jiocloud::undercloud::nova_rabbit_password: 'wErryimFa'
-rjil::jiocloud::undercloud::nova_keystone_password: 'RuHaysIss'
-rjil::jiocloud::undercloud::glance_db_password: 'WupZund3owx'
-rjil::jiocloud::undercloud::glance_rabbit_password: 'Tapvvurc5'
-rjil::jiocloud::undercloud::glance_keystone_password: 'PirlebNeg'
-rjil::jiocloud::undercloud::ironic_db_password: 'LoHisGorn6'
-rjil::jiocloud::undercloud::ironic_rabbit_password: 'boedyawnyoa'
-rjil::jiocloud::undercloud::ironic_keystone_password: 'AyentAjUs'
-rjil::jiocloud::undercloud::neutron_db_password: 'AufsayPygha'
-rjil::jiocloud::undercloud::neutron_rabbit_password: 'CipMavakEed'
-rjil::jiocloud::undercloud::neutron_keystone_password: 'daOwnUt2'
-rjil::jiocloud::undercloud::keystone_db_password: 'InLyHyHakAs'
-rjil::jiocloud::undercloud::keystone_admin_token: 'JobUerepNo'
-rjil::jiocloud::undercloud::keystone_admin_password: 'NoevUjdets'
-rjil::jiocloud::undercloud::mysql_root_password: 'smgefgi'
-rjil::jiocloud::undercloud::verbose: "%{hiera('verbose')}"
-rjil::jiocloud::undercloud::debug: "%{hiera('debug')}"
-rjil::jiocloud::undercloud::ironic_keystone_user: ironic
-rjil::jiocloud::undercloud::keystone_service_tenant: services
-
 ilo_user: hpadmin
 ilo_password: hpinvent
+
 #########################################
 ###### System configuration #############
 #########################################

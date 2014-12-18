@@ -87,9 +87,9 @@ rjil::jiocloud::dhcp::dhcppools:
       - 'execute("/usr/bin/python2.7", "-m", "jiocloud.enroll",
                   "--ilo_username", "%{hiera(''ilo_user'')}",
                   "--ilo_password", "%{hiera(''ilo_password'')}",
-                  "--os_username", "%{hiera(''rjil::jiocloud::undercloud::ironic_keystone_user'')}",
-                  "--os_tenant", "%{hiera(''rjil::jiocloud::undercloud::keystone_service_tenant'')}",
-                  "--os_password", "%{hiera(''rjil::jiocloud::undercloud::ironic_keystone_password'')}",
+                  "--os_username", "ironic",
+                  "--os_tenant", "%{hiera(''ironic::api::admin_tenant_name'')}",
+                  "--os_password", "%{hiera(''ironic::keystone::auth::password'')}",
                   "--os_auth_url", "%{hiera(''rjil::keystone::protocol'')}://%{ipaddress}:5000/%{hiera(''rjil::keystone::version'')}",
-                  "--nic", "eth0",
-                  "--ilo_address ","commit", cip)'
+                  "--nic", "3",
+                  "--ilo_address ", cip)'
