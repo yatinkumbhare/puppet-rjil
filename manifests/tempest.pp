@@ -124,7 +124,13 @@ class rjil::tempest (
     'python-testscenarios',
     'python-ecdsa',
     'python-mox3',
-   ])
+    'subunit',
+  ])
+
+  package {'tempest-lib':
+    ensure   => present,
+    provider => 'pip',
+  }
 
   Class ['::tempest::provision'] -> Class['::tempest']
   include ::tempest::provision
