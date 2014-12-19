@@ -17,12 +17,19 @@ describe 'rjil::keystone' do
     }
   end
 
+  let :facts do
+    {
+      :operatingsystemrelease => '14.04',
+      :operatingsystem        => 'Debian',
+      :osfamily               => 'Debian',
+      :concat_basedir         => '/tmp'
+    }
+  end
+
   describe 'default resources' do
     it 'should contain default resources' do
       should contain_file('/usr/lib/jiocloud/tests/keystone.sh')
       should contain_class('keystone')
-      should_not contain_apache__vhost('keystone')
-      should_not contain_apache__vhost('keystone-admin')
     end
   end
 
