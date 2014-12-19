@@ -91,7 +91,7 @@ do
     puppet apply --detailed-exitcodes \`puppet config print manifestdir\`/site.pp --tags package
     ret_code_package=\$?
     # now perform base config
-    puppet apply --detailed-exitcodes -e "include rjil::jiocloud"
+    (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'include rjil::jiocloud' ) | puppet apply --detailed-exitcodes --debug
     ret_code_jio=\$?
     if [[ \$ret_code_jio = 1 || \$ret_code_jio = 4 || \$ret_code_jio = 6 || \$ret_code_package = 1 || \$ret_code_package = 4 || \$ret_code_package = 6 ]]
     then
