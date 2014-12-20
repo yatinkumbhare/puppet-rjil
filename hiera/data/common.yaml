@@ -89,6 +89,11 @@ keystone_port: 5000
 keystone_admin_localbind_port: 35358
 keystone_admin_port: 35357
 
+glance_api_localbind_port: 19292
+glance_api_port: 9292
+glance_registry_localbind_port: 19191
+glance_registry_port: 9191
+
 
 ########### glance config
 ###################################
@@ -102,14 +107,22 @@ rjil::glance::backend: rbd
 ### Start: rbd backend specific settings
 rjil::glance::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
 rjil::glance::rbd_user: glance
+rjil::glance::admin_email: "%{hiera('admin_email')}"
+rjil::glance::server_name: "%{hiera('glance_public_address')}"
+rjil::glance::api_localbind_port: "%{hiera('glance_api_localbind_port')}"
+rjil::glance::api_public_port: "%{hiera('glance_api_port')}"
+rjil::glance::registry_localbind_port: "%{hiera('glance_registry_localbind_port')}"
+rjil::glance::registry_public_port: "%{hiera('glance_registry_port')}"
+
 glance::backend::rbd::rbd_store_user: "%{hiera('rjil::glance::rbd_user')}"
 glance::backend::rbd::rbd_store_pool: images
 ### End: rbd backend specific settings
-glance::bind_host: "%{hiera('private_address')}"
+glance::api::bind_host: "%{hiera('localbind_host')}"
+glance::api::bind_port: "%{hiera('glance_api_localbind_port')}"
 glance::api::debug: "%{hiera('debug')}"
 glance::api::verbose: "%{hiera('verbose')}"
 glance::api::registry_host: "localhost"
-glance::api::registry_protocol: "http"
+glance::api::registry_protocol: "%{hiera('api_protocol')}"
 glance::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
 glance::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 glance::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
