@@ -28,7 +28,7 @@ class rjil::tempest (
 
   keystone_config {
     'DEFAULT/admin_token':    value => $keystone_admin_token;
-    'DEFAULT/admin_endpoint': value => "${auth_protocol}://${auth_host}:${auth_port}/v2.0";
+    'DEFAULT/admin_endpoint': value => "${auth_protocol}://${auth_host}:${auth_port}";
   }
 
   File['/etc/keystone/keystone.conf'] -> Keystone_config<||>
