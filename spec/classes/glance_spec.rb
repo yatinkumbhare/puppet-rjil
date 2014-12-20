@@ -2,7 +2,15 @@ require 'spec_helper'
 require 'hiera-puppet-helper'
 
 describe 'rjil::glance' do
-  let(:facts) { {:operatingsystem => 'Debian', :osfamily => 'Debian'}}
+
+  let :facts do
+    {
+      :operatingsystemrelease => '14.04',
+      :operatingsystem        => 'Debian',
+      :osfamily               => 'Debian',
+      :concat_basedir         => '/tmp'
+    }
+  end
   let :hiera_data do
     {
       'glance::api::registry_host'       => '10.1.1.100',

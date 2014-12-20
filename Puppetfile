@@ -99,7 +99,7 @@ mod 'stackforge/glance',
 
 mod 'puppetlabs/keystone',
   :git => "#{base_url}/stackforge/puppet-keystone",
-  :ref => 'stable/icehouse'
+  :ref => '89a6506'
 
 mod 'puppetlabs/mysql',
   :git => "#{base_url}/puppetlabs/puppetlabs-mysql",

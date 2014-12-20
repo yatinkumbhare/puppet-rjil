@@ -18,13 +18,7 @@ class rjil::apache (
       apache_version    => '2.4',
       require           => Package[$ssl_secrets_packge_name],
     }
-    include ::apache::mod::wsgi
-    include apache::mod::rewrite
     include apache::mod::ssl
-    include apache::mod::proxy
-    include apache::mod::proxy_http
-    ## this is required to proxy novncproxy
-    ::apache::mod { 'proxy_wstunnel': }
     package { 'jiocloud-ssl-certificate':
       ensure => $jiocloud_ssl_cert_package_version,
     }
@@ -34,10 +28,11 @@ class rjil::apache (
       default_vhost    => false,
       mod_dir          => '/etc/apache2/mods',
     }
-    include ::apache::mod::wsgi
-    include apache::mod::rewrite
-    include apache::mod::proxy
-    include apache::mod::proxy_http
   }
 
+  include apache::mod::rewrite
+  include apache::mod::proxy
+  include apache::mod::proxy_http
+  include ::apache::mod::headers
+  ::apache::mod { 'proxy_wstunnel': }
 }
