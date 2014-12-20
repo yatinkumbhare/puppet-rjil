@@ -12,7 +12,7 @@ class rjil::jiocloud::consul::server(
       'bind_addr'        => $bind_addr,
       'start_join'       => [$join_address],
       'datacenter'       => "$::env",
-      'data_dir'         => '/var/lib/consul',
+      'data_dir'         => '/var/lib/consul-jio',
       'log_level'        => 'INFO',
       'server'           => true,
     }

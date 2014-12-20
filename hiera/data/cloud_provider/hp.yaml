@@ -1,6 +1,6 @@
 public_address: "%{ipaddress_eth0}"
 public_interface: eth0
-private_address: "%{ipaddress_eth0}"
+private_address: "%{ipaddress_vhost0_or_eth0}"
 private_interface: eth0
 
 rjil::system::proxies:

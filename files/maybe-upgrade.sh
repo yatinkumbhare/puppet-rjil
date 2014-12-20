@@ -42,7 +42,7 @@ then
        echo current_version=$pending_version > /etc/facter/facts.d/current_version.txt
 
        # Update apt sources to point to new snapshot version
-       puppet apply --logdest=syslog -e 'include rjil::system::apt'
+       (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'File<| title == "sources.list.d" |> { purge => false }'; echo 'include rjil::system::apt' ) | puppet apply --logdest=syslog
 
        apt-get update
        apt-get dist-upgrade -o Dpkg::Options::="--force-confold" -y

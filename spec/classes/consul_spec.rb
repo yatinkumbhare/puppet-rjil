@@ -35,7 +35,7 @@ describe 'rjil::jiocloud::consul::bootstrapserver' do
         'config_hash' => {
           'bind_addr'        => '0.0.0.0',
           'datacenter'       => 'testenv',
-          'data_dir'         => '/var/lib/consul',
+          'data_dir'         => '/var/lib/consul-jio',
           'log_level'        => 'INFO',
           'server'           => true,
           'bootstrap_expect' => 1
@@ -64,7 +64,7 @@ describe 'rjil::jiocloud::consul::server' do
           'bind_addr'        => '0.0.0.0',
           'start_join'       => ['testtoken.service.consuldiscovery.linux2go.dk'],
           'datacenter'       => 'testenv',
-          'data_dir'         => '/var/lib/consul',
+          'data_dir'         => '/var/lib/consul-jio',
           'log_level'        => 'INFO',
           'server'           => true,
         }
@@ -92,7 +92,7 @@ describe 'rjil::jiocloud::consul::agent' do
           'bind_addr'        => '0.0.0.0',
           'start_join'       => ['testtoken.service.consuldiscovery.linux2go.dk'],
           'datacenter'       => 'testenv',
-          'data_dir'         => '/var/lib/consul',
+          'data_dir'         => '/var/lib/consul-jio',
           'log_level'        => 'INFO',
           'server'           => false,
         }
