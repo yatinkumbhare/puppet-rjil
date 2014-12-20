@@ -88,6 +88,50 @@ class rjil::tempest (
     'keystone_authtoken/admin_password':    value => $neutron_admin_password;
   }
 
+  ensure_packages([
+    'python-pip',
+    'git',
+    'python-setuptools',
+    'python-tempest',
+    'python-hacking',
+    'python-sphinx',
+    'python-subunit',
+    'python-oslosphinx',
+    'python-mox',
+    'python-mock',
+    'python-coverage',
+    'python-oslotest',
+    'python-stevedore',
+    'python-pbr',
+    'python-anyjson',
+    'python-httplib2',
+    'python-jsonschema',
+    'python-testtools',
+    'python-boto',
+    'python-paramiko',
+    'python-netaddr',
+    'python-ceilometerclient',
+    'python-glanceclient',
+    'python-keystoneclient',
+    'python-novaclient',
+    'python-neutronclient',
+    'python-cinderclient',
+    'python-heatclient',
+    'oslo.config',
+    'python-oslo.config',
+    'python-iso8601',
+    'python-fixtures',
+    'python-testscenarios',
+    'python-ecdsa',
+    'python-mox3',
+    'subunit',
+  ])
+
+  package {'tempest-lib':
+    ensure   => present,
+    provider => 'pip',
+  }
+
   Class ['::tempest::provision'] -> Class['::tempest']
   include ::tempest::provision
   include ::tempest
