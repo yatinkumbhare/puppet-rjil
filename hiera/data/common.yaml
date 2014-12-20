@@ -132,6 +132,8 @@ glance::api::mysql_module: 2.3
 
 glance::registry::debug: "%{hiera('debug')}"
 glance::registry::verbose: "%{hiera('verbose')}"
+glance::registry::bind_host: "%{hiera('localbind_host')}"
+glance::registry::bind_port: "%{hiera('glance_registry_localbind_port')}"
 glance::registry::auth_host: "%{hiera('rjil::keystone::public_address')}"
 glance::registry::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 glance::registry::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('glance::registry::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"

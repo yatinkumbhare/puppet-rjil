@@ -51,6 +51,21 @@ describe 'rjil::glance' do
           'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
         }
       )
+
+      should contain_apache__vhost('glance-registry').with(
+        {
+          'servername'      => 'glance.server',
+          'serveradmin'     => 'root@localhost',
+          'port'            => '9191',
+          'ssl'             => false,
+          'docroot'         => '/usr/lib/cgi-bin/glance-registry',
+          'error_log_file'  => 'glance-registry.log',
+          'access_log_file' => 'glance-registry.log',
+          'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:19191/"  } ],
+          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
+        }
+      )
+
       should contain_class('glance::api').with({
         'registry_host'     => '10.1.1.100',
         'registry_port'     => '9191',

@@ -37,6 +37,7 @@ class rjil::glance (
   include rjil::apache
 
   Service['glance-api'] -> Service['httpd']
+  Service['glance-registry'] -> Service['httpd']
 
   ## Configure apache reverse proxy
   apache::vhost { 'glance-api':
@@ -48,6 +49,18 @@ class rjil::glance (
     error_log_file  => 'glance-api.log',
     access_log_file => 'glance-api.log',
     proxy_pass      => [ { path => '/', url => "http://${api_localbind_host}:${api_localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
+
+  apache::vhost { 'glance-registry':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $registry_public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/glance-registry',
+    error_log_file  => 'glance-registry.log',
+    access_log_file => 'glance-registry.log',
+    proxy_pass      => [ { path => '/', url => "http://${registry_localbind_host}:${registry_localbind_port}/"  } ],
     headers         => [ 'set Access-Control-Allow-Origin "*"' ],
   }
 
