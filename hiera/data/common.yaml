@@ -84,6 +84,10 @@ openstack_extras::auth_file::controller_node: "lb.keystone.service.consul"
 ########### Openstack ports
 ##################################
 localbind_host: 127.0.0.1
+
+cinder_localbind_port: 18776
+cinder_port: 8776
+
 keystone_localbind_port: 15000
 keystone_port: 5000
 keystone_admin_localbind_port: 35358
@@ -172,8 +176,16 @@ rjil::neutron::ovs::ctlplane_network_name: ctlplane
 
 ########### Cinder configuration
 ###################################
-cinder::rpc_backend: "%{hiera('rpc_backend')}"
 rjil::cinder::rpc_backend: "%{hiera('rpc_backend')}"
+rjil::cinder::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
+rjil::cinder::rbd_user: cinder_volume
+rjil::cinder::admin_email: "%{hiera('admin_email')}"
+rjil::cinder::server_name: "%{hiera('cinder_public_address')}"
+rjil::cinder::localbind_port: "%{hiera('cinder_localbind_port')}"
+rjil::cinder::public_port: "%{hiera('cinder_port')}"
+
+cinder::api::bind_host: "%{hiera('localbind_host')}"
+cinder::rpc_backend: "%{hiera('rpc_backend')}"
 cinder::verbose: "%{hiera('verbose')}"
 cinder::debug: "%{hiera('debug')}"
 cinder::database_connection: "mysql://%{hiera('cinder_db_user')}:%{hiera('cinder_db_password')}@%{hiera('db_host')}/cinder"
@@ -186,8 +198,6 @@ cinder::volume::rbd::rbd_pool: volumes
 cinder::volume::rbd::rbd_user: cinder_volume
 cinder::volume::rbd::volume_tmp_dir: /tmp
 cinder::volume::rbd::rbd_secret_uuid: "%{hiera('cinder_rbd_secret_uuid')}"
-rjil::cinder::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
-rjil::cinder::rbd_user: cinder_volume
 
 ########### Nova config
 ###################################
