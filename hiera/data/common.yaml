@@ -98,6 +98,8 @@ glance_api_port: 9292
 glance_registry_localbind_port: 19191
 glance_registry_port: 9191
 
+nova_osapi_localbind_port: 18774
+nova_osapi_port: 8774
 
 ########### glance config
 ###################################
@@ -201,13 +203,15 @@ cinder::volume::rbd::rbd_secret_uuid: "%{hiera('cinder_rbd_secret_uuid')}"
 
 ########### Nova config
 ###################################
-nova_api_public_port: 8774
-
+rjil::nova::controller::osapi_public_port: "%{hiera('nova_osapi_port')}"
+rjil::nova::controller::osapi_localbind_port: "%{hiera('nova_osapi_localbind_port')}"
+rjil::nova::controller::server_name: "%{hiera('nova_public_address')}"
 nova::rpc_backend: "%{hiera('rpc_backend')}"
 nova::glance_api_servers: "%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
 nova::database_connection: "mysql://%{hiera('nova_db_user')}:%{hiera('nova_db_password')}@%{hiera('db_host')}/nova"
 nova::mysql_module: 2.3
 
+nova::api::api_bind_address: "%{hiera('localbind_host')}"
 nova::api::debug: "%{hiera('debug')}"
 nova::api::verbose: "%{hiera('verbose')}"
 nova::api::auth_host: "%{hiera('keystone_public_address')}"
@@ -347,7 +351,7 @@ neutron::keystone::auth::region: "%{hiera('region')}"
 
 nova::keystone::auth::password: nova
 nova::keystone::auth::public_address: "%{hiera('nova_public_address')}"
-nova::keystone::auth::public_port: "%{hiera('nova_api_public_port')}"
+nova::keystone::auth::public_port: "%{hiera('nova_osapi_port')}"
 nova::keystone::auth::public_protocol: "%{hiera('api_protocol')}"
 nova::keystone::auth::admin_address: "%{hiera('nova_internal_address')}"
 nova::keystone::auth::internal_address: "%{hiera('nova_internal_address')}"

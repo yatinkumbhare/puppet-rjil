@@ -17,18 +17,42 @@
 #   Memcached server port. Default: 11211
 #
 class rjil::nova::controller (
-  $api_bind_port        = 8774,
   $vncproxy_bind_port   = 6080,
   $consul_check_interval= '120s',
   $default_floating_pool = 'public',
   $memcached_servers    = service_discover_dns('memcached.service.consul','ip'),
   $memcached_port       = 11211,
+  $osapi_public_port    = 8774,
+  $admin_email          = 'root@localhost',
+  $server_name          = 'localhost',
+  $localbind_host       = '127.0.0.1',
+  $osapi_localbind_port = 18774,
+  $ssl                  = false,
 ) {
 
 # Tests
   include rjil::test::nova_controller
 
-  nova_config { 'DEFAULT/default_floating_pool': value => $default_floating_pool }
+  nova_config {
+    'DEFAULT/default_floating_pool':      value => $default_floating_pool;
+    'DEFAULT/osapi_compute_listen_port':  value => $osapi_localbind_port;
+  }
+
+  include rjil::apache
+  Service['nova-api'] -> Service['httpd']
+
+  ## Configure apache reverse proxy
+  apache::vhost { 'nova-osapi':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $osapi_public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/nova-osapi',
+    error_log_file  => 'nova-osapi.log',
+    access_log_file => 'nova-osapi.log',
+    proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${osapi_localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
 
   ##
   # The problem with fail function is that , as funtions are evaluated on comple
@@ -134,8 +158,8 @@ class rjil::nova::controller (
 
   rjil::jiocloud::consul::service {'nova':
     tags          => ['real'],
-    port          => $api_bind_port,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${::nova::api::api_bind_address} -p ${api_bind_port}",
+    port          => $osapi_public_port,
+    check_command => "/usr/lib/nagios/plugins/check_http -I ${::nova::api::api_bind_address} -p ${osapi_public_port}",
     interval      => $consul_check_interval,
   }
 
