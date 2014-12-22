@@ -4,14 +4,15 @@ require 'hiera-puppet-helper'
 describe 'rjil::neutron::contrail' do
   let:facts do
     {
-      :operatingsystem  => 'Debian',
-      :osfamily         => 'Debian',
-      :concat_basedir   => '/tmp',
-      :hostname         => 'node1',
-      :interfaces       => 'eth0,lo',
-      :ipaddress_eth0   => '10.1.1.100',
-      :lsbdistid        => 'ubuntu',
-      :lsbdistcodename  => 'trusty',
+      :operatingsystem        => 'Debian',
+      :operatingsystemrelease => '14.04',
+      :osfamily               => 'Debian',
+      :concat_basedir         => '/tmp',
+      :hostname               => 'node1',
+      :interfaces             => 'eth0,lo',
+      :ipaddress_eth0         => '10.1.1.100',
+      :lsbdistid              => 'ubuntu',
+      :lsbdistcodename        => 'trusty',
     }
   end
   let :hiera_data do

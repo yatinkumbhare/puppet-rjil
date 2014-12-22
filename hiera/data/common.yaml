@@ -101,6 +101,9 @@ glance_registry_port: 9191
 nova_osapi_localbind_port: 18774
 nova_osapi_port: 8774
 
+neutron_localbind_port: 19696
+neutron_port: 9696
+
 ########### glance config
 ###################################
 
@@ -151,10 +154,11 @@ glance::registry::mysql_module: 2.3
 ###################################
 neutron_public_address: lb.neutron.service.consul
 neutron_internal_address: real.neutron.service.consul
-neutron_public_port: 9696
 
 neutron::verbose: "%{hiera('verbose')}"
 neutron::debug: "%{hiera('debug')}"
+neutron::bind_host: "%{hiera('localbind_host')}"
+neutron::bind_port: "%{hiera('neutron_localbind_port')}"
 neutron::server::database_connection: "mysql://%{hiera('neutron_db_user')}:%{hiera('neutron_db_password')}@%{hiera('db_host')}/neutron"
 neutron::server::auth_password: "%{hiera('neutron::keystone::auth::password')}"
 neutron::server::auth_host: "%{hiera('keystone_public_address')}"
@@ -175,6 +179,7 @@ rjil::neutron::service_provider: LOADBALANCER:Opencontrail:neutron_plugin_contra
 rjil::neutron::contrail::keystone_admin_password: "%{hiera('admin_password')}"
 rjil::neutron::contrail::public_network_name: "%{hiera('public_network_name')}"
 rjil::neutron::ovs::ctlplane_network_name: ctlplane
+rjil::neutron::server_name: "%{hiera('neutron_public_address')}"
 
 ########### Cinder configuration
 ###################################
@@ -224,7 +229,7 @@ nova::api::neutron_metadata_proxy_shared_secret: "%{hiera('nova_metadata_proxy_s
 nova::scheduler::enabled: true
 
 nova::network::neutron::neutron_admin_password: "%{hiera('neutron::keystone::auth::password')}"
-nova::network::neutron::neutron_url: "%{hiera('api_protocol')}://%{hiera('neutron_public_address')}:%{hiera('neutron_public_port')}"
+nova::network::neutron::neutron_url: "%{hiera('api_protocol')}://%{hiera('neutron_public_address')}:%{hiera('neutron_port')}"
 nova::network::neutron::neutron_region_name: "%{hiera('region')}"
 nova::network::neutron::neutron_admin_auth_url: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
 
@@ -343,7 +348,7 @@ keystone::keystone::auth::region: "%{hiera('region')}"
 
 neutron::keystone::auth::password: neutron
 neutron::keystone::auth::public_address: "%{hiera('neutron_public_address')}"
-neutron::keystone::auth::public_port: "%{hiera('neutron_public_port')}"
+neutron::keystone::auth::public_port: "%{hiera('neutron_port')}"
 neutron::keystone::auth::public_protocol: "%{hiera('api_protocol')}"
 neutron::keystone::auth::admin_address: "%{hiera('neutron_internal_address')}"
 neutron::keystone::auth::internal_address: "%{hiera('neutron_internal_address')}"

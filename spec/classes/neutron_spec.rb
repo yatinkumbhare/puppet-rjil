@@ -4,14 +4,15 @@ require 'hiera-puppet-helper'
 describe 'rjil::neutron' do
   let:facts do
     {
-      :operatingsystem  => 'Debian',
-      :osfamily         => 'Debian',
-      :concat_basedir   => '/tmp',
-      :hostname         => 'node1',
-      :interfaces       => 'eth0,lo',
-      :ipaddress_eth0   => '10.1.1.100',
-      :lsbdistid        => 'ubuntu',
-      :lsbdistcodename  => 'trusty',
+      :operatingsystem        => 'Debian',
+      :operatingsystemrelease => '14.04',
+      :osfamily               => 'Debian',
+      :concat_basedir         => '/tmp',
+      :hostname               => 'node1',
+      :interfaces             => 'eth0,lo',
+      :ipaddress_eth0         => '10.1.1.100',
+      :lsbdistid              => 'ubuntu',
+      :lsbdistcodename        => 'trusty',
     }
   end
   let :hiera_data do
@@ -25,6 +26,7 @@ describe 'rjil::neutron' do
       'neutron::quota::quota_driver'                => 'contraildriver',
       'rjil::neutron::api_extensions_path'          => 'extensionspath',
       'rjil::neutron::service_provider'             => 'serviceprovider',
+      'rjil::neutron::server_name'                  => 'neutron.server',
     }
   end
 
@@ -49,6 +51,20 @@ describe 'rjil::neutron' do
         'command'     => 'mv /etc/neutron/neutron.conf /etc/neutron/neutron.conf.bak_puppet',
         'refreshonly' => true,
         'subscribe'   => 'Package[neutron-server]',
+      })
+
+      should contain_class('rjil::apache')
+
+      should contain_apache__vhost('neutron').with({
+        'servername'      => 'neutron.server',
+        'serveradmin'     => 'root@localhost',
+        'port'            => 9696,
+        'ssl'             => false,
+        'docroot'         => '/usr/lib/cgi-bin/neutron',
+        'error_log_file'  => 'neutron.log',
+        'access_log_file' => 'neutron.log',
+        'proxy_pass'      => [ { 'path' => '/', 'url' => 'http://127.0.0.1:19696/'  } ],
+        'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
       })
 
     end
