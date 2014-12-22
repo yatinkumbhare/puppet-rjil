@@ -53,6 +53,21 @@ describe 'rjil::nova::controller' do
           'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
         }
       )
+
+      should contain_apache__vhost('nova-ec2api').with(
+        {
+          'servername'      => 'nova.server',
+          'serveradmin'     => 'root@localhost',
+          'port'            => '8773',
+          'ssl'             => false,
+          'docroot'         => '/usr/lib/cgi-bin/nova-ec2api',
+          'error_log_file'  => 'nova-ec2api.log',
+          'access_log_file' => 'nova-ec2api.log',
+          'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:18773/"  } ],
+          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
+        }
+      )
+
       should contain_file('/usr/lib/jiocloud/tests/nova-api.sh')
       should contain_file('/usr/lib/jiocloud/tests/nova-scheduler.sh')
       should contain_file('/usr/lib/jiocloud/tests/nova-cert.sh')

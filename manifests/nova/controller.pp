@@ -21,12 +21,14 @@ class rjil::nova::controller (
   $consul_check_interval= '120s',
   $default_floating_pool = 'public',
   $memcached_servers    = service_discover_dns('memcached.service.consul','ip'),
-  $memcached_port       = 11211,
-  $osapi_public_port    = 8774,
   $admin_email          = 'root@localhost',
   $server_name          = 'localhost',
   $localbind_host       = '127.0.0.1',
+  $memcached_port       = 11211,
+  $osapi_public_port    = 8774,
+  $ec2_public_port      = 8773,
   $osapi_localbind_port = 18774,
+  $ec2_localbind_port   = 18773,
   $ssl                  = false,
 ) {
 
@@ -36,6 +38,7 @@ class rjil::nova::controller (
   nova_config {
     'DEFAULT/default_floating_pool':      value => $default_floating_pool;
     'DEFAULT/osapi_compute_listen_port':  value => $osapi_localbind_port;
+    'DEFAULT/ec2_listen_port':            value => $ec2_localbind_port;
   }
 
   include rjil::apache
@@ -51,6 +54,18 @@ class rjil::nova::controller (
     error_log_file  => 'nova-osapi.log',
     access_log_file => 'nova-osapi.log',
     proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${osapi_localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
+
+  apache::vhost { 'nova-ec2api':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $ec2_public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/nova-ec2api',
+    error_log_file  => 'nova-ec2api.log',
+    access_log_file => 'nova-ec2api.log',
+    proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${ec2_localbind_port}/"  } ],
     headers         => [ 'set Access-Control-Allow-Origin "*"' ],
   }
 
