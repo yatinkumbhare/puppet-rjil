@@ -93,3 +93,5 @@ rjil::jiocloud::dhcp::dhcppools:
                   "--os_auth_url", "%{hiera(''rjil::keystone::protocol'')}://%{ipaddress}:5000/%{hiera(''rjil::keystone::version'')}",
                   "--nic", "3",
                   "--ilo_address ", cip)'
+rjil::apache::self_signed_cert: true
+rjil::ceph::radosgw::self_signed_cert: true
