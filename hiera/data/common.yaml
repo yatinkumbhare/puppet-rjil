@@ -106,7 +106,7 @@ rjil::keystone::test_user::password: "%{hiera('test_user_password')}"
 openstack_extras::auth_file::admin_user: "%{hiera('test_user_name')}"
 openstack_extras::auth_file::admin_tenant: "%{hiera('test_user_tenant')}"
 openstack_extras::auth_file::admin_password: "%{hiera('test_user_password')}"
-openstack_extras::auth_file::controller_node: "lb.keystone.service.consul"
+openstack_extras::auth_file::controller_node: "%{hiera('keystone_public_address')}"
 
 ########### Openstack ports
 ##################################
