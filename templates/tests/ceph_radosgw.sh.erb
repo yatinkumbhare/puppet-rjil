@@ -6,9 +6,9 @@ function fail {
 }
 
 <% if @ssl -%>
-/usr/lib/nagios/plugins/check_http -S -H localhost || fail 'radosgw is not up'
+/usr/lib/nagios/plugins/check_http -S -H localhost -p <%= @port %> || fail 'radosgw is not up'
 <% else -%>
-/usr/lib/nagios/plugins/check_http -H localhost || fail 'radosgw is not up'
+/usr/lib/nagios/plugins/check_http -H localhost -p <%= @port %> || fail 'radosgw is not up'
 <% end -%>
 source /root/openrc || fail 'Cannot source /root/openrc'
 

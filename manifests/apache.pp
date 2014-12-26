@@ -3,7 +3,7 @@ class rjil::apache (
   $ssl                              = false,
   $ssl_secrets_package_name         = 'jiocloud-ssl-certificate',
   $jiocloud_ssl_cert_package_ensure = 'present',
-  $self_signed_cert                 = false,
+  $manage_ssl_cert                  = false,
 ) {
 
   include ::apache
@@ -19,11 +19,8 @@ class rjil::apache (
 
     include apache::mod::ssl
 
-    if $self_signed_cert {
-      Package[$ssl_secrets_package_name] ->
-      Class['rjil::apache::trust_selfsigned_cert']
-
-      include rjil::apache::trust_selfsigned_cert
+    if $manage_ssl_cert {
+      include rjil::apache::install_ssl_cert
     }
   }
 

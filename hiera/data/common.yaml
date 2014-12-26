@@ -666,7 +666,7 @@ ceph::radosgw::radosgw_key_file: /etc/apache2/certs/jiocloud.com.key
 ceph::radosgw::radosgw_ca_file: /etc/apache2/certs/gd_bundle-g2-g1.crt
 ceph::radosgw::listen_ssl: true
 
-rjil::ceph::radosgw:ssl: true
+rjil::ceph::radosgw::ssl: true
 
 # below header is required to enable CORS.
 ceph::radosgw::apache::headers:
