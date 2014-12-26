@@ -20,7 +20,9 @@ class rjil::glance (
 ) {
 
   ## Add tests for glance api and registry
-  include rjil::test::glance
+  class {'rjil::test::glance':
+    ssl => $ssl,
+  }
 
   # ensure that we don't even try to configure the
   # database connection until the service is up

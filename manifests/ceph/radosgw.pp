@@ -9,6 +9,7 @@ class rjil::ceph::radosgw (
   $self_signed_cert                 = false,
   $ssl_secrets_package_name         = 'jiocloud-ssl-certificate',
   $jiocloud_ssl_cert_package_ensure = 'present',
+  $ssl                              = false,
 ) {
 
   include ::ceph::conf

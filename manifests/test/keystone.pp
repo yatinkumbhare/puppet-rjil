@@ -1,6 +1,7 @@
 class rjil::test::keystone(
   $admin_address  = '127.0.0.1',
   $public_address = '127.0.0.1',
+  $ssl            = false,
 ){
 
   include rjil::test::base

@@ -555,6 +555,7 @@ contrail::keystone_address: "%{hiera('keystone_public_address')}"
 contrail::keystone_admin_token: "%{hiera('keystone::admin_token')}"
 contrail::keystone_admin_password: "%{hiera('admin_password')}"
 contrail::keystone_auth_password: "%{hiera('neutron::keystone::auth::password')}"
+contrail::keystone_protocol: "%{hiera('api_protocol')}"
 contrail::nova_metadata_address: "lb.nova.service.consul"
 
 contrail::vrouter::metadata_proxy_secret: "%{hiera('nova_metadata_proxy_secret')}"
@@ -665,6 +666,8 @@ ceph::radosgw::radosgw_key_file: /etc/apache2/certs/jiocloud.com.key
 ceph::radosgw::radosgw_ca_file: /etc/apache2/certs/gd_bundle-g2-g1.crt
 ceph::radosgw::listen_ssl: true
 
+rjil::ceph::radosgw:ssl: true
+
 # below header is required to enable CORS.
 ceph::radosgw::apache::headers:
   - 'set Access-Control-Allow-Origin "*"'
@@ -761,6 +764,8 @@ tempest::tempest_clone_path: /home/jenkins/tempest
 tempest::tempest_clone_owner: jenkins
 
 rjil::tempest::keystone_admin_token: "%{hiera('keystone::admin_token')}"
+rjil::tempest::auth_host: "%{hiera('keystone_public_address')}"
+rjil::tempest::auth_protocol: "%{hiera('api_protocol')}"
 
 tempest::provision::imagename: "%{hiera('tempest::image_name')}"
 tempest::provision::tenantname: "%{hiera('tempest::tenant_name')}"
