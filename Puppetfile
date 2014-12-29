@@ -90,8 +90,8 @@ mod 'puppetlabs/concat',
   :ref => '1.1.1'
 
 mod 'enovance/ceph',
-  :git => "#{base_url}/hkumarmk/puppet-ceph",
-  :ref => 'fix_typo_ssl'
+  :git => "#{base_url}/jiocloud/puppet-ceph",
+  :ref => 'svn_to_git_2'
 
 mod 'stackforge/glance',
   :git => "#{base_url}/stackforge/puppet-glance",
