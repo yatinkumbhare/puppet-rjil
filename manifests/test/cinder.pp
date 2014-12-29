@@ -31,4 +31,12 @@ class rjil::test::cinder(
     mode   => '0755',
   }
 
+  file { '/usr/lib/jiocloud/tests/cinder-backup.sh':
+    source => 'puppet:///modules/rjil/tests/cinder-backup.sh',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
+
 }

@@ -149,6 +149,10 @@ class rjil::cinder (
   include ::cinder::volume
   include ::cinder::volume::rbd
 
+  class { 'rjil::cinder::backup':
+    ceph_mon_key => $ceph_mon_key,
+  }
+
   ##
   # Add ceph keyring for cinder_volume. This is required cinder to connect to
   # ceph.
@@ -196,4 +200,10 @@ class rjil::cinder (
     port          => 0,
     check_command => "sudo cinder-manage service list | grep 'cinder-scheduler.*${::hostname}.*enabled.*:-)'"
   }
+
+  rjil::jiocloud::consul::service { 'cinder-backup':
+    port          => 0,
+    check_command => "sudo cinder-manage service list | grep 'cinder-backup.*${::hostname}.*enabled.*:-)'"
+  }
+
 }
