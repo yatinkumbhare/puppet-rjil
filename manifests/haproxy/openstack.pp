@@ -35,6 +35,10 @@ class rjil::haproxy::openstack(
     nova_ips              => $nova_ips,
   }
 
+  Rjil::Haproxy_service {
+    ssl => true,
+  }
+
   rjil::haproxy_service { 'horizon':
     balancer_ports    => $horizon_port,
     cluster_addresses => $horizon_ips,
@@ -57,6 +61,7 @@ class rjil::haproxy::openstack(
   rjil::haproxy_service { 'novncproxy':
     balancer_ports    => $novncproxy_port,
     cluster_addresses => $nova_ips,
+    ssl               => false,
   }
 
   rjil::haproxy_service { 'keystone':
@@ -97,6 +102,7 @@ class rjil::haproxy::openstack(
   rjil::haproxy_service { 'metadata':
     balancer_ports    => $metadata_port,
     cluster_addresses => $nova_ips,
+    ssl               => false,
   }
 
   rjil::haproxy_service { 'nova-ec2':

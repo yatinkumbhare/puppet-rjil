@@ -171,10 +171,15 @@ class rjil::nova::controller (
   # param in rjil::nova::controller.
   ##
 
+  rjil::test::http_check { 'nova':
+    address => $::nova::api::api_bind_address,
+    port    => $osapi_public_port,
+    ssl     => $ssl,
+  }
+
   rjil::jiocloud::consul::service {'nova':
     tags          => ['real'],
     port          => $osapi_public_port,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${::nova::api::api_bind_address} -p ${osapi_public_port}",
     interval      => $consul_check_interval,
   }
 

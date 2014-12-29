@@ -10,7 +10,7 @@ class rjil::test::neutron(
 
   include rjil::test::base
 
-  file { '/usr/lib/jiocloud/tests/neutron.sh':
+  file { '/usr/lib/jiocloud/tests/neutron-service.sh':
     source => 'puppet:///modules/rjil/tests/neutron.sh',
     owner  => 'root',
     group  => 'root',

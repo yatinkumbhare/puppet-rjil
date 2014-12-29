@@ -39,6 +39,9 @@ describe 'rjil::cinder' do
       should contain_file('/usr/lib/jiocloud/tests/cinder-api.sh')
       should contain_file('/usr/lib/jiocloud/tests/cinder-volume.sh')
       should contain_file('/usr/lib/jiocloud/tests/cinder-scheduler.sh')
+      should contain_file('/usr/lib/jiocloud/tests/cinder.sh').with_content(
+        /check_http -H 10\.1\.1\.1 -p 8776/
+      )
       should contain_Cinder_config('database/connection').that_requires('Rjil::Service_blocker[mysql]')
       should contain_class('rjil::ceph::mon_config').that_requires('Rjil::Service_blocker[stmon]')
       should contain_class('cinder::volume').that_requires('Class[rjil::ceph::mon_config]')
@@ -81,7 +84,7 @@ describe 'rjil::cinder' do
       should contain_rjil__jiocloud__consul__service('cinder').with({
         'tags'          => ['real'],
         'port'          => 8776,
-        'check_command' => "/usr/lib/nagios/plugins/check_http -I 10.1.1.1 -p 8776"
+        'check_command' => "/usr/lib/jiocloud/tests/cinder.sh"
       })
       should contain_rjil__jiocloud__consul__service('cinder-volume').with({
         'port'          => 0,
@@ -91,6 +94,17 @@ describe 'rjil::cinder' do
         'port'          => 0,
         'check_command' => "sudo cinder-manage service list | grep 'cinder-scheduler.*node1.*enabled.*:-)'"
       })
+    end
+  end
+  context 'with ssl' do
+    let :params do
+      {'ssl' => true}
+    end
+    it do
+      should contain_apache__vhost('cinder').with_ssl(true)
+      should contain_file('/usr/lib/jiocloud/tests/cinder.sh').with_content(
+        /check_http -S -H 10\.1\.1\.1 -p 8776/
+      )
     end
   end
 end

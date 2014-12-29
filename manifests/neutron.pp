@@ -88,9 +88,14 @@ class rjil::neutron (
     }
   }
 
+  rjil::test::http_check { 'neutron':
+    address => '127.0.0.1',
+    port    => $public_port,
+    ssl     => $ssl,
+  }
+
   rjil::jiocloud::consul::service { 'neutron':
     tags          => ['real'],
-    port          => 9696,
-    check_command => "/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 9696",
+    port          => $public_port,
   }
 }

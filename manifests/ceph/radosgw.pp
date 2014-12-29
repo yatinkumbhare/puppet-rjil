@@ -30,18 +30,15 @@ class rjil::ceph::radosgw (
     port => $port,
   }
 
-  if $ssl {
-    rjil::jiocloud::consul::service { 'radosgw':
-      tags          => ['real'],
-      port          => $port,
-      check_command => "/usr/lib/nagios/plugins/check_http -S -H localhost -p $port",
-    }
-  } else {
-    rjil::jiocloud::consul::service { 'radosgw':
-      tags          => ['real'],
-      port          => $port,
-      check_command => "/usr/lib/nagios/plugins/check_http -H localhost -p $port",
-    }
+  rjil::test::http_check { 'radosgw':
+    address => '127.0.0.1',
+    port    => $port,
+    ssl     => $ssl,
+  }
+
+  rjil::jiocloud::consul::service { 'radosgw':
+    tags          => ['real'],
+    port          => $port,
   }
 
 }
