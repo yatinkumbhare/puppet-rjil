@@ -6,6 +6,13 @@ then
     exit 1
 fi
 
+#
+# default layout to full if it is not set
+#
+if [ -z "${layout}" ]; then
+  layout=full
+fi
+
 if [ -z "${cloud_provider}" ]; then
   # defaulting it to env for backwards compatibility
   cloud_provider=$env
