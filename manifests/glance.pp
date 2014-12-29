@@ -1,15 +1,28 @@
 ## Class: rjil::openstack::glance
 class rjil::glance (
-  $ceph_mon_key = undef,
-  $backend = 'file',
-  $rbd_user = 'glance',
+  $ceph_mon_key            = undef,
+  $backend                 = 'file',
+  $rbd_user                = 'glance',
   $ceph_keyring_file_owner = 'glance',
-  $ceph_keyring_path = '/etc/ceph/keyring.ceph.client.glance',
-  $ceph_keyring_cap = 'mon "allow r" osd "allow class-read object_prefix rbd_children, allow rwx pool=images"'
+  $ceph_keyring_path       = '/etc/ceph/keyring.ceph.client.glance',
+  $ceph_keyring_cap        = 'mon "allow r" osd "allow class-read object_prefix rbd_children, allow rwx pool=images"',
+  $admin_email             = 'root@localhost',
+
+  $server_name             = 'localhost',
+  $api_localbind_host      = '127.0.0.1',
+  $api_localbind_port      = '19292',
+  $api_public_port         = '9292',
+  $registry_localbind_host = '127.0.0.1',
+  $registry_localbind_port = '19191',
+  $registry_public_address = '127.0.0.1',
+  $registry_public_port    = '9191',
+  $ssl                     = false,
 ) {
 
   ## Add tests for glance api and registry
-  include rjil::test::glance
+  class {'rjil::test::glance':
+    ssl => $ssl,
+  }
 
   # ensure that we don't even try to configure the
   # database connection until the service is up
@@ -22,6 +35,36 @@ class rjil::glance (
 
   ## Setup glance registry
   include ::glance::registry
+
+  include rjil::apache
+
+  Service['glance-api'] -> Service['httpd']
+  Service['glance-registry'] -> Service['httpd']
+
+  ## Configure apache reverse proxy
+  apache::vhost { 'glance-api':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $api_public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/glance-api',
+    error_log_file  => 'glance-api.log',
+    access_log_file => 'glance-api.log',
+    proxy_pass      => [ { path => '/', url => "http://${api_localbind_host}:${api_localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
+
+  apache::vhost { 'glance-registry':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $registry_public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/glance-registry',
+    error_log_file  => 'glance-registry.log',
+    access_log_file => 'glance-registry.log',
+    proxy_pass      => [ { path => '/', url => "http://${registry_localbind_host}:${registry_localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
 
   if($backend == 'swift') {
     ## Swift backend

@@ -4,10 +4,11 @@ require 'hiera-puppet-helper'
 describe 'rjil::cinder' do
   let:facts do
     {
-      :operatingsystem  => 'Debian',
-      :osfamily         => 'Debian',
-      :concat_basedir   => '/tmp',
-      :hostname         => 'node1',
+      :operatingsystemrelease => '14.04',
+      :operatingsystem        => 'Debian',
+      :osfamily               => 'Debian',
+      :concat_basedir         => '/tmp',
+      :hostname               => 'node1',
     }
   end
   let :hiera_data do
@@ -27,6 +28,9 @@ describe 'rjil::cinder' do
       'rjil::cinder::rbd_user'                      => 'cinder_volume',
       'rjil::ceph::mon_config::mon_config'          => ['1.1.1.1'],
       'cinder::api::bind_host'                      => '10.1.1.1',
+      'rjil::cinder::server_name'                   => 'cinder.server',
+      'rjil::cinder::localbind_port'                => 18776,
+      'rjil::cinder::public_port'                   => 8776,
     }
   end
 
@@ -58,6 +62,19 @@ describe 'rjil::cinder' do
         'file_owner'   => 'cinder',
         'keyring_path' => '/etc/ceph/keyring.ceph.client.cinder_volume',
       })
+      should contain_apache__vhost('cinder').with(
+        {
+          'servername'      => 'cinder.server',
+          'serveradmin'     => 'root@localhost',
+          'port'            => '8776',
+          'ssl'             => false,
+          'docroot'         => '/usr/lib/cgi-bin/cinder',
+          'error_log_file'  => 'cinder.log',
+          'access_log_file' => 'cinder.log',
+          'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:18776/"  } ],
+          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
+        }
+      )
       should contain_ceph__conf__clients('cinder_volume').with({
         'keyring' => '/etc/ceph/keyring.ceph.client.cinder_volume'
       })

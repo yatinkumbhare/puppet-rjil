@@ -90,7 +90,7 @@ mod 'puppetlabs/concat',
   :ref => '1.1.1'
 
 mod 'enovance/ceph',
-  :git => "#{base_url}/JioCloud/puppet-ceph",
+  :git => "#{base_url}/jiocloud/puppet-ceph",
   :ref => 'svn_to_git_2'
 
 mod 'stackforge/glance',
@@ -126,7 +126,7 @@ mod 'stackforge/vswitch',
   :ref => '0.3.0'
 
 mod 'stackforge/openstack_extras',
-  :git => "#{base_url}/bodepd/puppet-openstack_extras"
+  :git => "#{base_url}/jiocloud/puppet-openstack_extras"
 
 mod 'stackforge/heat',
   :git => "#{base_url}/stackforge/puppet-heat",

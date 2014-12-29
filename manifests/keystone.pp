@@ -19,7 +19,9 @@ class rjil::keystone(
   $disable_db_sync        = false,
 ) {
 
-  include rjil::test::keystone
+  class { 'rjil::test::keystone':
+    ssl => $ssl,
+  }
 
   if $public_address == '0.0.0.0' {
     $address = '127.0.0.1'

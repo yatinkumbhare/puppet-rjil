@@ -3,7 +3,10 @@
 #   Adding tests for nova services
 #
 
-class rjil::test::ceph_radosgw {
+class rjil::test::ceph_radosgw (
+  $ssl  = false,
+  $port = 6000,
+){
 
   include openstack_extras::auth_file
 

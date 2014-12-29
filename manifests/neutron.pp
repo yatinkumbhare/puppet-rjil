@@ -4,6 +4,12 @@
 class rjil::neutron (
   $api_extensions_path  = undef,
   $service_provider     = undef,
+  $admin_email          = 'root@localhost',
+  $server_name          = 'localhost',
+  $localbind_host       = '127.0.0.1',
+  $public_port          = 9696,
+  $localbind_port       = 19696,
+  $ssl                  = false,
 ) {
 
   ##
@@ -23,6 +29,27 @@ class rjil::neutron (
   include ::neutron::quota
 
   ensure_resource('package','python-six', { ensure => 'latest' })
+
+
+  ##
+  # Reverse proxy
+  ##
+
+  include rjil::apache
+  Service['neutron-server'] -> Service['httpd']
+
+  ## Configure apache reverse proxy
+  apache::vhost { 'neutron':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/neutron',
+    error_log_file  => 'neutron.log',
+    access_log_file => 'neutron.log',
+    proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
 
   ##
   # neutron_config is making multiple entries for service_provider

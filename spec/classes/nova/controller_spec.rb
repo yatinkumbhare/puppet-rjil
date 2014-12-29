@@ -4,10 +4,11 @@ require 'hiera-puppet-helper'
 describe 'rjil::nova::controller' do
   let:facts do
     {
-      :operatingsystem  => 'Debian',
-      :osfamily         => 'Debian',
-      :concat_basedir   => '/tmp',
-      :hostname         => 'node1',
+      :operatingsystemrelease => '14.04',
+      :operatingsystem        => 'Debian',
+      :osfamily               => 'Debian',
+      :concat_basedir         => '/tmp',
+      :hostname               => 'node1',
     }
   end
   let :hiera_data do
@@ -28,15 +29,45 @@ describe 'rjil::nova::controller' do
       'nova::network::neutron::neutron_url'           => 'http://neutronserver:9696',
       'nova::network::neutron::neutron_admin_auth_url'=> 'http://10.1.1.10:5000/v2.0',
       'nova::api::api_bind_address'                   => '0.0.0.0',
-      'rjil::nova::controller::api_bind_port'         => 100,
+      'rjil::nova::controller::osapi_public_port'     => 100,
       'rjil::nova::controller::vncproxy_bind_port'    => 101,
       'openstack_extras::auth_file::admin_password'   => 'pw',
       'rjil::nova::controller::memcached_servers'     => ['10.2.2.1','10.2.2.2'],
+      'rjil::nova::controller::server_name'           => 'nova.server',
     }
   end
 
   context 'with http, defaults' do
     it  do
+      should contain_class('rjil::apache')
+      should contain_apache__vhost('nova-osapi').with(
+        {
+          'servername'      => 'nova.server',
+          'serveradmin'     => 'root@localhost',
+          'port'            => '100',
+          'ssl'             => false,
+          'docroot'         => '/usr/lib/cgi-bin/nova-osapi',
+          'error_log_file'  => 'nova-osapi.log',
+          'access_log_file' => 'nova-osapi.log',
+          'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:18774/"  } ],
+          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
+        }
+      )
+
+      should contain_apache__vhost('nova-ec2api').with(
+        {
+          'servername'      => 'nova.server',
+          'serveradmin'     => 'root@localhost',
+          'port'            => '8773',
+          'ssl'             => false,
+          'docroot'         => '/usr/lib/cgi-bin/nova-ec2api',
+          'error_log_file'  => 'nova-ec2api.log',
+          'access_log_file' => 'nova-ec2api.log',
+          'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:18773/"  } ],
+          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
+        }
+      )
+
       should contain_file('/usr/lib/jiocloud/tests/nova-api.sh')
       should contain_file('/usr/lib/jiocloud/tests/nova-scheduler.sh')
       should contain_file('/usr/lib/jiocloud/tests/nova-cert.sh')

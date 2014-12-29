@@ -1,4 +1,9 @@
 #!/bin/bash
 set -e
+<% if @ssl -%>
+/usr/lib/nagios/plugins/check_http -S -H <%= @admin_address %> -p 35357
+/usr/lib/nagios/plugins/check_http -S -H <%= @public_address %> -p 5000
+<% else -%>
 /usr/lib/nagios/plugins/check_http -H <%= @admin_address %> -p 35357
 /usr/lib/nagios/plugins/check_http -H <%= @public_address %> -p 5000
+<% end -%>

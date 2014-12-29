@@ -38,7 +38,7 @@ describe 'rjil::ceph::radosgw' do
       should contain_rjil__jiocloud__consul__service('radosgw').with({
         'tags'          => ['real'],
         'port'          => '80',
-        'check_command' => '/usr/lib/nagios/plugins/check_http -H localhost',
+        'check_command' => '/usr/lib/nagios/plugins/check_http -H localhost -p 80',
       })
 
     end
