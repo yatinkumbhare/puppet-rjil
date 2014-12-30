@@ -250,7 +250,7 @@ rjil::nova::controller::osapi_localbind_port: "%{hiera('nova_osapi_localbind_por
 rjil::nova::controller::server_name: "%{hiera('nova_public_address')}"
 rjil::nova::controller::ssl: true
 nova::rpc_backend: "%{hiera('rpc_backend')}"
-nova::glance_api_servers: "%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
+nova::glance_api_servers: "%{hiera('api_protocol')}://%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
 nova::database_connection: "mysql://%{hiera('nova_db_user')}:%{hiera('nova_db_password')}@%{hiera('db_host')}/nova"
 nova::mysql_module: 2.3
 
