@@ -88,7 +88,7 @@ class rjil::neutron (
     }
   }
 
-  rjil::test::http_check { 'neutron':
+  rjil::test::check { 'neutron':
     address => '127.0.0.1',
     port    => $public_port,
     ssl     => $ssl,

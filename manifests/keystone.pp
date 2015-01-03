@@ -25,16 +25,16 @@ class rjil::keystone(
     $address = $public_address
   }
 
-  Rjil::Test::Http_check {
+  Rjil::Test::Check {
     ssl     => $ssl,
     address => $address,
   }
 
-  rjil::test::http_check { 'keystone':
+  rjil::test::check { 'keystone':
     port => $public_port,
   }
 
-  rjil::test::http_check { 'keystone-admin':
+  rjil::test::check { 'keystone-admin':
     port => $admin_port,
   }
 

@@ -214,7 +214,7 @@ class rjil::cinder (
   ## Add tests for cinder api and registry
   include rjil::test::cinder
 
-  rjil::test::http_check { 'cinder':
+  rjil::test::check { 'cinder':
     address => $::cinder::api::bind_host,
     port    => $public_port,
     ssl     => $ssl,

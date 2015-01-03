@@ -171,7 +171,7 @@ class rjil::nova::controller (
   # param in rjil::nova::controller.
   ##
 
-  rjil::test::http_check { 'nova':
+  rjil::test::check { 'nova':
     address => $::nova::api::api_bind_address,
     port    => $osapi_public_port,
     ssl     => $ssl,

@@ -30,7 +30,7 @@ class rjil::ceph::radosgw (
     port => $port,
   }
 
-  rjil::test::http_check { 'radosgw':
+  rjil::test::check { 'radosgw':
     address => '127.0.0.1',
     port    => $port,
     ssl     => $ssl,

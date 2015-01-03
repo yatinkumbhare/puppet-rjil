@@ -17,6 +17,7 @@ define rjil::haproxy_service(
   $balancer_cookie  = undef,
   $bind_options     = undef,
   $ssl              = false,
+  $check_type       = 'http',
 ) {
 
   if $cluster_addresses != [] {
@@ -81,10 +82,11 @@ define rjil::haproxy_service(
     }
 
     if ($balancer_ports) {
-      rjil::test::http_check { $name:
+      rjil::test::check { $name:
         address => $vip,
         port    => $port,
         ssl     => $ssl,
+        type    => $check_type,
       }
       rjil::jiocloud::consul::service { "${name}":
         tags          => ['lb'],
