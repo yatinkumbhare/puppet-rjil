@@ -17,6 +17,10 @@ class rjil::test::glance(
     mode   => '755',
   }
 
+  file { '/usr/lib/jiocloud/tests/glance-api.sh':
+    ensure => absent,
+  }
+
   file { "/usr/lib/jiocloud/tests/glance-registry.sh":
     source => "puppet:///modules/rjil/tests/glance-registry.sh",
     owner  => 'root',
