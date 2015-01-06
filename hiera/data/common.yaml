@@ -561,13 +561,7 @@ contrail::nova_metadata_address: "lb.nova.service.consul"
 contrail::vrouter::metadata_proxy_secret: "%{hiera('nova_metadata_proxy_secret')}"
 contrail::vrouter::keystone_admin_password: "%{hiera('admin_password')}"
 
-##
-# Currently we have some dependency packages missing from rustedhalo, so they
-# are taken from opencontrail ppa. This can be made false after we have all
-# code.
-##
-
-contrail::manage_repo: true
+contrail::manage_repo: false
 contrail::neutron_ip: "%{hiera('neutron_public_address')}"
 
 ##
