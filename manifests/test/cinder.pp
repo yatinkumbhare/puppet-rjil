@@ -38,5 +38,4 @@ class rjil::test::cinder(
     mode   => '0755',
   }
 
-
 }

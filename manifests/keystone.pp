@@ -19,26 +19,33 @@ class rjil::keystone(
   $disable_db_sync        = false,
 ) {
 
-  class { 'rjil::test::keystone':
-    ssl => $ssl,
-  }
-
   if $public_address == '0.0.0.0' {
     $address = '127.0.0.1'
   } else {
     $address = $public_address
   }
 
+  Rjil::Test::Check {
+    ssl     => $ssl,
+    address => $address,
+  }
+
+  rjil::test::check { 'keystone':
+    port => $public_port,
+  }
+
+  rjil::test::check { 'keystone-admin':
+    port => $admin_port,
+  }
+
   rjil::jiocloud::consul::service { "keystone":
     tags          => ['real'],
     port          => 5000,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${address} -p 5000"
   }
 
   rjil::jiocloud::consul::service { "keystone-admin":
     tags          => ['real'],
     port          => 35357,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${address} -p 35357"
   }
 
   # ensure that we don't even try to configure the

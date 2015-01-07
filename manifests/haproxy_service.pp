@@ -16,6 +16,8 @@ define rjil::haproxy_service(
   $balancer_options = 'check inter 10s rise 2 fall 3',
   $balancer_cookie  = undef,
   $bind_options     = undef,
+  $ssl              = false,
+  $check_type       = 'http',
 ) {
 
   if $cluster_addresses != [] {
@@ -80,10 +82,15 @@ define rjil::haproxy_service(
     }
 
     if ($balancer_ports) {
+      rjil::test::check { $name:
+        address => $vip,
+        port    => $port,
+        ssl     => $ssl,
+        type    => $check_type,
+      }
       rjil::jiocloud::consul::service { "${name}":
         tags          => ['lb'],
         port          => $port,
-        check_command => "/usr/lib/nagios/plugins/check_http -I ${vip} -p $port"
       }
     }
   }

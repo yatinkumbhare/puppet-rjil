@@ -38,9 +38,19 @@ describe 'rjil::ceph::radosgw' do
       should contain_rjil__jiocloud__consul__service('radosgw').with({
         'tags'          => ['real'],
         'port'          => '80',
-        'check_command' => '/usr/lib/nagios/plugins/check_http -H localhost -p 80',
+        'check_command' => '/usr/lib/jiocloud/tests/radosgw.sh',
       })
+
+      should contain_file('/usr/lib/jiocloud/tests/radosgw.sh').with_content(/check_http -H 127\.0\.0\.1 -p 80/)
 
     end
   end
+
+  context 'with ssl' do
+    let :params do
+      {'ssl' => true}
+    end
+    it { should contain_file('/usr/lib/jiocloud/tests/radosgw.sh').with_content(/check_http -S -H 127\.0\.0\.1 -p 80/) }
+  end
+
 end

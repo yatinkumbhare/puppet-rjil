@@ -60,9 +60,6 @@ class rjil::cinder (
   $ssl                     = false,
 ) {
 
-  ## Add tests for cinder api and registry
-  include rjil::test::cinder
-
   ######################## Service Blockers and Ordering
   #######################################################
 
@@ -214,10 +211,18 @@ class rjil::cinder (
   #
   ##
 
+  ## Add tests for cinder api and registry
+  include rjil::test::cinder
+
+  rjil::test::check { 'cinder':
+    address => $::cinder::api::bind_host,
+    port    => $public_port,
+    ssl     => $ssl,
+  }
+
   rjil::jiocloud::consul::service { 'cinder':
     tags          => ['real'],
     port          => $public_port,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${::cinder::api::bind_host} -p ${public_port}"
   }
 
   rjil::jiocloud::consul::service { 'cinder-volume':

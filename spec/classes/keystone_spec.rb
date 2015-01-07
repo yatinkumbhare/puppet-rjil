@@ -28,7 +28,8 @@ describe 'rjil::keystone' do
 
   describe 'default resources' do
     it 'should contain default resources' do
-      should contain_file('/usr/lib/jiocloud/tests/keystone.sh')
+      should contain_file('/usr/lib/jiocloud/tests/keystone.sh').with_content(/check_http -H 127\.0\.0\.1 -p 443/)
+      should contain_file('/usr/lib/jiocloud/tests/keystone-admin.sh').with_content(/check_http -H 127\.0\.0\.1 -p 35357/)
       should contain_class('keystone')
     end
   end
@@ -41,6 +42,7 @@ describe 'rjil::keystone' do
         'public_address' => '10.0.0.2',
         'admin_email'    => 'root@rjil.com',
         'admin_port'     => '35756',
+        'public_port'    => '5001',
       }
       it 'should contain ssl specific resources' do
         should contain_class('apache')
@@ -48,7 +50,7 @@ describe 'rjil::keystone' do
           {
             'servername'  => '10.0.0.2',
             'serveradmin' => 'root@rjil.com',
-            'port'        => '443',
+            'port'        => '5001',
             'ssl'         => true,
             'proxy_pass'  => [ { 'path' => '/', 'url' => "http://localhost:5000/"  } ]
           }
@@ -62,6 +64,8 @@ describe 'rjil::keystone' do
             'proxy_pass'  => [ { 'path' => '/', 'url' => "http://localhost:35357/"  } ]
           }
         )
+        should contain_file('/usr/lib/jiocloud/tests/keystone.sh').with_content(/check_http -S -H 127\.0\.0\.1 -p 5001/)
+        should contain_file('/usr/lib/jiocloud/tests/keystone-admin.sh').with_content(/check_http -S -H 127\.0\.0\.1 -p 35356/)
       end
     end
 

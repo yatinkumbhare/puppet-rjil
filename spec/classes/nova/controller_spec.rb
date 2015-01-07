@@ -102,7 +102,7 @@ describe 'rjil::nova::controller' do
       should contain_rjil__jiocloud__consul__service('nova').with({
         'tags'          => ['real'],
         'port'          => 100,
-        'check_command' => "/usr/lib/nagios/plugins/check_http -I 0.0.0.0 -p 100"
+        'check_command' => "/usr/lib/jiocloud/tests/nova.sh"
       })
       should contain_rjil__jiocloud__consul__service('nova-scheduler').with({
         'port'          => 0,

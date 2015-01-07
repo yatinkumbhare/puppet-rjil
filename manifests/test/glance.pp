@@ -10,11 +10,15 @@ class rjil::test::glance(
 
   ensure_resource('package', 'python-glanceclient')
 
-  file { "/usr/lib/jiocloud/tests/glance-api.sh":
+  file { "/usr/lib/jiocloud/tests/glance.sh":
     content => template('rjil/tests/glance-api.sh.erb'),
     owner  => 'root',
     group  => 'root',
     mode   => '755',
+  }
+
+  file { '/usr/lib/jiocloud/tests/glance-api.sh':
+    ensure => absent,
   }
 
   file { "/usr/lib/jiocloud/tests/glance-registry.sh":

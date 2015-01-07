@@ -107,6 +107,5 @@ class rjil::glance (
   rjil::jiocloud::consul::service { "glance":
     tags          => ['real'],
     port          => $::glance::api::bind_port,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${::glance::api::bind_host} -p ${::glance::api::bind_port}"
   }
 }

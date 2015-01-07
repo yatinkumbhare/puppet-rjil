@@ -34,7 +34,7 @@ describe 'rjil::glance' do
 
   context 'with http, File backend' do
     it 'should contain http with file backend' do
-      should contain_file('/usr/lib/jiocloud/tests/glance-api.sh')
+      should contain_file('/usr/lib/jiocloud/tests/glance.sh')
       should contain_file('/usr/lib/jiocloud/tests/glance-registry.sh')
       should contain_class('rjil::apache')
 
