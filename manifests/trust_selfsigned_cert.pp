@@ -2,7 +2,9 @@
 # Class rjil::trust_selfsigned_cert
 #
 
-class rjil::trust_selfsigned_cert {
+class rjil::trust_selfsigned_cert(
+  $cert = "/etc/ssl/certs/jiocloud.com.crt"
+) {
 
   ##
   # Trust this self signed certificate, without this code openstack clients
@@ -12,16 +14,10 @@ class rjil::trust_selfsigned_cert {
     ensure => installed,
   }
 
-  file { '/usr/share/ca-certificates/selfsigned_server.crt':
-    ensure  => file,
-    source  => 'puppet:///modules/rjil/ssl/selfsigned_server.crt',
+  file { '/usr/local/share/ca-certificates/selfsigned.crt':
+    ensure  => link,
+    source  => $cert,
     require => Package['ca-certificates'],
-  }
-
-  file_line { 'add_selfsigned_server.crt':
-    path    => '/etc/ca-certificates.conf',
-    line    => 'selfsigned_server.crt',
-    require => File['/usr/share/ca-certificates/selfsigned_server.crt'],
     notify  => Exec['update-cacerts'],
   }
 
