@@ -11,5 +11,3 @@ rjil::neutron::contrail::public_cidr: 100.1.0.0/24
 rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek,ahmad,vaidy]
 rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek,ahmad,vaidy]
 rjil::base::self_signed_cert: true
-rjil::ceph::radosgw::manage_ssl_cert: true
-rjil::apache::manage_ssl_cert: true

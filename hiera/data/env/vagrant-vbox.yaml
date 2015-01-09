@@ -94,5 +94,3 @@ rjil::jiocloud::dhcp::dhcppools:
                   "--nic", "3",
                   "--ilo_address ", cip)'
 rjil::base::self_signed_cert: true
-rjil::ceph::radosgw::manage_ssl_cert: true
-rjil::apache::manage_ssl_cert: true
