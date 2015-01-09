@@ -657,7 +657,7 @@ ceph::radosgw::mon_key: "%{hiera('rjil::ceph::mon::key')}"
 ceph::radosgw::gw_serveradmin_email: "%{hiera('admin_email')}"
 ceph::radosgw::gw_server_name: "%{hiera('radosgw_public_address')}"
 ceph::radosgw::radosgw_cert_file: /etc/apache2/certs/jiocloud.com.crt
-ceph::radosgw::radosgw_key_file: /etc/apache2/certs/jiocloud.com.key
+ceph::radosgw::radosgw_key_file: /etc/apache2/keys/jiocloud.com.key
 ceph::radosgw::radosgw_ca_file: /etc/apache2/certs/gd_bundle-g2-g1.crt
 ceph::radosgw::listen_ssl: true
 
@@ -734,7 +734,7 @@ apache::server_signature: 'Off'
 apache::apache_version: '2.4'
 apache::default_ssl_chain: '/etc/apache2/certs/gd_bundle-g2-g1.crt'
 apache::default_ssl_cert: '/etc/apache2/certs/jiocloud.com.crt'
-apache::default_ssl_key: '/etc/apache2/certs/jiocloud.com.key'
+apache::default_ssl_key: '/etc/apache2/keys/jiocloud.com.key'
 
 
 ######### Tempest settings
