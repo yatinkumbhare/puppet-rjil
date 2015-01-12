@@ -33,9 +33,10 @@ At a high level, it contains the following files/directories
 * Puppetfile
   List of all puppet modules that need to be installed as dependencies.
 * ./build\_scripts/deploy.sh - Script that performs deployment of jiocloud.
-t * ./files/maybe-upgrade.sh - script that actually runs Puppet to perform
+* ./files/maybe-upgrade.sh - script that actually runs Puppet to perform
   deployments on provisioned machines (when not using vagrant)
 * ./environment/full.yaml - contains the defintion of nodes that can be used for testing
+* site.pp - puppet content that contains role assignments to node.
 
 # Details
 
@@ -108,8 +109,7 @@ using librarian-puppet-simple)
 
 ### puppet-rjil as a module
 
-The Puppet-rjil module contains all of the composition roles that combine the external modules
-into the roles defined in site.pp.
+The Puppet-rjil module contains all of the composition roles that combine the external modules into the roles defined in site.pp.
 
 In Puppet's lexicon, the type of content found in this module are referred to as profiles.
 
@@ -235,10 +235,6 @@ and uses this information to make decisions about if local configuration should 
 
 #### Puppet design
 
-Due to the design of Puppet, these two use cases are implemented in ways that are fundamentally different.
-The reason that these two cases are different is due to the distinction in Puppet between compile time
-versus run time actions.
-
 In order to understand the motivation for the design of Puppet + Consul for orchestration, you need to first
 understand the difference between compile vs. runtime in Puppet.
 
@@ -310,7 +306,11 @@ CONS:
 ##### Collect data and compile and fail at runtime if not ready
 
 We are tending towards a combination of function/type/providers. At compile time,
-functions
+functions are used to query for data which is then forwarded to a type that fails
+catalog compile if the expected values are not present.
+
+This failure just results in a sub-graph failure, which means that failures are
+not preventing other resources from being executed.
 
 ## Openstack Dependencies
 
