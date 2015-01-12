@@ -33,7 +33,7 @@ At a high level, it contains the following files/directories
 * Puppetfile
   List of all puppet modules that need to be installed as dependencies.
 * ./build\_scripts/deploy.sh - Script that performs deployment of jiocloud.
-* ./files/maybe-upgrade.sh - script that actually runs Puppet to perform
+t * ./files/maybe-upgrade.sh - script that actually runs Puppet to perform
   deployments on provisioned machines (when not using vagrant)
 * ./environment/full.yaml - contains the defintion of nodes that can be used for testing
 
@@ -56,50 +56,6 @@ This deployment module was built using the following steps:
 
 5. Debug the build process to follow a build's progress
 
-## Layout (stack) data
-
-The build script is driven by a set of data that describes the machines that
-need to be configured.
-
-These build scripts can be found in the environment directory.
-The filename should be of the form:
-
-````
-./environment/<layout>.yaml
-````
-
-NOTE: layout actually defaults to env if not specified
-
-where layout/env is an argument passed into the build script/Vagrantfile.
-
-The following file contains our reference architecture for openstack:
-
-````
-./environment/cloud.dan.yaml
-````
-
-### file contents
-
-This file should contain the top level key `resources`.
-
-Here resources should be listed. Where the names of these
-resource should match a node expression.
-
-For example, if the following resources are specified:
-
-````
-resources:
-  etcd:
-    number: 1
-    ...
-  apache:
-    number: 2
-```
-
-It will result in hostnames that are prefixed with the following strings:
-* etcd1
-* apache1
-* apache2
 
 ## Puppet
 
@@ -152,19 +108,89 @@ using librarian-puppet-simple)
 
 ### puppet-rjil as a module
 
-The Puppet-rjil module contains all of the composition roles that we use to compose our dependent
-modules into the actual roles defined in site.pp
+The Puppet-rjil module contains all of the composition roles that combine the external modules
+into the roles defined in site.pp.
+
+In Puppet's lexicon, the type of content found in this module are referred to as profiles.
 
 TODO: document more about the kinds of things that belong here and our expectations for how those
 things are developed.
 
 ### Populating hiera data
 
-All external data used to customize the depoyment scripts written in Puppet is passed via hiera. This includes all
-configuration that is specific to each environment and the reference architecture for jiocloud. You could
-realistically say that the combination of the
+All data used to override defaults of Puppet Profiles located in puppet-rjil/modules are passed in
+via hiera.
 
 Understanding hiera is a requirement for using this system. Please get started [here](https://docs.puppetlabs.com/hiera/1/).
+
+Hiera uses [Facter](http://puppetlabs.com/facter) to determine how data is set for a given node:
+
+`hiera/hiera.yaml` supplies the override configuration that hiera uses to deterine how to set hosts
+for a given system. The override levels are as follows:
+
+* clientcert/%{::clientcert} - client specific data
+* secrets/%{env} - environment specific secrets. This data is provided from env speific packages
+* role/%{jiocloud\_role} - role specific overrides
+* cloud\_provider/%{cloud\_provider} - overrides specific to a certain cloud provider.
+* env/%{env} - environemt specific overrides
+* secrets/common - default test secrets that are overridden in prod via packages
+* common - defaul overrides (the majority of the hiera data is stored here)
+
+## Layout (stack) data
+
+The build script is driven by a set of data that describes the machines that
+need to be configured.
+
+These build scripts can be found in the environment directory.
+The filename should be of the form:
+
+````
+./environment/<layout>.yaml
+````
+
+NOTE: layout defaults to full (full openstack install) if not specified
+
+where layout/env is an argument passed into the build script/Vagrantfile.
+
+The following file contains our reference architecture for openstack:
+
+````
+./environment/full.yaml
+````
+
+### file contents
+
+This file should contain the top level key `resources`.
+
+Here resources should be listed. Where the names of these
+resource should match a node expression (specified from Puppet
+in site.pp).
+
+For example, if the following resources are specified:
+
+````
+resources:
+  haproxy:
+    number: 1
+    ...
+  httpproxy:
+    number: 2
+````
+
+### applying layout files
+
+Layout files can be applied using the command:
+
+````
+python -m jiocloud.apply_resources apply --mappings=environment/${cloud_provider} environment/${layout}.yaml
+````
+
+This command will create only the desired nodes specified in the layout file that do not already exist.
+
+Apply this file  will result in host whose names are prefixed with the following strings:
+* hapoxy1
+* httpproxy1
+* httpproxy2
 
 # Cross host dependencies
 
@@ -180,30 +206,41 @@ capture those issues along with recommendations for how it can be improved.
 
 ## Configuration Orchestration
 
+Configuration orchestration is managed via a combination of registering services in consul
+and the following [module](https://github.com/jiocloud/puppet-orchestration_utils).
+
 ### Consul
 
-Orchestration is currently managed by both consul and etcd (although in the future, we will be eliminating
-etcd in favor of consul for everything)
+Orchestration is currently managed by [consul](https://consul.io/), a tool that provides
+dns service registration and discovery.
 
 Consul works as follows:
 
   * The following Puppet Defined resource `rjil::jiocloud::consul::service` is used to define a service in consul.
   * Each service registers its ip address as an A record for the address: `<service_name>.service.consul`
-  * Each service registers its hostname: <hostmame>.node.consul and registers that as a SRV record for `<service_name>.service.consul`
+  * Each service registers its hostname: <hostmame>.node.consul as an SRV record for `<service_name>.service.consul`
 
-#### using DNS
+### Orchestrating with consul
 
-Each agent uses DNS to understand what services are available. There are two ways in which Puppet needs to interact with DNS.
+Each service registers itself with consul, along with health checks that ensure that services are not
+actually registered until they are functional. These services are available both through the
+consul http api as well as via regular DNS tools (like dig)
+
+Puppet uses both DNS as well as the consul API to understand what remote services are available
+and uses this information to make decisions about if local configuration should be applied.
 
 1. block until an address is resolvable
 2. block until we can retrieve registered A records or SRV records from an address.
+3. fail if a DNS address is not available
 
-#### Puppet design and implications
+#### Puppet design
 
-##### Puppet design
+Due to the design of Puppet, these two use cases are implemented in ways that are fundamentally different.
+The reason that these two cases are different is due to the distinction in Puppet between compile time
+versus run time actions.
 
-Due to the design of Puppet, these two use cases are implemented in ways that are fundamentally different. The reason that these
-two cases are different is due to the distinction in Puppet between compile time versus run time actions.
+In order to understand the motivation for the design of Puppet + Consul for orchestration, you need to first
+understand the difference between compile vs. runtime in Puppet.
 
 1. compile time - Puppet goes through a separate process of compiling the catalog that will be used to apply the
    desired configuration state of each agent. During compile time, the following things occur:
@@ -214,33 +251,66 @@ two cases are different is due to the distinction in Puppet between compile time
 * functions are run
 * variables are assigned to resource attributes
 
-This phase processes Puppet manifests, functions, and hiera.
+This phase processes Puppet manifests, functions, and hiera. In general, data can only be supplied during the
+compile time phase in Puppet. This means that all data must be available during compile to be used during
+runtime.
 
 2. run time - during Run time, a graph of resources is applied to the system. Most of the logic that is performed
    during these steps is contained within the actual ruby providers.
 
-##### Puppet orchestration integration tooling
+#### Puppet orchestration integration tooling
 
-We have implemented the following tools to be used in combination with consul.
-  * rjil::service\_blocker - a type that blocks until an A record is registered for an address. It is configured to tell it
-    now many times to retry and how long to sleep between each attempt. This check is performed at run-time and requires that
-    the hostname to lookup is known ahead of time and that only that hostname is being used to determine attribute values for
-    a resource.
-  * service\_discovery\_dns - A function that performs a DNS SRV lookup, and returns either discovered ips, hostname, or a hash
-    or both. This method is used in cases where information used to populate resource attributes needs to be determined
-    dynamically.
+The [orchestration\_utils](https://github.com/JioCloud/puppet-orchestration_utils) repo contains all code used
+to orchestrate configuration based on the current state of registered services in consul.
 
-##### Implications
+##### functions
 
-The way that Puppet is designed has several implications to the design of our system. In order to achieve the
-best performance, it is better to block during resource execution (and run-time) because you can set dependencies
-on which resources can be applied in parallel by indicating those resources should be applied before the service\_blocker.
-This means that many more resources can be applied in parallel. For example, it would be easy to  use Puppet
-dependencies to ensure that the service blocker never happened before any packages are installed.
+Functions can be used at runtime to collect data.
 
-However, since variable substitution occurs during compile time, anything that relies on using the static DNS address,
-(ie: by using the service\_discovery\_dns function) must be performed during compile time. This means that the entire
-catalog application is blocked until this data becomes available.
+* dns\_resolve - gets A records for an address
+* service\_discovery\_consul - pull a host => ip hash for a specified hostname.
+
+
+##### type/provider
+
+* runtime\_fail - used to trigger a catalog failure which causes the entire subgraph to fail. This is used as a
+more performant way to fail and retry when certain data is not ready at compile time.
+* dns\_blocker - blocks until a specified address is registered. This blocks not only dependent resources, but
+also resources that are not dependencies that just happen to not have run.
+* consul\_kv\_fail - fail a catalog subgraph if a certain key has not been set in cosul. This is used to
+orchestrate arbitrary events besides registered services.
+* consul\_kv - used to register arbitrary keys from Puppet as a part of run time (meaning that keys can be
+sure to be inserted only after certain configuration has been applied.
+
+
+#### Orchestration performance
+
+3 kinds of orchestration actions are performed in our Puppet vs. Consul integration. This section will
+discussed along with it's performance and design implications.
+
+##### Fail catalog on missig data - Since date must be available during compile time, the easiest
+orchestration decision is to simply fail to compile and retry until all external services are ready.
+We initially tried this approach, but discontinued for the following reason:
+* Performance was terrible. Failing at compile time blocked all resource from being able to run.
+* Unable to represent cross host circular dependencies.
+* Impossible to decouple package installations. Currently, to ensure the best performance, we install
+all packages as a separate call to puppet apply with --tags package to ensure that package installs
+never have to be blocked on service level dependencies.
+
+##### Block until data ready - In this case, types/providers retry until DNS records are registered.
+
+PROS:
+* Easy to monitor cross host orchestration flow
+* Less spurious failures.
+
+CONS:
+* Cannot work unless hard coded DNS addresses can be used
+* Leads to some resource executions getting delayed.
+
+##### Collect data and compile and fail at runtime if not ready
+
+We are tending towards a combination of function/type/providers. At compile time,
+functions
 
 ## Openstack Dependencies
 
