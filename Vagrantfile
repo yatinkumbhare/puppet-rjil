@@ -53,7 +53,7 @@ Vagrant.configure("2") do |config|
 
       # This seems wrong - Soren
       config.vm.provision 'shell', :inline =>
-         'cp /vagrant/hiera/hiera.yaml /etc/puppet'
+         'cp /etc/puppet/hiera/hiera.yaml /etc/puppet'
 
       config.vm.host_name = "#{node_name}.domain.name"
       ['consul'].each do |x|
