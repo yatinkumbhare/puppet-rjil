@@ -65,4 +65,16 @@ class rjil::system(
     subscribe   => File_line['domain_search'],
   }
 
+  ##
+  # autocompletion of hostnames for ssh and host commands.
+  # TODO: this will remove the autocompletion for commandline options, which
+  # need to be fixed.
+  ##
+  file { '/etc/bash_completion.d/host_complete':
+    ensure        => file,
+    owner         => root,
+    group         => root,
+    mode          => 644,
+    source        => "puppet:///modules/${module_name}/bash_completion.d_host_complete"
+  }
 }
