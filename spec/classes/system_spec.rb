@@ -30,6 +30,7 @@ describe 'rjil::system' do
       should contain_file('/etc/issue')
       should contain_file('/etc/issue.net')
       should contain_file('/usr/lib/jiocloud/tests/check_timezone.sh')
+      should contain_file('/etc/bash_completion.d/host_complete')
       should contain_class('timezone')
       should contain_class('rjil::system::apt')
       should contain_class('rjil::system::accounts')
