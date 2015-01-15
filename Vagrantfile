@@ -2,18 +2,19 @@ require 'yaml'
 
 Vagrant.configure("2") do |config|
 
+  default_flavor = 'small'
+  default_image = 'trusty'
+
   # allow users to set their own environment
   # which effect the hiera hierarchy and the
   # cloud file that is used
   environment = ENV['env'] || 'vagrant-vbox'
   layout = ENV['layout'] || 'full'
-
+  map = ENV['map'] || ENV['env']
 
   config.vm.provider :virtualbox do |vb, override|
-    override.vm.box = 'ubuntu/trusty64'
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-    vb.memory = 1024
   end
 
   config.vm.provider "lxc" do |v, override|
@@ -23,24 +24,26 @@ Vagrant.configure("2") do |config|
   last_octet = 41
   env_data = YAML.load_file("environment/#{layout}.yaml")
 
+  map_data = YAML.load_file("environment/#{map}.map.yaml")
+
   machines = {}
   env_data['resources'].each do |name, info|
     (1..info['number']).to_a.each do |idx|
-      machines["#{name}#{idx}"] = last_octet
-      last_octet += 1
+      machines["#{name}#{idx}"] = info
     end
   end
-  machines.each do |node_name, number|
+
+  machines.each do |node_name, info|
 
     config.vm.define(node_name) do |config|
 
       config.vm.provider :virtualbox do |vb, override|
-        if node_name =~ /(cp)/
-          vb.memory = ENV['COMPUTE_MEMORY_MB'] || 4096
-        end
-        if node_name =~ /(ct|ocdb|oc)/
-          vb.memory = 4096
-        end
+        image = info['image'] || default_image
+        override.vm.box = map_data['image']['virtualbox'][image]
+
+        flavor = info['flavor'] || default_flavor
+        vb.memory = map_data['flavor'][flavor]['ram']
+        vb.cpus = map_data['flavor'][flavor]['cpu']
       end
 
       config.vm.synced_folder("hiera/", '/etc/puppet/hiera/')
