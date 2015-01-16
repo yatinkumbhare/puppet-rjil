@@ -29,13 +29,13 @@ At a high level, it contains the following files/directories
 * Vagrantfile
   A Vagrantfile that can be used for faster deployments and iterative
   development.
-  NOTE: Vagrant has it's own hiera env data in `./hiera/data/env/vagrant.yaml`:
+  NOTE: Vagrant has its own hiera env data in `./hiera/data/env/vagrant.yaml`:
 * Puppetfile
   List of all puppet modules that need to be installed as dependencies.
 * ./build\_scripts/deploy.sh - Script that performs deployment of jiocloud.
 * ./files/maybe-upgrade.sh - script that actually runs Puppet to perform
   deployments on provisioned machines (when not using vagrant)
-* ./environment/full.yaml - contains the defintion of nodes that can be used for testing
+* ./environment/full.yaml - contains the definition of nodes that can be used for testing
 * site.pp - puppet content that contains role assignments to node.
 
 # Details
@@ -96,7 +96,7 @@ node /^apache\d+/ {
 }
 ````
 
-Those nodes definitions should inculde whatever classes are required to configure those
+Those nodes definitions should include whatever classes are required to configure those
 roles.
 
 ### external modules
@@ -282,7 +282,7 @@ sure to be inserted only after certain configuration has been applied.
 #### Orchestration performance
 
 3 kinds of orchestration actions are performed in our Puppet vs. Consul integration. This section will
-discussed along with it's performance and design implications.
+discussed along with its performance and design implications.
 
 ##### Fail catalog on missig data - Since date must be available during compile time, the easiest
 orchestration decision is to simply fail to compile and retry until all external services are ready.
@@ -472,7 +472,7 @@ mkdir modules/rjil
 The Vagrantfile accepts a few additional environment variables that can be used to further customize the environment.
 
 ````
-# used to set a local system squid proxy (recomended!!!)
+# used to set a local system squid proxy (recommended!!!)
 export http\_proxy=http://10.22.3.1:3128
 export https\_proxy=http://10.22.3.1:3128
 # used to customize the environement to use
