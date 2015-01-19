@@ -14,7 +14,7 @@
 define rjil::service_blocker(
   $tries      = 30,
   $try_sleep  = 20,
-  $datacenter = $::env,
+  $datacenter = $::consul_discovery_token,
 ) {
 
   $service_hostname = "${name}.service.${datacenter}.consul"
