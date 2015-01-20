@@ -67,7 +67,7 @@ Puppet is responsible for ensuring that each of the defined hosts in our
 layout get assigned their correct role.
 
 For example, for the case of an apache server. Puppet contains the description
-of how a machine is traisitions to its desired role.
+of how a machine is transitioned to its desired role.
 
 ````
 +----------+      +-----------+
