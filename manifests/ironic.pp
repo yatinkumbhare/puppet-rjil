@@ -1,5 +1,6 @@
-class rjil::ironic
-{
+class rjil::ironic(
+  $deploy_ironic_api_url = "http://${::ipaddress}:6385/",
+) {
   class { '::rabbitmq': }
 
   class { '::nova::compute': }
@@ -49,6 +50,8 @@ class rjil::ironic
   package { 'syslinux':
     ensure => 'present'
   }
+
+  ironic_config { 'conductor/ironic_api_url': value => $deploy_ironic_api_url }
 
   package { 'tftpd-hpa':
     ensure => 'present'
