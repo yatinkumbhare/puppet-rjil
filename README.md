@@ -285,8 +285,8 @@ sure to be inserted only after certain configuration has been applied.
 3 kinds of orchestration actions are performed in our Puppet vs. Consul integration. This section will
 discussed along with its performance and design implications.
 
-##### Fail catalog on missig data - Since date must be available during compile time, the easiest
-orchestration decision is to simply fail to compile and retry until all external services are ready.
+##### Fail catalog on missig data - Since data must be available during compile time, the easiest
+Orchestration decision is to simply fail to compile and retry until all external services are ready.
 We initially tried this approach, but discontinued for the following reason:
 * Performance was terrible. Failing at compile time blocked all resource from being able to run.
 * Unable to represent cross host circular dependencies.
