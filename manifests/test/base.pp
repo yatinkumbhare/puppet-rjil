@@ -24,8 +24,9 @@ class rjil::test::base(
 
   # Add a custom nagios check for killall -0
   file { "${nagios_base_dir}/check_killall_0":
-    source => 'puppet:///modules/rjil/tests/nagios_killall_0',
-    mode   => '0755',
+    source  => 'puppet:///modules/rjil/tests/nagios_killall_0',
+    mode    => '0755',
+    require => Package['nagios-plugins'],
   }
 
 }
