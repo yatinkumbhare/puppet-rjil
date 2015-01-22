@@ -28,12 +28,12 @@ resources:
     networks: default
   stmonleader:
     number: 1
-    flavor: large
+    flavor: storage
     image: trusty
     networks: default
   stmon:
     number: 2
-    flavor: large
+    flavor: storage
     image: trusty
     networks: default
   cp:

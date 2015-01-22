@@ -13,3 +13,6 @@ flavor:
   large:
     ram: 4096
     cpu: 2
+  storage:
+    ram: 4096
+    cpu: 2
