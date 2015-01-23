@@ -314,16 +314,17 @@ ironic::glance_api_insecure: true
 
 ironic::api::debug: "%{hiera('debug')}"
 ironic::api::verbose: "%{hiera('verbose')}"
-ironic::api::auth_host: "%{hiera('rjil::keystone::public_address')}"
+ironic::api::auth_host: "%{hiera('keystone_public_address')}"
 ironic::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 ironic::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('ironic::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
 ironic::api::admin_password: "%{hiera('ironic::keystone::auth::password')}"
 ironic::api::admin_tenant_name: services
 ironic::api::mysql_module: 2.3
 
-nova::compute::ironic::keystone_password: "%{hiera('ironic::api::keystone_password')}"
+nova::compute::ironic::keystone_password: "%{hiera('ironic::api::admin_password')}"
 nova::compute::ironic::keystone_url: "%{hiera('ironic::api::auth_uri')}"
 
+rjil::ironic::deploy_ironic_api_url: "http://%{::ipaddress}:6385/"
 
 ########### Keystone config
 ###################################

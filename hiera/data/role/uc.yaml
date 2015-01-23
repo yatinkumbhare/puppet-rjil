@@ -5,3 +5,5 @@ ntp::servers:
 
 apache::default_vhost: false
 rjil::glance::backend: file
+
+nova::api::neutron_metadata_proxy_shared_secret: false
