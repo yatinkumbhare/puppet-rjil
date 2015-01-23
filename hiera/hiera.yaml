@@ -6,8 +6,6 @@
   :datadir: /etc/puppet/hiera/data
 :hierarchy:
   - "clientcert/%{::clientcert}"
-  - user
-  - services
   - "secrets/%{env}"
   - "role/%{jiocloud_role}"
   - "cloud_provider/%{cloud_provider}"
