@@ -309,7 +309,7 @@ ironic::rabbit_password: "%{hiera('ironic_rabbit_password')}"
 ironic::rabbit_virtual_host: "%{hiera('ironic_rabbit_virtual_host')}"
 ironic::database_connection: "mysql://%{hiera('ironic_db_user')}:%{hiera('ironic_db_password')}@%{hiera('db_host')}/ironic"
 
-ironic::glance_api_servers: "%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
+ironic::glance_api_servers: "%{hiera('api_protocol')}://%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
 ironic::glance_api_insecure: true
 
 ironic::api::debug: "%{hiera('debug')}"
