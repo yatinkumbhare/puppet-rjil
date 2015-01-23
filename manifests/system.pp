@@ -17,6 +17,8 @@ class rjil::system(
   include rjil::system::apt
   include rjil::system::accounts
 
+  ensure_packages(['molly-guard'])
+
   ## Setup tests
   rjil::test {'check_timezone.sh':}
 
