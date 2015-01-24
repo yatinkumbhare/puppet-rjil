@@ -111,9 +111,20 @@ class rjil::glance (
     ssl     => $ssl,
   }
 
+  rjil::test::check { 'glance-registry':
+    type    => 'tcp',
+    address => $registry_localbind_host,
+    port    => $registry_localbind_port,
+  }
+
   rjil::jiocloud::consul::service { "glance":
     tags          => ['real'],
     port          => $::glance::api::bind_port,
+  }
+
+  rjil::jiocloud::consul::service { 'glance-registry':
+    tags          => ['real'],
+    port          => $::glance::registry::bind_port,
   }
 
 }
