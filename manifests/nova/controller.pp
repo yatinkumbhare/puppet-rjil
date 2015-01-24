@@ -70,11 +70,11 @@ class rjil::nova::controller (
   }
 
   ##
-  # The problem with fail function is that , as funtions are evaluated on comple
+  # The problem with fail function is that, as funtions are evaluated on compile
   # time, the execution will fail during that time, so if the condition
-  # evaluates a resource or outcome of a resource execution  which create on the
+  # evaluates a resource or outcome of a resource execution which create on the
   # same role/node will cause the execution always fail as the puppet execution
-  # willl never happen. So using a type here.
+  # will never happen. So using a type here.
   ##
 
   if ! empty($memcached_servers) {
@@ -87,7 +87,7 @@ class rjil::nova::controller (
   }
 
   ##
-  # Adding service blocker for mysql which make sure mysql is avaiable before
+  # Adding service blocker for mysql which make sure mysql is available before
   # database configuration.
   ##
 
@@ -151,7 +151,7 @@ class rjil::nova::controller (
   include ::nova::vncproxy
 
   ##
-  # Making sure /var/log/nova-manage.log is wriable by nova user. This is
+  # Making sure /var/log/nova-manage.log is writable by nova user. This is
   # because, nova module is running "nova-manage db sync" as user nova
   # which is failing as nova dont have write permission to nova-manage.log.
   ##
