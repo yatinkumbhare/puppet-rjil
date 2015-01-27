@@ -4,7 +4,9 @@
 # This is essentially the profile for haproxy
 #
 #
-class rjil::haproxy () {
+class rjil::haproxy (
+  $consul_service_tags = []
+) {
 
   rjil::test { 'haproxy.sh': }
 
@@ -64,7 +66,8 @@ class rjil::haproxy () {
 
   rjil::jiocloud::consul::service { "haproxy":
     port          => 8094,
-    check_command => "/usr/lib/nagios/plugins/check_haproxy -u 'http://0.0.0.0:8094/lb-stats;csv'"
+    check_command => "/usr/lib/nagios/plugins/check_haproxy -u 'http://0.0.0.0:8094/lb-stats;csv'",
+    tags          => $consul_service_tags
   }
 
 #  if $cluster_master == $::fqdn {
