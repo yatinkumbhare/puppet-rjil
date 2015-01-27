@@ -1,5 +1,5 @@
 resources:
-  etcd:
+  bootstrap:
     number: 1
     flavor: small
     image: trusty
