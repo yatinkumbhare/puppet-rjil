@@ -12,6 +12,7 @@ puppet-rjil
 4. [Development Workflow](#development-environment)
 5. [Running Behind Proxy Server](#running-behind-proxy-server)
 6. [Build script - command line tool for generating test deployments](#build-script)
+7. [Development - Resources for Developers](#developers)
 
 # Overview
 
@@ -736,6 +737,172 @@ that libffi is available:
 ````
 export CFLAGS="-I/usr/local/opt/libffi/lib/libffi-3.0.13/include/"
 ````
+
+# Development
+
+## Process
+
+In general, the process has been designed to be as unobtrusive and
+lenient as possible, and is split into the following:
+
+### github pull requests
+
+````
+https://github.com/jiocloud/puppet-rjil/pulls
+````
+
+The easiest way to make a contribution is to submit a pull request
+via github. It is not a requirement that an issue of task exist for
+a pull request to be merged (although it might be helpful for some
+situations). Contributions are merged as long as they:
+
+1. Are approved by at least one core team member
+2. Pass unit tests
+3. Pass integration tests (if they risk regressions to
+   any of the systems under integration tests)
+4. Contain commit messages that provide enough context for reviewers
+   to understand
+* * the motivation for the patch
+* * the desired outcome of the patch
+
+### github issues
+
+````
+https://github.com/jiocloud/puppet-rjil/issues
+````
+
+Github issues are used to track issues where there is not a patch immediately
+available. This might be because:
+
+1. The issue is not well understood/diagnosed
+2. The issue is non-trivial to fix
+3. The person opening the issue does not immediately know how to resolve it.
+
+In general, at least a menial attempt to debug an issue should be attempted before opening
+an issue. There are standard procesures that anyone can use to attempt to categorize
+and provide context around a given failure so that they can open a useful (ie: actionable)
+as opposed to a useless issue.
+
+Example of a useless issue:
+
+````
+Umm... dude, it doesn't work.
+<enter random log spew here, or even worse, logs from jenkins, showing that you put
+zero effort into it>
+````
+
+Issues like the above will result in a mild scolding followed by a request that you perform
+the debugging steps mentioned in this section.
+
+### slack
+
+````
+https://rjil.slack.com/messages/deployment-team/
+````
+
+We use slack as the communication center for this project. Slack is a great place
+to ask a questions, or to collaborate on issues where pairing is desired. Events related
+to the development of the cloud platform are also streamed to slack in real time.
+
+### Kanban board (ie: tasks)
+
+````
+ https://trello.com/b/PUXa12Cl/jiocloud-deployments
+````
+
+We use Trello to track tasks and task backlog related to this project. It is used
+to understand our tasks, how they fit into overall categories as well as who is
+currently working on what things. The process for how tasks are added into Trello
+is currently a bit adhoc, but needs to be enhanced as additional resources come
+online.
+
+### Specifications
+
+````
+https://github.com/jiocloud/jiocloud-specs
+````
+
+A specification should be created in advance for large features.
+
+Specifications are intended to allow more people to be involved in the
+design and consensus for larger feature sets. This becomes more important
+as more people get on boarded, especially as those resources intend to assist
+in the implementation of larger features sets.
+
+## Basic debugging
+
+1. login to one of the roles with a floating ip assigned (review your specified
+   layout to be sure)
+
+2. from there, run the following
+
+````
+*jorc get_failures --hosts*
+````
+
+This command will list three kinds of failures for each host.
+In order to debug each host, you generally need to log into the
+host that is in an error state.
+
+NOTE: it is possible to login to each host by the same hostname
+returned by *get_failures*. It even autocompletes for you.
+
+### puppet failures
+
+Indicate that the last puppet run did not complete successfully.
+
+````
+Node: XXXX, Check: puppet
+````
+
+Indicates the last puppet run has failing resources. Review
+/var/log/syslog to track down failures.
+
+NOTE: all puppet lines from the logs contain puppet-user
+
+NOTE: some errors from the logs are just cascading failures, you need
+to track these down to the root cause
+
+### validation failures
+
+````
+Node: XXX, Check: validation
+````
+
+Validation checks are run to ensure that each service installed on a machine
+is in an active state before calling the failure a success. Validation failures
+indicate that while the configuration has been successfully applied, the service
+is not actually functional. This may indicate that it is still waiting for external
+dependencies or in the case of ceph, that it is still performing bootstrapping
+operations.
+
+The output from each validation command can be viewed in /var/log/syslog of the
+machine whose validation is failing. It is also easy to run the validation commands
+yourself:
+
+````
+sudo run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/
+````
+
+After seeing that a service is not in a functional state, you should check the logs
+for that individual service to see if there are any clues there.
+### consul service failures
+
+Lists additional consul checks that are currently in the critical state
+
+To see all consul services in the critical state:
+
+````
+curl http://localhost:8500/v1/health/state/critical?pretty=1
+````
+
+Each service mentioned here also contains the output from it's failed command.
+
+* logging into the machines
+* running jorc get\_failures --hosts
+* * tracking down failures to root causes (in either /var/log/syslog or /var/log/cloud-init.log)
+
+/var/log/cloud-init-output.log
 
 # TODO
 
