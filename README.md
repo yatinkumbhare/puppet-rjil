@@ -126,16 +126,16 @@ Understanding hiera is a requirement for using this system. Please get started [
 
 Hiera uses [Facter](http://puppetlabs.com/facter) to determine how data is set for a given node:
 
-`hiera/hiera.yaml` supplies the override configuration that hiera uses to deterine how to set hosts
+`hiera/hiera.yaml` supplies the override configuration that hiera uses to determine how to set hosts
 for a given system. The override levels are as follows:
 
 * clientcert/%{::clientcert} - client specific data
-* secrets/%{env} - environment specific secrets. This data is provided from env speific packages
+* secrets/%{env} - environment specific secrets. This data is provided from env specific packages
 * role/%{jiocloud\_role} - role specific overrides
 * cloud\_provider/%{cloud\_provider} - overrides specific to a certain cloud provider.
-* env/%{env} - environemt specific overrides
+* env/%{env} - environment specific overrides
 * secrets/common - default test secrets that are overridden in prod via packages
-* common - defaul overrides (the majority of the hiera data is stored here)
+* common - default overrides (the majority of the hiera data is stored here)
 
 ## Layout (stack) data
 
@@ -213,7 +213,7 @@ and the following [module](https://github.com/jiocloud/puppet-orchestration_util
 ### Consul
 
 Orchestration is currently managed by [consul](https://consul.io/), a tool that provides
-dns service registration and discovery.
+DNS service registration and discovery.
 
 Consul works as follows:
 
@@ -274,7 +274,7 @@ Functions can be used at runtime to collect data.
 more performant way to fail and retry when certain data is not ready at compile time.
 * dns\_blocker - blocks until a specified address is registered. This blocks not only dependent resources, but
 also resources that are not dependencies that just happen to not have run.
-* consul\_kv\_fail - fail a catalog subgraph if a certain key has not been set in cosul. This is used to
+* consul\_kv\_fail - fail a catalog subgraph if a certain key has not been set in consul. This is used to
 orchestrate arbitrary events besides registered services.
 * consul\_kv - used to register arbitrary keys from Puppet as a part of run time (meaning that keys can be
 sure to be inserted only after certain configuration has been applied.
@@ -285,7 +285,7 @@ sure to be inserted only after certain configuration has been applied.
 3 kinds of orchestration actions are performed in our Puppet vs. Consul integration. This section will
 discussed along with its performance and design implications.
 
-##### Fail catalog on missig data - Since data must be available during compile time, the easiest
+##### Fail catalog on missing data - Since data must be available during compile time, the easiest
 Orchestration decision is to simply fail to compile and retry until all external services are ready.
 We initially tried this approach, but discontinued for the following reason:
 * Performance was terrible. Failing at compile time blocked all resource from being able to run.
@@ -343,7 +343,7 @@ It is worth noting that two of these roles will need to reapply configuration wh
 4. oc will start compiling, but it blocks until the database is resolvable, once that is resolvable, it continues. At the same
   time stmon's are rerunning Puppet to set up their osd drives.
 
-5. once oc and ocdb are up, haproxy registers poolmembers.
+5. once oc and ocdb are up, haproxy registers pool members.
 
 #### Diagram
 
@@ -409,7 +409,7 @@ verified until glance has registered (maybe this is actually not a problem...)
 
 [Install Virtualbox](http://www.virtualbox.org/manual/ch01.html#intro-installing)
 
-It is possible that you can use lxc for this, but it is not fully validating.
+It is possible that you can use LXC for this, but it is not fully validating.
 
 [Install vagrant](https://docs.vagrantup.com/v2/installation/)
 
@@ -440,7 +440,7 @@ git clone git://github.com/jiocloud/puppet-rjil
 
 * setup tokens (this is required for setting up consul and etcd)
 NOTE: etcd is currently required to do anything related to provisioning openstack, so you
-need to generate usique tokens per environment. It is possilbe that this requirement will
+need to generate unique tokens per environment. It is possible that this requirement will
 eventually go away, but for now it is a requirement.
 
 ````
@@ -452,7 +452,7 @@ source newtokens.sh
 First, you need to make sure that your Puppet module dependencies are
 installed:
 
-NOTE: make sure that you install librarian-puppet-simple and *not* librian-puppet!!!!
+NOTE: make sure that you install librarian-puppet-simple and *not* librarian-puppet!!!!
 
 ````
 gem install librarian-puppet-simple
@@ -476,7 +476,7 @@ The Vagrantfile accepts a few additional environment variables that can be used 
 # used to set a local system squid proxy (recommended!!!)
 export http\_proxy=http://10.22.3.1:3128
 export https\_proxy=http://10.22.3.1:3128
-# used to customize the environement to use
+# used to customize the environment to use
 export env=vagrant-lxc
 ````
 
@@ -484,7 +484,7 @@ export env=vagrant-lxc
 
 Once you have initialized your vagrant environment using the above steps, you are ready to start using vagrant.
 
-It is highly recommended that if you intend to use this utility that you be famliar with the basics of
+It is highly recommended that if you intend to use this utility that you be familiar with the basics of
 [vagrant](https://www.vagrantup.com/).
 
 #### vagrant status
@@ -746,5 +746,5 @@ we want to better support project devs.
 here is what I envision:
 
   - developers can check out their local code into the puppet-rjil environment
-  - set it up as a mount in vagrant (or rely on the fact it will be automaounted into /vagrant/)
+  - set it up as a mount in vagrant (or rely on the fact it will be automounted into /vagrant/)
   - customize the load path for whatever is using it
