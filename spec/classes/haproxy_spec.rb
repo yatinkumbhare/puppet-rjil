@@ -13,7 +13,21 @@ describe 'rjil::haproxy' do
   it 'should install haproxy' do
 
     should contain_rjil__test('haproxy.sh')
-
+    should contain_rjil__jiocloud__consul__service('haproxy').with({
+      'tags' => []
+    })
   end
 
+  context 'consul_service_tags are provided' do
+    let :params do
+      {
+        'consul_service_tags' => ['foo', 'bar']
+      }
+    end
+    it 'should set set the tags on consul service' do
+      should contain_rjil__jiocloud__consul__service('haproxy').with({
+        'tags' => ['foo', 'bar']
+      })
+    end
+  end
 end
