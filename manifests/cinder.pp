@@ -171,6 +171,7 @@ class rjil::cinder (
   include rjil::ceph::mon_config
   include ::cinder
   include ::cinder::api
+  include ::cinder::glance
   include ::cinder::scheduler
   include ::cinder::volume
   include ::cinder::volume::rbd

@@ -243,6 +243,8 @@ cinder::volume::rbd::rbd_user: cinder_volume
 cinder::volume::rbd::volume_tmp_dir: /tmp
 cinder::volume::rbd::rbd_secret_uuid: "%{hiera('cinder_rbd_secret_uuid')}"
 
+cinder::glance::glance_api_servers: "%{hiera('api_protocol')}://%{hiera('glance_public_address')}:%{hiera('glance_api_port')}"
+
 ########### Nova config
 ###################################
 rjil::nova::controller::osapi_public_port: "%{hiera('nova_osapi_port')}"
@@ -771,3 +773,5 @@ tempest::provision::password: "%{hiera('tempest::password')}"
 tempest::provision::admin_username: "%{hiera('tempest::admin_username')}"
 tempest::provision::admin_password: "%{hiera('tempest::admin_password')}"
 tempest::provision::networkname: "%{hiera('tempest::fixed_network_name')}"
+
+
