@@ -93,6 +93,7 @@ class rjil::tempest (
     'git',
     'python-setuptools',
     'python-tempest',
+    'python-tempest-lib',
     'python-hacking',
     'python-sphinx',
     'python-subunit',
@@ -126,11 +127,6 @@ class rjil::tempest (
     'python-mox3',
     'subunit',
   ])
-
-  package {'tempest-lib':
-    ensure   => present,
-    provider => 'pip',
-  }
 
   Class ['::tempest::provision'] -> Class['::tempest']
   include ::tempest::provision
