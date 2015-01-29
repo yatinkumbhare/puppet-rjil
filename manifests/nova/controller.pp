@@ -18,7 +18,7 @@
 #
 class rjil::nova::controller (
   $vncproxy_bind_port   = 6080,
-  $consul_check_interval= '120s',
+  $consul_check_interval= '10s',
   $default_floating_pool = 'public',
   $memcached_servers    = service_discover_dns('memcached.service.consul','ip'),
   $admin_email          = 'root@localhost',
