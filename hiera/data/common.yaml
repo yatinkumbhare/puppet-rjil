@@ -773,3 +773,4 @@ tempest::provision::admin_password: "%{hiera('tempest::admin_password')}"
 tempest::provision::networkname: "%{hiera('tempest::fixed_network_name')}"
 
 apache::trace_enable: false
+apache::mod::ssl::ssl_cipher: "HIGH:MEDIUM:!aNULL:!MD5:!RC4"
