@@ -98,6 +98,7 @@ describe 'rjil::nova::controller' do
       should contain_class('nova::cert')
       should contain_class('nova::consoleauth')
       should contain_class('nova::vncproxy')
+      should contain_class('nova::quota')
       should contain_file('/var/log/nova/nova-manage.log').that_comes_before('Nova_config[database/connection]')
       should contain_rjil__jiocloud__consul__service('nova').with({
         'tags'          => ['real'],
