@@ -149,6 +149,7 @@ class rjil::nova::controller (
   include ::nova::cert
   include ::nova::consoleauth
   include ::nova::vncproxy
+  include ::nova::quota
 
   ##
   # Making sure /var/log/nova-manage.log is writable by nova user. This is
