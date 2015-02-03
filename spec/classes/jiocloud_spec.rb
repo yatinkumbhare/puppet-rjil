@@ -39,5 +39,20 @@ describe 'rjil::jiocloud' do
       'section' => 'main',
       'setting' => 'templatedir',
     })}
+
+    it { should contain_ini_setting('modulepath').with({
+      'ensure'  => 'absent',
+      'path'    => '/etc/puppet/puppet.conf',
+      'section' => 'main',
+      'setting' => 'modulepath',
+    })}
+ 
+    it { should contain_ini_setting('manifestdir').with({
+      'ensure'  => 'absent',
+      'path'    => '/etc/puppet/puppet.conf',
+      'section' => 'main',
+      'setting' => 'manifestdir',
+    })}
+ 
   end
 end

@@ -71,8 +71,9 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   mkdir -p /etc/puppet/modules.overrides/rjil
   cp -Rvf /tmp/rjil/* /etc/puppet/modules.overrides/rjil/
   time librarian-puppet install --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
-  puppet apply -e "ini_setting { modulepath: path => \"/etc/puppet/puppet.conf\", section => main, setting => modulepath, value => \"/etc/puppet/modules.overrides:/etc/puppet/modules\" }"
-  puppet apply -e "ini_setting { manifestdir: path => \"/etc/puppet/puppet.conf\", section => main, setting => manifestdir, value => \"/etc/puppet/manifests.overrides\" }"
+  puppet apply -e "ini_setting { basemodulepath: path => \"/etc/puppet/puppet.conf\", section => main, setting => basemodulepath, value => \"/etc/puppet/modules.overrides:/etc/puppet/modules\" }"
+  puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests.overrides/site.pp\" }"
+  puppet apply -e "ini_setting { disable_per_environment_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => disable_per_environment_manifest, value => \"true\" }"
 fi
 sudo mkdir -p /etc/facter/facts.d
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
@@ -82,7 +83,7 @@ echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
 while true
 do
     # first install all packages to make the build as fast as possible
-    puppet apply --detailed-exitcodes \`puppet config print manifestdir\`/site.pp --tags package
+    puppet apply --detailed-exitcodes \`puppet config print default_manifest\` --tags package
     ret_code_package=\$?
     # now perform base config
     (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'include rjil::jiocloud' ) | puppet apply --detailed-exitcodes --debug
