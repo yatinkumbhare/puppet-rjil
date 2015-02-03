@@ -748,7 +748,7 @@ apache::default_ssl_key: '/etc/ssl/keys/jiocloud.com.key'
 
 ######### Tempest settings
 ################################
-tempest::tempest_repo_uri: 'https://github.com/openstack/tempest.git'
+tempest::tempest_repo_uri: 'https://github.com/JioCloud/tempest.git'
 tempest::image_name: cirros-0.3.3
 tempest::image_name_alt: cirros-0.3.3
 tempest::flavor_ref: 1
@@ -766,10 +766,16 @@ tempest::setup_venv: false
 tempest::swift_available: true
 tempest::tempest_clone_path: /home/jenkins/tempest
 tempest::tempest_clone_owner: jenkins
+tempest::allow_tenant_isolation: true
+tempest::volume_storage_protocol: ceph
+
 
 rjil::tempest::keystone_admin_token: "%{hiera('keystone::admin_token')}"
 rjil::tempest::auth_host: "%{hiera('keystone_public_address')}"
 rjil::tempest::auth_protocol: "%{hiera('api_protocol')}"
+rjil::tempest::tempest_test_file: /home/jenkins/tempest_tests.txt
+rjil::tempest::tempest_clone_path: "%{hiera('tempest::tempest_clone_path')}"
+
 
 tempest::provision::imagename: "%{hiera('tempest::image_name')}"
 tempest::provision::tenantname: "%{hiera('tempest::tenant_name')}"

@@ -11,6 +11,7 @@ class rjil::tempest (
   $neutron_admin_password = 'neutron',
   $glance_admin_user      = 'glance',
   $glance_admin_password  = 'glance',
+  $tempest_test_file      = '/home/jenkins/tempest_tests.txt',
 ) {
 
 ##
@@ -19,6 +20,11 @@ class rjil::tempest (
 
   file {'/etc/keystone':
     ensure => directory,
+  }
+
+  file { $tempest_test_file:
+    ensure => file,
+    source => "puppet:///modules/${module_name}/tempest_tests.txt",
   }
 
   file {'/etc/keystone/keystone.conf':
