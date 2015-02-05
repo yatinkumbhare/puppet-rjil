@@ -79,4 +79,18 @@ class rjil::system(
     mode          => 644,
     source        => "puppet:///modules/${module_name}/bash_completion.d_host_complete"
   }
+
+  file { '/etc/securetty':
+    mode => '0600'
+  }
+
+  sysctl::value {
+    'net.ipv4.conf.all.accept_redirects':        value => 0;
+    'net.ipv4.conf.default.accept_redirects':    value => 0;
+    'net.ipv4.conf.all.secure_redirects':        value => 0;
+    'net.ipv4.conf.default.secure_redirects':    value => 0;
+    'net.ipv4.conf.default.accept_source_route': value => 0;
+    'net.ipv4.conf.all.send_redirects':          value => 0;
+    'net.ipv4.conf.default.send_redirects':      value => 0;
+  }
 }
