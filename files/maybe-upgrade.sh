@@ -6,8 +6,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # Exit codes:
 # 0: Yup, there's an update
 # 1: No, no updates
-# 2: Could not reach etcd, so we don't know
-# 3: Could not reach etcd, but we also haven't been initialised ourselves.
+# 2: Could not reach consul, so we don't know
+# 3: Could not reach consul, but we also haven't been initialised ourselves.
 python -m jiocloud.orchestrate pending_update
 rv=$?
 
@@ -55,7 +55,7 @@ then
        :
 elif [ $rv -eq 3 ]
 then
-       # Maybe we're the first etcd node (or some other weirdness is going on).
+       # Maybe we're the first consul node (or some other weirdness is going on).
        # Let's just run Puppet and see if things normalize
        run_puppet
 fi

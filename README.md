@@ -90,7 +90,7 @@ The provisioned hosts have their hostname set as:
 A set of matching nodes from *site.pp* might look like:
 
 ````
-node /^etcd\d+/ {
+node /^bootstrap\d+/ {
 
 }
 node /^apache\d+/ {
@@ -319,7 +319,7 @@ not preventing other resources from being executed.
 This section is intended to document all of the cross host dependencies of our current Openstack architecture,
 and emphasize the performance implications of each step.
 
-1. All machines block for the etcd/consul server to come up.
+1. All machines block for the consul (bootstrap) server to come up.
 
 2. Currently, the stmonleader, contrail controller, and haproxy machine can all start applying configuration immediately.
 
@@ -439,10 +439,7 @@ The following initial setup steps are required to use the vagrant environment:
 git clone git://github.com/jiocloud/puppet-rjil
 ````
 
-* setup tokens (this is required for setting up consul and etcd)
-NOTE: etcd is currently required to do anything related to provisioning openstack, so you
-need to generate unique tokens per environment. It is possible that this requirement will
-eventually go away, but for now it is a requirement.
+* setup tokens (this is required for setting up consul)
 
 ````
 source newtokens.sh
@@ -694,7 +691,7 @@ Branch that should be used to install python-jiocloud.
 
 ### ssh\_user
 
-User to that build process should use to ssh into etcd server.
+User to that build process should use to ssh into bootstrap server.
 
 ````
 ssh\_user=ubuntu

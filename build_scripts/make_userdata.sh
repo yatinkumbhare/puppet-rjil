@@ -22,8 +22,6 @@ fi
 if [ -n "${env_https_proxy}" ]
 then
 	export https_proxy=${env_https_proxy}
-	export ETCD_DISCOVERY_PROXY=${env_https_proxy}
-	echo ETCD_DISCOVERY_PROXY="'${env_https_proxy}'" >> /etc/environment
 	echo https_proxy="'${env_https_proxy}'" >> /etc/environment
 fi
 wget -O puppet.deb -t 2 -T 30 http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
