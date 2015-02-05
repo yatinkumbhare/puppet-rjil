@@ -72,6 +72,8 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   puppet apply -e "ini_setting { basemodulepath: path => \"/etc/puppet/puppet.conf\", section => main, setting => basemodulepath, value => \"/etc/puppet/modules.overrides:/etc/puppet/modules\" }"
   puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests.overrides/site.pp\" }"
   puppet apply -e "ini_setting { disable_per_environment_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => disable_per_environment_manifest, value => \"true\" }"
+else
+  puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests/site.pp\" }"
 fi
 sudo mkdir -p /etc/facter/facts.d
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
