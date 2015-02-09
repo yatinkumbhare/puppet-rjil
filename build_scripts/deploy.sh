@@ -15,7 +15,7 @@ time python -m jiocloud.apply_resources apply ${EXTRA_APPLY_RESOURCES_OPTS} --ke
 # This is crazy, but it seems to help A LOT
 if [ "$cloud_provider" = 'hp' ]
 then
-    sleep 100
+    sleep 270
     nova list | grep test${BUILD_NUMBER} | cut -f2 -d' ' | while read uuid; do nova console-log $uuid | grep Giving.up.on.md && nova reboot $uuid || true; done
 fi
 
