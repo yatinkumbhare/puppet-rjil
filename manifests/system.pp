@@ -17,6 +17,8 @@ class rjil::system(
   include rjil::system::apt
   include rjil::system::accounts
 
+  ensure_packages(['molly-guard'])
+
   ## Setup tests
   rjil::test {'check_timezone.sh':}
 
@@ -65,4 +67,30 @@ class rjil::system(
     subscribe   => File_line['domain_search'],
   }
 
+  ##
+  # autocompletion of hostnames for ssh and host commands.
+  # TODO: this will remove the autocompletion for commandline options, which
+  # need to be fixed.
+  ##
+  file { '/etc/bash_completion.d/host_complete':
+    ensure        => file,
+    owner         => root,
+    group         => root,
+    mode          => 644,
+    source        => "puppet:///modules/${module_name}/bash_completion.d_host_complete"
+  }
+
+  file { '/etc/securetty':
+    mode => '0600'
+  }
+
+  sysctl::value {
+    'net.ipv4.conf.all.accept_redirects':        value => 0;
+    'net.ipv4.conf.default.accept_redirects':    value => 0;
+    'net.ipv4.conf.all.secure_redirects':        value => 0;
+    'net.ipv4.conf.default.secure_redirects':    value => 0;
+    'net.ipv4.conf.default.accept_source_route': value => 0;
+    'net.ipv4.conf.all.send_redirects':          value => 0;
+    'net.ipv4.conf.default.send_redirects':      value => 0;
+  }
 }

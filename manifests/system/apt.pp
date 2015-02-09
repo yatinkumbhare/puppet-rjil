@@ -11,6 +11,9 @@ class rjil::system::apt (
   include ::apt
 
   ## All package operations should follow apt::source
+  Apt::Source<||> {
+    tag => 'package',
+  }
   Apt::Source<||> -> Package<||>
 
   if $enable_puppetlabs {
@@ -22,12 +25,14 @@ class rjil::system::apt (
       content => "Acquire::Http::Proxy \"${proxy}\";",
       owner => 'root',
       group => 'root',
-      mode => '0644'
+      mode  => '0644',
+      tag   => 'package',
     }
   } else {
     file { '/etc/apt/apt.conf.d/90proxy':
-      ensure => 'absent'
+      ensure => 'absent',
+      tag   => 'package',
     }
   }
-  create_resources(rjil::system::apt::repo, $repositories)
+  create_resources(rjil::system::apt::repo, $repositories, {'tag' => 'package'} )
 }

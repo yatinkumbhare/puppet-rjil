@@ -111,6 +111,7 @@ class rjil::db (
   mysql_user { "monitor@${user_address}":
     ensure        => 'present',
     password_hash => mysql_password('monitor'),
+    require       => File['/root/.my.cnf'],
   }
 
   mysql_grant { "monitor@${user_address}/*.*":
@@ -118,7 +119,8 @@ class rjil::db (
     options    => ['GRANT'],
     privileges => ['USAGE'],
     user       => "monitor@${user_address}",
-    table      => '*.*'
+    table      => '*.*',
+    require    => Mysql_user["monitor@${user_address}"],
   }
 
   rjil::jiocloud::consul::service { "mysql":

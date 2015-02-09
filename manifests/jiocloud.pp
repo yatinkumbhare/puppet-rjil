@@ -60,4 +60,19 @@ class rjil::jiocloud (
     section => 'main',
     setting => 'templatedir',
   }
+
+  ini_setting { 'modulepath':
+    ensure  => absent,
+    path    => "/etc/puppet/puppet.conf",
+    section => 'main',
+    setting => 'modulepath',
+  }
+
+  ini_setting { 'manifestdir':
+    ensure  => absent,
+    path    => "/etc/puppet/puppet.conf",
+    section => 'main',
+    setting => 'manifestdir',
+  }
+
 }

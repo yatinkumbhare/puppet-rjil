@@ -32,7 +32,7 @@
 # [*ceph_keyring_cap*]
 #   Ceph caps for the user.
 #
-# [*bind_port*]
+# [*public_port*]
 #   Which port to bind cinder. Default: 8776
 #
 # [*rbd_user*]
@@ -52,11 +52,13 @@ class rjil::cinder (
   $ceph_keyring_path       = '/etc/ceph/keyring.ceph.client.cinder_volume',
   $ceph_keyring_cap        = 'mon "allow r" osd "allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rx pool=images"',
   $rbd_user                = 'cinder',
-  $bind_port               = 8776,
+  $public_port             = 8776,
+  $admin_email             = 'root@localhost',
+  $server_name             = 'localhost',
+  $localbind_host          = '127.0.0.1',
+  $localbind_port          = 18776,
+  $ssl                     = false,
 ) {
-
-  ## Add tests for cinder api and registry
-  include rjil::test::cinder
 
   ######################## Service Blockers and Ordering
   #######################################################
@@ -80,6 +82,29 @@ class rjil::cinder (
   Rjil::Service_blocker['stmon']  ->
   Class['rjil::ceph::mon_config'] ->
   Class['::cinder::volume']
+
+  include rjil::apache
+
+  Service['cinder-api'] -> Service['httpd']
+
+  ##
+  # Cinder module dont have bind port parameter, so adding here for now.
+  ##
+
+  cinder_config { 'DEFAULT/osapi_volume_listen_port': value => $localbind_port }
+
+  ## Configure apache reverse proxy
+  apache::vhost { 'cinder':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/cinder',
+    error_log_file  => 'cinder.log',
+    access_log_file => 'cinder.log',
+    proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
 
   ##
   # Adding order to run Ceph::Auth after cinder, this is because,
@@ -149,6 +174,10 @@ class rjil::cinder (
   include ::cinder::volume
   include ::cinder::volume::rbd
 
+  class { 'rjil::cinder::backup':
+    ceph_mon_key => $ceph_mon_key,
+  }
+
   ##
   # Add ceph keyring for cinder_volume. This is required cinder to connect to
   # ceph.
@@ -181,19 +210,36 @@ class rjil::cinder (
   #
   ##
 
+  ## Add tests for cinder api and registry
+  include rjil::test::cinder
+
+  rjil::test::check { 'cinder':
+    address => $::cinder::api::bind_host,
+    port    => $public_port,
+    ssl     => $ssl,
+  }
+
   rjil::jiocloud::consul::service { 'cinder':
     tags          => ['real'],
-    port          => $bind_port,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${::cinder::api::bind_host} -p ${bind_port}"
+    port          => $public_port,
   }
 
-  rjil::jiocloud::consul::service { 'cinder-volume':
-    port          => 0,
-    check_command => '/usr/lib/nagios/plugins/check_procs -c 1:10 -C cinder-volume'
+  rjil::test::check { 'cinder-volume':
+    type => 'proc',
   }
 
-  rjil::jiocloud::consul::service { 'cinder-scheduler':
-    port          => 0,
-    check_command => "sudo cinder-manage service list | grep 'cinder-scheduler.*${::hostname}.*enabled.*:-)'"
+  rjil::jiocloud::consul::service { 'cinder-volume': }
+
+  rjil::test::check { 'cinder-scheduler':
+    type => 'proc',
   }
+
+  rjil::jiocloud::consul::service { 'cinder-scheduler': }
+
+  rjil::test::check { 'cinder-backup':
+    type => 'proc',
+  }
+
+  rjil::jiocloud::consul::service { 'cinder-backup': }
+
 }

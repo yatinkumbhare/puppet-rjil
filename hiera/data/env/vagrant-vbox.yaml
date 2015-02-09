@@ -1,6 +1,6 @@
 public_address: "%{ipaddress_eth1}"
 public_interface: eth1
-private_address: "%{ipaddress_eth1}"
+private_address: "%{ipaddress_vhost0_or_eth1}"
 private_interface: eth1
 
 rjil::ceph::osd::autogenerate: true
@@ -16,9 +16,9 @@ nova::compute::libvirt::libvirt_virt_type: qemu
 # more appropriate value.
 rjil::jiocloud::consul::service::interval: 120s
 
-rjil::neutron::public_cidr: 100.1.0.0/24
-rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek]
-rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek]
+rjil::neutron::contrail::public_cidr: 100.1.0.0/24
+rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek,ahmad,vaidy,himanshu,rohit,sanjayu,vigneshvar,alokjani,amar]
+rjil::system::accounts::sudo_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,vivek,ahmad,vaidy,himanshu,rohit,sanjayu,vigneshvar,alokjani,amar]
 ceph::conf::mon_timecheck_interval: 30
 
 ##
@@ -55,3 +55,42 @@ rustedhalo_apt_repo_release: 'trusty-testing'
 #    url: "http://10.135.121.138:3128"
 #  "https":
 #    url: "http://10.135.121.138:3128"
+
+rjil::jiocloud::dhcp::interfaces:
+  - eth1
+
+##
+# There must be dhcppools entries for subnets which are configured on
+# rjil::jiocloud::dhcp::interfaces, otherwise dhcp server will fail to start.
+##
+
+##
+# It seems this is becoming more complex so would need to move to manifests.
+# Just adding here to make sure this is functional, which would be moved to
+# manifests. Also currently undercloud controller is not added to consul, which
+# would also need to be added.
+##
+rjil::jiocloud::dhcp::dhcppools:
+  localnet:
+    network: "%{network_eth1}"
+    mask: "%{netmask_eth1}"
+  net1:
+    network: 10.10.10.0
+    mask: 255.255.255.0
+    range:
+      - 10.10.10.10
+      - 10.10.10.254
+    gateway: 10.10.10.1
+    oncommit_script: /usr/bin/python2.7
+    oncommit:
+      - 'set cip = binary-to-ascii(10, 8, ".", leased-address)'
+      - 'execute("/usr/bin/python2.7", "-m", "jiocloud.enroll",
+                  "--ilo_username", "%{hiera(''ilo_user'')}",
+                  "--ilo_password", "%{hiera(''ilo_password'')}",
+                  "--os_username", "ironic",
+                  "--os_tenant", "%{hiera(''ironic::api::admin_tenant_name'')}",
+                  "--os_password", "%{hiera(''ironic::keystone::auth::password'')}",
+                  "--os_auth_url", "%{hiera(''rjil::keystone::protocol'')}://%{ipaddress}:5000/%{hiera(''rjil::keystone::version'')}",
+                  "--nic", "3",
+                  "--ilo_address ", cip)'
+rjil::base::self_signed_cert: true

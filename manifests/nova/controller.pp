@@ -17,25 +17,64 @@
 #   Memcached server port. Default: 11211
 #
 class rjil::nova::controller (
-  $api_bind_port        = 8774,
   $vncproxy_bind_port   = 6080,
-  $consul_check_interval= '120s',
+  $consul_check_interval= '10s',
   $default_floating_pool = 'public',
   $memcached_servers    = service_discover_dns('memcached.service.consul','ip'),
+  $admin_email          = 'root@localhost',
+  $server_name          = 'localhost',
+  $localbind_host       = '127.0.0.1',
   $memcached_port       = 11211,
+  $osapi_public_port    = 8774,
+  $ec2_public_port      = 8773,
+  $osapi_localbind_port = 18774,
+  $ec2_localbind_port   = 18773,
+  $ssl                  = false,
 ) {
 
 # Tests
   include rjil::test::nova_controller
 
-  nova_config { 'DEFAULT/default_floating_pool': value => $default_floating_pool }
+  nova_config {
+    'DEFAULT/default_floating_pool':      value => $default_floating_pool;
+    'DEFAULT/osapi_compute_listen_port':  value => $osapi_localbind_port;
+    'DEFAULT/ec2_listen_port':            value => $ec2_localbind_port;
+  }
+
+  include rjil::apache
+  Service['nova-api'] -> Service['httpd']
+
+  ## Configure apache reverse proxy
+  apache::vhost { 'nova-osapi':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $osapi_public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/nova-osapi',
+    error_log_file  => 'nova-osapi.log',
+    access_log_file => 'nova-osapi.log',
+    proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${osapi_localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
+
+  apache::vhost { 'nova-ec2api':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $ec2_public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/nova-ec2api',
+    error_log_file  => 'nova-ec2api.log',
+    access_log_file => 'nova-ec2api.log',
+    proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${ec2_localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+  }
 
   ##
-  # The problem with fail function is that , as funtions are evaluated on comple
+  # The problem with fail function is that, as funtions are evaluated on compile
   # time, the execution will fail during that time, so if the condition
-  # evaluates a resource or outcome of a resource execution  which create on the
+  # evaluates a resource or outcome of a resource execution which create on the
   # same role/node will cause the execution always fail as the puppet execution
-  # willl never happen. So using a type here.
+  # will never happen. So using a type here.
   ##
 
   if ! empty($memcached_servers) {
@@ -48,7 +87,7 @@ class rjil::nova::controller (
   }
 
   ##
-  # Adding service blocker for mysql which make sure mysql is avaiable before
+  # Adding service blocker for mysql which make sure mysql is available before
   # database configuration.
   ##
 
@@ -110,9 +149,10 @@ class rjil::nova::controller (
   include ::nova::cert
   include ::nova::consoleauth
   include ::nova::vncproxy
+  include ::nova::quota
 
   ##
-  # Making sure /var/log/nova-manage.log is wriable by nova user. This is
+  # Making sure /var/log/nova-manage.log is writable by nova user. This is
   # because, nova module is running "nova-manage db sync" as user nova
   # which is failing as nova dont have write permission to nova-manage.log.
   ##
@@ -132,35 +172,48 @@ class rjil::nova::controller (
   # param in rjil::nova::controller.
   ##
 
+  rjil::test::check { 'nova':
+    address => $::nova::api::api_bind_address,
+    port    => $osapi_public_port,
+    ssl     => $ssl,
+  }
+
   rjil::jiocloud::consul::service {'nova':
     tags          => ['real'],
-    port          => $api_bind_port,
-    check_command => "/usr/lib/nagios/plugins/check_http -I ${::nova::api::api_bind_address} -p ${api_bind_port}",
+    port          => $osapi_public_port,
     interval      => $consul_check_interval,
+  }
+
+  rjil::test::check { 'nova-scheduler':
+    type => 'proc',
   }
 
   rjil::jiocloud::consul::service {'nova-scheduler':
-    port          => 0,
-    check_command => "sudo nova-manage service list | grep 'nova-scheduler.*${::hostname}.*enabled.*:-)'",
     interval      => $consul_check_interval,
+  }
+
+  rjil::test::check { 'nova-conductor':
+    type => 'proc',
   }
 
   rjil::jiocloud::consul::service {'nova-conductor':
-    port          => 0,
     interval      => $consul_check_interval,
-    check_command => "sudo nova-manage service list | grep 'nova-conductor.*${::hostname}.*enabled.*:-)'"
   }
 
-  rjil::jiocloud::consul::service {'nova-cert':
-    port          => 0,
-    interval      => $consul_check_interval,
-    check_command => "sudo nova-manage service list | grep 'nova-cert.*${::hostname}.*enabled.*:-)'"
+  rjil::test::check { 'nova-cert':
+    type => 'proc',
   }
 
-  rjil::jiocloud::consul::service {'nova-consoleauth':
-    port          => 0,
+  rjil::jiocloud::consul::service { 'nova-cert':
     interval      => $consul_check_interval,
-    check_command => "sudo nova-manage service list | grep 'nova-consoleauth.*${::hostname}.*enabled.*:-)'"
+  }
+
+  rjil::test::check { 'nova-consoleauth':
+    type => 'proc',
+  }
+
+  rjil::jiocloud::consul::service { 'nova-consoleauth':
+    interval      => $consul_check_interval,
   }
 
   rjil::jiocloud::consul::service {'nova-vncproxy':

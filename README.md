@@ -3,6 +3,7 @@
 puppet-rjil
 ===========
 
+
 ### Table of Contents
 
 1. [Overview - What is puppet-rjil module?](#overview)
@@ -11,6 +12,7 @@ puppet-rjil
 4. [Development Workflow](#development-environment)
 5. [Running Behind Proxy Server](#running-behind-proxy-server)
 6. [Build script - command line tool for generating test deployments](#build-script)
+7. [Development - Resources for Developers](#developers)
 
 # Overview
 
@@ -29,13 +31,14 @@ At a high level, it contains the following files/directories
 * Vagrantfile
   A Vagrantfile that can be used for faster deployments and iterative
   development.
-  NOTE: Vagrant has it's own hiera env data in `./hiera/data/env/vagrant.yaml`:
+  NOTE: Vagrant has its own hiera env data in `./hiera/data/env/vagrant.yaml`:
 * Puppetfile
   List of all puppet modules that need to be installed as dependencies.
 * ./build\_scripts/deploy.sh - Script that performs deployment of jiocloud.
 * ./files/maybe-upgrade.sh - script that actually runs Puppet to perform
   deployments on provisioned machines (when not using vagrant)
-* ./environment/full.yaml - contains the defintion of nodes that can be used for testing
+* ./environment/full.yaml - contains the definition of nodes that can be used for testing
+* site.pp - puppet content that contains role assignments to node.
 
 # Details
 
@@ -56,50 +59,6 @@ This deployment module was built using the following steps:
 
 5. Debug the build process to follow a build's progress
 
-## Layout (stack) data
-
-The build script is driven by a set of data that describes the machines that
-need to be configured.
-
-These build scripts can be found in the environment directory.
-The filename should be of the form:
-
-````
-./environment/<layout>.yaml
-````
-
-NOTE: layout actually defaults to env if not specified
-
-where layout/env is an argument passed into the build script/Vagrantfile.
-
-The following file contains our reference architecture for openstack:
-
-````
-./environment/cloud.dan.yaml
-````
-
-### file contents
-
-This file should contain the top level key `resources`.
-
-Here resources should be listed. Where the names of these
-resource should match a node expression.
-
-For example, if the following resources are specified:
-
-````
-resources:
-  etcd:
-    number: 1
-    ...
-  apache:
-    number: 2
-```
-
-It will result in hostnames that are prefixed with the following strings:
-* etcd1
-* apache1
-* apache2
 
 ## Puppet
 
@@ -109,7 +68,7 @@ Puppet is responsible for ensuring that each of the defined hosts in our
 layout get assigned their correct role.
 
 For example, for the case of an apache server. Puppet contains the description
-of how a machine is traisitions to its desired role.
+of how a machine is transitioned to its desired role.
 
 ````
 +----------+      +-----------+
@@ -131,7 +90,7 @@ The provisioned hosts have their hostname set as:
 A set of matching nodes from *site.pp* might look like:
 
 ````
-node /^etcd\d+/ {
+node /^bootstrap\d+/ {
 
 }
 node /^apache\d+/ {
@@ -139,7 +98,7 @@ node /^apache\d+/ {
 }
 ````
 
-Those nodes definitions should inculde whatever classes are required to configure those
+Those nodes definitions should include whatever classes are required to configure those
 roles.
 
 ### external modules
@@ -152,19 +111,88 @@ using librarian-puppet-simple)
 
 ### puppet-rjil as a module
 
-The Puppet-rjil module contains all of the composition roles that we use to compose our dependent
-modules into the actual roles defined in site.pp
+The Puppet-rjil module contains all of the composition roles that combine the external modules into the roles defined in site.pp.
+
+In Puppet's lexicon, the type of content found in this module are referred to as profiles.
 
 TODO: document more about the kinds of things that belong here and our expectations for how those
 things are developed.
 
 ### Populating hiera data
 
-All external data used to customize the depoyment scripts written in Puppet is passed via hiera. This includes all
-configuration that is specific to each environment and the reference architecture for jiocloud. You could
-realistically say that the combination of the
+All data used to override defaults of Puppet Profiles located in puppet-rjil/modules are passed in
+via hiera.
 
 Understanding hiera is a requirement for using this system. Please get started [here](https://docs.puppetlabs.com/hiera/1/).
+
+Hiera uses [Facter](http://puppetlabs.com/facter) to determine how data is set for a given node:
+
+`hiera/hiera.yaml` supplies the override configuration that hiera uses to determine how to set hosts
+for a given system. The override levels are as follows:
+
+* clientcert/%{::clientcert} - client specific data
+* secrets/%{env} - environment specific secrets. This data is provided from env specific packages
+* role/%{jiocloud\_role} - role specific overrides
+* cloud\_provider/%{cloud\_provider} - overrides specific to a certain cloud provider.
+* env/%{env} - environment specific overrides
+* secrets/common - default test secrets that are overridden in prod via packages
+* common - default overrides (the majority of the hiera data is stored here)
+
+## Layout (stack) data
+
+The build script is driven by a set of data that describes the machines that
+need to be configured.
+
+These build scripts can be found in the environment directory.
+The filename should be of the form:
+
+````
+./environment/<layout>.yaml
+````
+
+NOTE: layout defaults to full (full openstack install) if not specified
+
+where layout/env is an argument passed into the build script/Vagrantfile.
+
+The following file contains our reference architecture for openstack:
+
+````
+./environment/full.yaml
+````
+
+### file contents
+
+This file should contain the top level key `resources`.
+
+Here resources should be listed. Where the names of these
+resource should match a node expression (specified from Puppet
+in site.pp).
+
+For example, if the following resources are specified:
+
+````
+resources:
+  haproxy:
+    number: 1
+    ...
+  httpproxy:
+    number: 2
+````
+
+### applying layout files
+
+Layout files can be applied using the command:
+
+````
+python -m jiocloud.apply_resources apply --mappings=environment/${cloud_provider} environment/${layout}.yaml
+````
+
+This command will create only the desired nodes specified in the layout file that do not already exist.
+
+Apply this file  will result in host whose names are prefixed with the following strings:
+* hapoxy1
+* httpproxy1
+* httpproxy2
 
 # Cross host dependencies
 
@@ -180,30 +208,37 @@ capture those issues along with recommendations for how it can be improved.
 
 ## Configuration Orchestration
 
+Configuration orchestration is managed via a combination of registering services in consul
+and the following [module](https://github.com/jiocloud/puppet-orchestration_utils).
+
 ### Consul
 
-Orchestration is currently managed by both consul and etcd (although in the future, we will be eliminating
-etcd in favor of consul for everything)
+Orchestration is currently managed by [consul](https://consul.io/), a tool that provides
+DNS service registration and discovery.
 
 Consul works as follows:
 
   * The following Puppet Defined resource `rjil::jiocloud::consul::service` is used to define a service in consul.
   * Each service registers its ip address as an A record for the address: `<service_name>.service.consul`
-  * Each service registers its hostname: <hostmame>.node.consul and registers that as a SRV record for `<service_name>.service.consul`
+  * Each service registers its hostname: <hostmame>.node.consul as an SRV record for `<service_name>.service.consul`
 
-#### using DNS
+### Orchestrating with consul
 
-Each agent uses DNS to understand what services are available. There are two ways in which Puppet needs to interact with DNS.
+Each service registers itself with consul, along with health checks that ensure that services are not
+actually registered until they are functional. These services are available both through the
+consul http api as well as via regular DNS tools (like dig)
+
+Puppet uses both DNS as well as the consul API to understand what remote services are available
+and uses this information to make decisions about if local configuration should be applied.
 
 1. block until an address is resolvable
 2. block until we can retrieve registered A records or SRV records from an address.
+3. fail if a DNS address is not available
 
-#### Puppet design and implications
+#### Puppet design
 
-##### Puppet design
-
-Due to the design of Puppet, these two use cases are implemented in ways that are fundamentally different. The reason that these
-two cases are different is due to the distinction in Puppet between compile time versus run time actions.
+In order to understand the motivation for the design of Puppet + Consul for orchestration, you need to first
+understand the difference between compile vs. runtime in Puppet.
 
 1. compile time - Puppet goes through a separate process of compiling the catalog that will be used to apply the
    desired configuration state of each agent. During compile time, the following things occur:
@@ -214,40 +249,77 @@ two cases are different is due to the distinction in Puppet between compile time
 * functions are run
 * variables are assigned to resource attributes
 
-This phase processes Puppet manifests, functions, and hiera.
+This phase processes Puppet manifests, functions, and hiera. In general, data can only be supplied during the
+compile time phase in Puppet. This means that all data must be available during compile to be used during
+runtime.
 
 2. run time - during Run time, a graph of resources is applied to the system. Most of the logic that is performed
    during these steps is contained within the actual ruby providers.
 
-##### Puppet orchestration integration tooling
+#### Puppet orchestration integration tooling
 
-We have implemented the following tools to be used in combination with consul.
-  * rjil::service\_blocker - a type that blocks until an A record is registered for an address. It is configured to tell it
-    now many times to retry and how long to sleep between each attempt. This check is performed at run-time and requires that
-    the hostname to lookup is known ahead of time and that only that hostname is being used to determine attribute values for
-    a resource.
-  * service\_discovery\_dns - A function that performs a DNS SRV lookup, and returns either discovered ips, hostname, or a hash
-    or both. This method is used in cases where information used to populate resource attributes needs to be determined
-    dynamically.
+The [orchestration\_utils](https://github.com/JioCloud/puppet-orchestration_utils) repo contains all code used
+to orchestrate configuration based on the current state of registered services in consul.
 
-##### Implications
+##### functions
 
-The way that Puppet is designed has several implications to the design of our system. In order to achieve the
-best performance, it is better to block during resource execution (and run-time) because you can set dependencies
-on which resources can be applied in parallel by indicating those resources should be applied before the service\_blocker.
-This means that many more resources can be applied in parallel. For example, it would be easy to  use Puppet
-dependencies to ensure that the service blocker never happened before any packages are installed.
+Functions can be used at runtime to collect data.
 
-However, since variable substitution occurs during compile time, anything that relies on using the static DNS address,
-(ie: by using the service\_discovery\_dns function) must be performed during compile time. This means that the entire
-catalog application is blocked until this data becomes available.
+* dns\_resolve - gets A records for an address
+* service\_discovery\_consul - pull a host => ip hash for a specified hostname.
+
+
+##### type/provider
+
+* runtime\_fail - used to trigger a catalog failure which causes the entire subgraph to fail. This is used as a
+more performant way to fail and retry when certain data is not ready at compile time.
+* dns\_blocker - blocks until a specified address is registered. This blocks not only dependent resources, but
+also resources that are not dependencies that just happen to not have run.
+* consul\_kv\_fail - fail a catalog subgraph if a certain key has not been set in consul. This is used to
+orchestrate arbitrary events besides registered services.
+* consul\_kv - used to register arbitrary keys from Puppet as a part of run time (meaning that keys can be
+sure to be inserted only after certain configuration has been applied.
+
+
+#### Orchestration performance
+
+3 kinds of orchestration actions are performed in our Puppet vs. Consul integration. This section will
+discussed along with its performance and design implications.
+
+##### Fail catalog on missing data - Since data must be available during compile time, the easiest
+Orchestration decision is to simply fail to compile and retry until all external services are ready.
+We initially tried this approach, but discontinued for the following reason:
+* Performance was terrible. Failing at compile time blocked all resource from being able to run.
+* Unable to represent cross host circular dependencies.
+* Impossible to decouple package installations. Currently, to ensure the best performance, we install
+all packages as a separate call to puppet apply with --tags package to ensure that package installs
+never have to be blocked on service level dependencies.
+
+##### Block until data ready - In this case, types/providers retry until DNS records are registered.
+
+PROS:
+* Easy to monitor cross host orchestration flow
+* Less spurious failures.
+
+CONS:
+* Cannot work unless hard coded DNS addresses can be used
+* Leads to some resource executions getting delayed.
+
+##### Collect data and compile and fail at runtime if not ready
+
+We are tending towards a combination of function/type/providers. At compile time,
+functions are used to query for data which is then forwarded to a type that fails
+catalog compile if the expected values are not present.
+
+This failure just results in a sub-graph failure, which means that failures are
+not preventing other resources from being executed.
 
 ## Openstack Dependencies
 
 This section is intended to document all of the cross host dependencies of our current Openstack architecture,
 and emphasize the performance implications of each step.
 
-1. All machines block for the etcd/consul server to come up.
+1. All machines block for the consul (bootstrap) server to come up.
 
 2. Currently, the stmonleader, contrail controller, and haproxy machine can all start applying configuration immediately.
 
@@ -272,7 +344,7 @@ It is worth noting that two of these roles will need to reapply configuration wh
 4. oc will start compiling, but it blocks until the database is resolvable, once that is resolvable, it continues. At the same
   time stmon's are rerunning Puppet to set up their osd drives.
 
-5. once oc and ocdb are up, haproxy registers poolmembers.
+5. once oc and ocdb are up, haproxy registers pool members.
 
 #### Diagram
 
@@ -338,7 +410,7 @@ verified until glance has registered (maybe this is actually not a problem...)
 
 [Install Virtualbox](http://www.virtualbox.org/manual/ch01.html#intro-installing)
 
-It is possible that you can use lxc for this, but it is not fully validating.
+It is possible that you can use LXC for this, but it is not fully validating.
 
 [Install vagrant](https://docs.vagrantup.com/v2/installation/)
 
@@ -367,10 +439,7 @@ The following initial setup steps are required to use the vagrant environment:
 git clone git://github.com/jiocloud/puppet-rjil
 ````
 
-* setup tokens (this is required for setting up consul and etcd)
-NOTE: etcd is currently required to do anything related to provisioning openstack, so you
-need to generate usique tokens per environment. It is possilbe that this requirement will
-eventually go away, but for now it is a requirement.
+* setup tokens (this is required for setting up consul)
 
 ````
 source newtokens.sh
@@ -381,7 +450,7 @@ source newtokens.sh
 First, you need to make sure that your Puppet module dependencies are
 installed:
 
-NOTE: make sure that you install librarian-puppet-simple and *not* librian-puppet!!!!
+NOTE: make sure that you install librarian-puppet-simple and *not* librarian-puppet!!!!
 
 ````
 gem install librarian-puppet-simple
@@ -402,10 +471,10 @@ mkdir modules/rjil
 The Vagrantfile accepts a few additional environment variables that can be used to further customize the environment.
 
 ````
-# used to set a local system squid proxy (recomended!!!)
+# used to set a local system squid proxy (recommended!!!)
 export http\_proxy=http://10.22.3.1:3128
 export https\_proxy=http://10.22.3.1:3128
-# used to customize the environement to use
+# used to customize the environment to use
 export env=vagrant-lxc
 ````
 
@@ -413,7 +482,7 @@ export env=vagrant-lxc
 
 Once you have initialized your vagrant environment using the above steps, you are ready to start using vagrant.
 
-It is highly recommended that if you intend to use this utility that you be famliar with the basics of
+It is highly recommended that if you intend to use this utility that you be familiar with the basics of
 [vagrant](https://www.vagrantup.com/).
 
 #### vagrant status
@@ -622,7 +691,7 @@ Branch that should be used to install python-jiocloud.
 
 ### ssh\_user
 
-User to that build process should use to ssh into etcd server.
+User to that build process should use to ssh into bootstrap server.
 
 ````
 ssh\_user=ubuntu
@@ -666,6 +735,172 @@ that libffi is available:
 export CFLAGS="-I/usr/local/opt/libffi/lib/libffi-3.0.13/include/"
 ````
 
+# Development
+
+## Process
+
+In general, the process has been designed to be as unobtrusive and
+lenient as possible, and is split into the following:
+
+### github pull requests
+
+````
+https://github.com/jiocloud/puppet-rjil/pulls
+````
+
+The easiest way to make a contribution is to submit a pull request
+via github. It is not a requirement that an issue of task exist for
+a pull request to be merged (although it might be helpful for some
+situations). Contributions are merged as long as they:
+
+1. Are approved by at least one core team member
+2. Pass unit tests
+3. Pass integration tests (if they risk regressions to
+   any of the systems under integration tests)
+4. Contain commit messages that provide enough context for reviewers
+   to understand
+* * the motivation for the patch
+* * the desired outcome of the patch
+
+### github issues
+
+````
+https://github.com/jiocloud/puppet-rjil/issues
+````
+
+Github issues are used to track issues where there is not a patch immediately
+available. This might be because:
+
+1. The issue is not well understood/diagnosed
+2. The issue is non-trivial to fix
+3. The person opening the issue does not immediately know how to resolve it.
+
+In general, at least a menial attempt to debug an issue should be attempted before opening
+an issue. There are standard procesures that anyone can use to attempt to categorize
+and provide context around a given failure so that they can open a useful (ie: actionable)
+as opposed to a useless issue.
+
+Example of a useless issue:
+
+````
+Umm... dude, it doesn't work.
+<enter random log spew here, or even worse, logs from jenkins, showing that you put
+zero effort into it>
+````
+
+Issues like the above will result in a mild scolding followed by a request that you perform
+the debugging steps mentioned in this section.
+
+### slack
+
+````
+https://rjil.slack.com/messages/deployment-team/
+````
+
+We use slack as the communication center for this project. Slack is a great place
+to ask a questions, or to collaborate on issues where pairing is desired. Events related
+to the development of the cloud platform are also streamed to slack in real time.
+
+### Kanban board (ie: tasks)
+
+````
+ https://trello.com/b/PUXa12Cl/jiocloud-deployments
+````
+
+We use Trello to track tasks and task backlog related to this project. It is used
+to understand our tasks, how they fit into overall categories as well as who is
+currently working on what things. The process for how tasks are added into Trello
+is currently a bit adhoc, but needs to be enhanced as additional resources come
+online.
+
+### Specifications
+
+````
+https://github.com/jiocloud/jiocloud-specs
+````
+
+A specification should be created in advance for large features.
+
+Specifications are intended to allow more people to be involved in the
+design and consensus for larger feature sets. This becomes more important
+as more people get on boarded, especially as those resources intend to assist
+in the implementation of larger features sets.
+
+## Basic debugging
+
+1. login to one of the roles with a floating ip assigned (review your specified
+   layout to be sure)
+
+2. from there, run the following
+
+````
+*jorc get_failures --hosts*
+````
+
+This command will list three kinds of failures for each host.
+In order to debug each host, you generally need to log into the
+host that is in an error state.
+
+NOTE: it is possible to login to each host by the same hostname
+returned by *get_failures*. It even autocompletes for you.
+
+### puppet failures
+
+Indicate that the last puppet run did not complete successfully.
+
+````
+Node: XXXX, Check: puppet
+````
+
+Indicates the last puppet run has failing resources. Review
+/var/log/syslog to track down failures.
+
+NOTE: all puppet lines from the logs contain puppet-user
+
+NOTE: some errors from the logs are just cascading failures, you need
+to track these down to the root cause
+
+### validation failures
+
+````
+Node: XXX, Check: validation
+````
+
+Validation checks are run to ensure that each service installed on a machine
+is in an active state before calling the failure a success. Validation failures
+indicate that while the configuration has been successfully applied, the service
+is not actually functional. This may indicate that it is still waiting for external
+dependencies or in the case of ceph, that it is still performing bootstrapping
+operations.
+
+The output from each validation command can be viewed in /var/log/syslog of the
+machine whose validation is failing. It is also easy to run the validation commands
+yourself:
+
+````
+sudo run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/
+````
+
+After seeing that a service is not in a functional state, you should check the logs
+for that individual service to see if there are any clues there.
+### consul service failures
+
+Lists additional consul checks that are currently in the critical state
+
+To see all consul services in the critical state:
+
+````
+curl http://localhost:8500/v1/health/state/critical?pretty=1
+````
+
+Each service mentioned here also contains the output from it's failed command.
+
+* logging into the machines
+* running jorc get\_failures --hosts
+* * tracking down failures to root causes (in either /var/log/syslog or /var/log/cloud-init.log)
+
+/var/log/cloud-init-output.log
+
 # TODO
 
 ## supporting devs
@@ -675,5 +910,5 @@ we want to better support project devs.
 here is what I envision:
 
   - developers can check out their local code into the puppet-rjil environment
-  - set it up as a mount in vagrant (or rely on the fact it will be automaounted into /vagrant/)
+  - set it up as a mount in vagrant (or rely on the fact it will be automounted into /vagrant/)
   - customize the load path for whatever is using it

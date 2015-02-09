@@ -22,10 +22,11 @@ describe 'rjil::jiocloud::consul::bootstrapserver' do
   let :facts  do
     {
       :env             => 'testenv',
-	    :osfamily        => 'Debian',
-	    :operatingsystem => 'Ubuntu',
-	    :architecture    => 'x86_64',
-	    :lsbdistrelease  => '14.04'
+      :osfamily        => 'Debian',
+      :operatingsystem => 'Ubuntu',
+      :architecture    => 'x86_64',
+      :lsbdistrelease  => '14.04',
+      :consul_discovery_token => 'token'
     }
   end
 
@@ -34,11 +35,11 @@ describe 'rjil::jiocloud::consul::bootstrapserver' do
       should contain_class('rjil::jiocloud::consul').with({
         'config_hash' => {
           'bind_addr'        => '0.0.0.0',
-          'datacenter'       => 'testenv',
-          'data_dir'         => '/var/lib/consul',
+          'data_dir'         => '/var/lib/consul-jio',
           'log_level'        => 'INFO',
           'server'           => true,
-          'bootstrap_expect' => 1
+          'bootstrap_expect' => 1,
+          'datacenter'       => 'token'
         }
       })
     end
@@ -63,10 +64,10 @@ describe 'rjil::jiocloud::consul::server' do
         'config_hash' => {
           'bind_addr'        => '0.0.0.0',
           'start_join'       => ['testtoken.service.consuldiscovery.linux2go.dk'],
-          'datacenter'       => 'testenv',
-          'data_dir'         => '/var/lib/consul',
+          'data_dir'         => '/var/lib/consul-jio',
           'log_level'        => 'INFO',
           'server'           => true,
+          'datacenter'       => 'testtoken'
         }
       })
     end
@@ -91,10 +92,10 @@ describe 'rjil::jiocloud::consul::agent' do
         'config_hash' => {
           'bind_addr'        => '0.0.0.0',
           'start_join'       => ['testtoken.service.consuldiscovery.linux2go.dk'],
-          'datacenter'       => 'testenv',
-          'data_dir'         => '/var/lib/consul',
+          'data_dir'         => '/var/lib/consul-jio',
           'log_level'        => 'INFO',
           'server'           => false,
+          'datacenter'       => 'testtoken'
         }
       })
     end

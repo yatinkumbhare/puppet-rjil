@@ -11,6 +11,7 @@ class rjil::tempest (
   $neutron_admin_password = 'neutron',
   $glance_admin_user      = 'glance',
   $glance_admin_password  = 'glance',
+  $tempest_test_file      = '/home/jenkins/tempest_tests.txt',
 ) {
 
 ##
@@ -21,6 +22,11 @@ class rjil::tempest (
     ensure => directory,
   }
 
+  file { $tempest_test_file:
+    ensure => file,
+    source => "puppet:///modules/${module_name}/tempest_tests.txt",
+  }
+
   file {'/etc/keystone/keystone.conf':
     ensure  => file,
     require => File['/etc/keystone'],
@@ -28,7 +34,7 @@ class rjil::tempest (
 
   keystone_config {
     'DEFAULT/admin_token':    value => $keystone_admin_token;
-    'DEFAULT/admin_endpoint': value => "${auth_protocol}://${auth_host}:${auth_port}/v2.0";
+    'DEFAULT/admin_endpoint': value => "${auth_protocol}://${auth_host}:${auth_port}";
   }
 
   File['/etc/keystone/keystone.conf'] -> Keystone_config<||>
@@ -87,6 +93,46 @@ class rjil::tempest (
     'keystone_authtoken/admin_user':        value => $neutron_admin_user;
     'keystone_authtoken/admin_password':    value => $neutron_admin_password;
   }
+
+  ensure_packages([
+    'python-pip',
+    'git',
+    'python-setuptools',
+    'python-tempest',
+    'python-tempest-lib',
+    'python-hacking',
+    'python-sphinx',
+    'python-subunit',
+    'python-oslosphinx',
+    'python-mox',
+    'python-mock',
+    'python-coverage',
+    'python-oslotest',
+    'python-stevedore',
+    'python-pbr',
+    'python-anyjson',
+    'python-httplib2',
+    'python-jsonschema',
+    'python-testtools',
+    'python-boto',
+    'python-paramiko',
+    'python-netaddr',
+    'python-ceilometerclient',
+    'python-glanceclient',
+    'python-keystoneclient',
+    'python-novaclient',
+    'python-neutronclient',
+    'python-cinderclient',
+    'python-heatclient',
+    'oslo.config',
+    'python-oslo.config',
+    'python-iso8601',
+    'python-fixtures',
+    'python-testscenarios',
+    'python-ecdsa',
+    'python-mox3',
+    'subunit',
+  ])
 
   Class ['::tempest::provision'] -> Class['::tempest']
   include ::tempest::provision

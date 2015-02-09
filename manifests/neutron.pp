@@ -1,45 +1,21 @@
 #
 # Class: rjil::neutron
 #
-# [* public_subnets *]
-#   is a hash of subnetlogicalname => cidr
-#   e.g { pub_subnet1 => '100.1.0.0/16'}
-
-# NOTE: Public network will be created on services tenant. In order to specify
-# specific tenant name on which public network created, keystone.conf required
-# on neutron server which is not the case as of now.
-
 class rjil::neutron (
-  $keystone_admin_password,
   $api_extensions_path  = undef,
   $service_provider     = undef,
-  $public_network_name  = 'public',
-  $public_subnet_name   = 'pub_subnet1',
-  $public_cidr          = undef,
-  $public_rt_number     = 10000,
-  $router_asn           = 64512,
-  $contrail_api_server  = 'real.neutron.service.consul',
+  $admin_email          = 'root@localhost',
+  $server_name          = 'localhost',
+  $localbind_host       = '127.0.0.1',
+  $public_port          = 9696,
+  $localbind_port       = 19696,
+  $ssl                  = false,
 ) {
 
   ##
   # Rjil tests
   ##
   include rjil::test::neutron
-
-  ##
-  # Database connection is not required for neutron
-  ##
-
-  Neutron_config<| title == 'database/connection' |> {
-    ensure => absent
-  }
-
-  ##
-  # Subscribe neutron-server to contrailplugin.ini
-  ##
-
-  File['/etc/neutron/plugins/opencontrail/ContrailPlugin.ini'] ~>
-    Service['neutron-server']
 
   ##
   # Python-six version >= 1.8.x is required for neutron server, and not handled in package. So
@@ -50,11 +26,29 @@ class rjil::neutron (
 
   include ::neutron
   include ::neutron::server
-  include rjil::contrail::server
   include ::neutron::quota
 
-  package {'python-six':
-    ensure  => latest,
+  ensure_resource('package','python-six', { ensure => 'latest' })
+
+
+  ##
+  # Reverse proxy
+  ##
+
+  include rjil::apache
+  Service['neutron-server'] -> Service['httpd']
+
+  ## Configure apache reverse proxy
+  apache::vhost { 'neutron':
+    servername      => $server_name,
+    serveradmin     => $admin_email,
+    port            => $public_port,
+    ssl             => $ssl,
+    docroot         => '/usr/lib/cgi-bin/neutron',
+    error_log_file  => 'neutron.log',
+    access_log_file => 'neutron.log',
+    proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${localbind_port}/"  } ],
+    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
   }
 
   ##
@@ -88,52 +82,20 @@ class rjil::neutron (
     }
   }
 
-
   if $service_provider {
     neutron_config { 'service_providers/service_provider':
       value => $service_provider
     }
   }
 
-  ##
-  # Add floating IPs
-  ##
-
-  neutron_network {$public_network_name:
-    ensure          => present,
-    router_external => true,
-  }
-
-  if $public_cidr {
-    neutron_subnet {$public_subnet_name:
-      ensure       => present,
-      cidr         => $public_cidr,
-      network_name => $public_network_name,
-      before       => Contrail_rt["default-domain:services:${public_network_name}"],
-    }
-  }
-
-  ##
-  # Add route target in contrail config database.
-  ##
-  contrail_rt {"default-domain:services:${public_network_name}":
-    ensure             => present,
-    rt_number          => $public_rt_number,
-    router_asn         => $router_asn,
-    api_server_address => $contrail_api_server,
-    admin_password     => $keystone_admin_password,
-    require            => Neutron_network[$public_network_name],
-  }
-
-
-  consul_kv{'neutron/floatingip_pool/status':
-    value   => 'ready',
-    require => Contrail_rt["default-domain:services:${public_network_name}"],
+  rjil::test::check { 'neutron':
+    address => '127.0.0.1',
+    port    => $public_port,
+    ssl     => $ssl,
   }
 
   rjil::jiocloud::consul::service { 'neutron':
     tags          => ['real'],
-    port          => 9696,
-    check_command => "/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 9696",
+    port          => $public_port,
   }
 }

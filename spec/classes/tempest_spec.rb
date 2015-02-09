@@ -44,7 +44,7 @@ describe 'rjil::tempest' do
 
       should contain_keystone_config('DEFAULT/admin_token').with_value('token')
 
-      should contain_keystone_config('DEFAULT/admin_endpoint').with_value('http://lb.keystone.service.consul:35357/v2.0')
+      should contain_keystone_config('DEFAULT/admin_endpoint').with_value('http://lb.keystone.service.consul:35357')
 
       should contain_file('/etc/glance')
 

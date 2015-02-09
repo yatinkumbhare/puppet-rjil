@@ -2,26 +2,70 @@ require 'spec_helper'
 require 'hiera-puppet-helper'
 
 describe 'rjil::glance' do
-  let(:facts) { {:operatingsystem => 'Debian', :osfamily => 'Debian'}}
+
+  let :facts do
+    {
+      :operatingsystemrelease => '14.04',
+      :operatingsystem        => 'Debian',
+      :osfamily               => 'Debian',
+      :concat_basedir         => '/tmp'
+    }
+  end
   let :hiera_data do
     {
-      'glance::api::registry_host'       => '10.1.1.100',
-      'glance::api::auth_host'           => '10.1.1.10',
-      'glance::api::keystone_password'   => 'pass',
-      'glance::registry::keystone_password'   => 'pass',
-      'glance::registry::auth_host'           => '10.1.1.10',
-      'glance::api::mysql_module'        => '2.3',
-      'rjil::glance::backend' => 'file',
-      'glance::backend::swift::swift_store_user' => 'swiftuser',
-      'glance::backend::swift::swift_store_key' => 'swiftuser_key',
+      'glance::api::registry_host'                  => '10.1.1.100',
+      'glance::api::auth_host'                      => '10.1.1.10',
+      'glance::api::keystone_password'              => 'pass',
+      'glance::registry::keystone_password'         => 'pass',
+      'glance::registry::auth_host'                 => '10.1.1.10',
+      'glance::api::mysql_module'                   => '2.3',
+      'rjil::glance::backend'                       => 'file',
+      'glance::backend::swift::swift_store_user'    => 'swiftuser',
+      'glance::backend::swift::swift_store_key'     => 'swiftuser_key',
       'openstack_extras::auth_file::admin_password' => 'pw',
+      'rjil::glance::server_name'                   => 'glance.server',
+      'rjil::glance::api_localbind_port'            => 19292,
+      'rjil::glance::api_public_port'               => 9292,
+      'rjil::glance::registry_localbind_port'       => 19191,
+      'rjil::glance::registry_public_port'          => 9191,
+
     }
   end
 
   context 'with http, File backend' do
     it 'should contain http with file backend' do
-      should contain_file('/usr/lib/jiocloud/tests/glance-api.sh')
+      should contain_file('/usr/lib/jiocloud/tests/glance.sh')
       should contain_file('/usr/lib/jiocloud/tests/glance-registry.sh')
+      should contain_class('rjil::apache')
+
+      should contain_apache__vhost('glance-api').with(
+        {
+          'servername'      => 'glance.server',
+          'serveradmin'     => 'root@localhost',
+          'port'            => '9292',
+          'ssl'             => false,
+          'docroot'         => '/usr/lib/cgi-bin/glance-api',
+          'error_log_file'  => 'glance-api.log',
+          'access_log_file' => 'glance-api.log',
+          'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:19292/"  } ],
+          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
+        }
+      )
+
+      should contain_apache__vhost('glance-registry').with(
+        {
+          'servername'      => 'glance.server',
+          'serveradmin'     => 'root@localhost',
+          'port'            => '9191',
+          'ssl'             => false,
+          'docroot'         => '/usr/lib/cgi-bin/glance-registry',
+          'error_log_file'  => 'glance-registry.log',
+          'access_log_file' => 'glance-registry.log',
+          'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:19191/"  } ],
+          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
+        }
+      )
+
       should contain_class('glance::api').with({
         'registry_host'     => '10.1.1.100',
         'registry_port'     => '9191',

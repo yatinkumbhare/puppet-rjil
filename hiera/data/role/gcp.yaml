@@ -3,7 +3,7 @@
 # without any physical router, in test and development environments.
 ##
 contrail::vrouter::vgw_enabled: true
-contrail::vrouter::vgw_subnets: "%{hiera('rjil::neutron::public_cidr')}"
+contrail::vrouter::vgw_subnets: "%{hiera('rjil::neutron::contrail::public_cidr')}"
 contrail::vrouter::dest_net: 0.0.0.0/0
 contrail::vrouter::vrf: 'default-domain:services:public:public'
 rjil::test::contrail_vrouter::vgw_enabled: "%{hiera('contrail::vrouter::vgw_enabled')}"
