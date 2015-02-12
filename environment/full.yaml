@@ -10,7 +10,6 @@ resources:
     flavor: medium
     image: trusty
     networks: default
-    assign_floating_ip: true
   oc:
     number: 1
     flavor: large
