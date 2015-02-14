@@ -16,26 +16,26 @@ export no_proxy="127.0.0.1,169.254.169.254,localhost,consul,jiocloud.com"
 echo no_proxy="'127.0.0.1,169.254.169.254,localhost,consul,jiocloud.com'" >> /etc/environment
 if [ -n "${env_http_proxy}" ]
 then
-	export http_proxy=${env_http_proxy}
-	echo http_proxy="'${env_http_proxy}'" >> /etc/environment
+  export http_proxy=${env_http_proxy}
+  echo http_proxy="'${env_http_proxy}'" >> /etc/environment
 fi
 if [ -n "${env_https_proxy}" ]
 then
-	export https_proxy=${env_https_proxy}
-	echo https_proxy="'${env_https_proxy}'" >> /etc/environment
+  export https_proxy=${env_https_proxy}
+  echo https_proxy="'${env_https_proxy}'" >> /etc/environment
 fi
 wget -O puppet.deb -t 5 -T 30 http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
 if [ "${env}" == "at" ]
 then
-	jiocloud_repo_deb_url=http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}-testing.deb
+  jiocloud_repo_deb_url=http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}-testing.deb
 else
-	jiocloud_repo_deb_url=http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
+  jiocloud_repo_deb_url=http://jiocloud.rustedhalo.com/ubuntu/jiocloud-apt-\${release}.deb
 fi
 wget -O jiocloud.deb -t 5 -T 30 \${jiocloud_repo_deb_url}
 dpkg -i puppet.deb jiocloud.deb
 if http_proxy= wget -t 2 -T 30 -O internal.deb http://apt.internal.jiocloud.com/internal.deb
 then
-       dpkg -i internal.deb
+  dpkg -i internal.deb
 fi
 apt-get update
 apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate
@@ -82,19 +82,19 @@ echo 'env='${env} > /etc/facter/facts.d/env.txt
 echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
 while true
 do
-    # first install all packages to make the build as fast as possible
-    puppet apply --detailed-exitcodes \`puppet config print default_manifest\` --tags package
-    ret_code_package=\$?
-    # now perform base config
-    (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'include rjil::jiocloud' ) | puppet apply --detailed-exitcodes --debug
-    ret_code_jio=\$?
-    if [[ \$ret_code_jio = 1 || \$ret_code_jio = 4 || \$ret_code_jio = 6 || \$ret_code_package = 1 || \$ret_code_package = 4 || \$ret_code_package = 6 ]]
-    then
-        echo "Puppet failed. Will retry in 5 seconds"
-        sleep 5
-    else
-        break
-    fi
+  # first install all packages to make the build as fast as possible
+  puppet apply --detailed-exitcodes \`puppet config print default_manifest\` --tags package
+  ret_code_package=\$?
+  # now perform base config
+  (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'include rjil::jiocloud' ) | puppet apply --detailed-exitcodes --debug
+  ret_code_jio=\$?
+  if [[ \$ret_code_jio = 1 || \$ret_code_jio = 4 || \$ret_code_jio = 6 || \$ret_code_package = 1 || \$ret_code_package = 4 || \$ret_code_package = 6 ]]
+  then
+    echo "Puppet failed. Will retry in 5 seconds"
+    sleep 5
+  else
+    break
+  fi
 done
 date
 EOF
