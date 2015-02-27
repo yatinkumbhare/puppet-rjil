@@ -28,11 +28,6 @@ describe 'rjil::tempest' do
       'tempest::fixed_network_name'  => 'net_tempest',
       'tempest::setup_venv'          => true,
       'rjil::tempest::keystone_admin_token' => 'token',
-#      'tempest::provision::imagename'       => 'cirros',
-#      'tempest::provision::tenantname'      => 'tempest',
-#      'tempest::provision::username'        => 'tempest_user',
-#      'tempest::provision::admin_username'  => 'tempest_admin',
-#      'tempest::provision::networkname'     =>
     }
   end
 
@@ -77,7 +72,6 @@ describe 'rjil::tempest' do
       should contain_neutron_config('keystone_authtoken/admin_user').with_value('neutron')
 
       should contain_neutron_config('keystone_authtoken/admin_password').with_value('neutron')
-      should contain_class('tempest::provision')
       should contain_class('tempest')
     end
   end
