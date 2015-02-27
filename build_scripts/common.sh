@@ -46,9 +46,7 @@ if ! [ -e venv ]
 then
     virtualenv venv
     . venv/bin/activate
-    # This can go away with the next release of Pip (which will include a
-    # version of python-requests newer than 2.4.0.)
-    pip install -e git+http://github.com/pypa/pip#egg=pip
+    pip install -U pip
 
     # This speeds the whole process up *a lot*
     pip install pip-accel
