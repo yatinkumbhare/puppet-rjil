@@ -134,8 +134,6 @@ class rjil::tempest (
     'subunit',
   ])
 
-  Class ['::tempest::provision'] -> Class['::tempest']
-  include ::tempest::provision
   include ::tempest
 }
 
