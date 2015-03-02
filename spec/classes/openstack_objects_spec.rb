@@ -25,7 +25,7 @@ describe 'rjil::openstack_objects' do
     it 'should fail at runtime' do
       should contain_runtime_fail('keystone_endpoint_not_resolvable').with({
         'fail'   => true,
-        'before' => ["Class[Openstack_extras::Keystone_endpoints]", "Class[Rjil::Keystone::Test_user]", "Class[Rjil::Tempest::Provision]"]
+        'before' => ["Class[Openstack_extras::Keystone_endpoints]", "Class[Keystone::Endpoint]", "Class[Keystone::Roles::Admin]",  "Class[Rjil::Keystone::Test_user]", "Class[Rjil::Tempest::Provision]"]
       })
       should contain_class('openstack_extras::keystone_endpoints')
       should contain_class('rjil::keystone::test_user')
