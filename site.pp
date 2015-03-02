@@ -107,17 +107,7 @@ node /^ocdb\d+/ {
   include rjil::glance
   include rjil::nova::controller
   include rjil::openstack_zeromq
-  include openstack_extras::keystone_endpoints
-  include rjil::keystone::test_user
-
-  # provision tempest resources like images, network, users etc.
-  include tempest::provision
-
-  # ensure that we don't create keystone objects until
-  # the service is operational
-  ensure_resource('rjil::service_blocker', 'keystone-admin', {})
-  Rjil::Service_blocker['keystone-admin'] -> Class['openstack_extras::keystone_endpoints']
-  Rjil::Service_blocker['keystone-admin'] -> Class['rjil::keystone::test_user']
+  include rjil::openstack_objects
 }
 
 #
