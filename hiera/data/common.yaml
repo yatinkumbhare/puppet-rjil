@@ -753,8 +753,6 @@ tempest::tempest_repo_uri: 'https://github.com/JioCloud/tempest.git'
 tempest::image_name: cirros-0.3.3
 tempest::image_name_alt: cirros-0.3.3
 tempest::flavor_ref: 1
-tempest::admin_password: tempest_admin
-tempest::admin_username: tempest_admin
 tempest::tenant_name: tempest
 tempest::username: tempest
 tempest::password: tempest
