@@ -371,7 +371,7 @@ rjil::keystone::cache_enabled: true
 rjil::keystone::cache_backend: dogpile.cache.memcached
 rjil::keystone::cache_backend_argument: url:127.0.0.1:11211
 
-rjil::openstack_objects::identity_address: "%hiera('keystone_public_address')"
+rjil::openstack_objects::identity_address: "%{hiera('keystone_public_address')}"
 
 cinder::keystone::auth::password: cinder
 cinder::keystone::auth::admin_address: "%{hiera('cinder_internal_address')}"
