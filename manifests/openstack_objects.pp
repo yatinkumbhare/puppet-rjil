@@ -7,15 +7,20 @@
 #
 class rjil::openstack_objects(
   $identity_address,
-  $identity_ips     = dns_resolve($identity_address)
+  $override_ips      = false,
 ) {
 
-  if $ips == '' {
+  if $override_ips {
+    $identity_ips = $override_ips
+  } else {
+    $identity_ips = dns_resolve($identity_address)
+  }
+
+  if $identity_ips == '' {
     $fail = true
   } else {
     $fail = false
   }
-
   # add a runtime fail and ensure that it blocks all object creation.
   # otherwise, it's possible that we might have to wait for network
   # timeouts if the dns address does not correctly resolve.
