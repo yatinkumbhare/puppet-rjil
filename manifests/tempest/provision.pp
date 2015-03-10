@@ -2,9 +2,9 @@
 # This is WIP, just adding required route to get floating IP accessible now.
 #
 class rjil::tempest::provision (
-  $auth_host              = 'lb.keystone.service.consul',
-  $auth_port              = 35357,
-  $auth_protocol          = 'http',
+  $auth_host              = 'identity.jiocloud.com',
+  $auth_port              = 5000,
+  $auth_protocol          = 'https',
   $service_tenant         = 'services',
   $neutron_admin_user     = 'neutron',
   $neutron_admin_password = 'neutron',
