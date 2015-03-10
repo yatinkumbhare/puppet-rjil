@@ -19,11 +19,11 @@ mod 'puppetlabs/haproxy',
 
 mod 'puppetlabs/inifile',
   :git => "#{base_url}/puppetlabs/puppetlabs-inifile",
-  :ref => 'ab21bd3'
+  :ref => 'ab21bd39fde35b53ae00c44c7b1970b42276d29b'
 
 mod 'saz/sudo',
   :git => "#{base_url}/saz/puppet-sudo",
-  :ref => '62b93da'
+  :ref => '62b93dacbf49ac82022e52ef7046c467f1c21cf5'
 
 mod 'fsalum/redis',
   :git => "#{base_url}/fsalum/puppet-redis",
@@ -51,11 +51,11 @@ mod 'saz/ssh',
 
 mod 'duritong/sysctl',
   :git => "#{base_url}/duritong/puppet-sysctl",
-  :ref => '4a46338'
+  :ref => '4a463384e844f51b270428643a5b8beb3628e854'
 
 mod 'msimonin/cassandra',
   :git => "#{base_url}/msimonin/puppet-cassandra",
-  :ref => 'f781e1c87915eb8'
+  :ref => 'f781e1c87915eb8bb4bbf80bf9b22cda07aac2d9'
 
 mod 'saz/timezone',
   :git => "#{base_url}/saz/puppet-timezone",
@@ -95,11 +95,11 @@ mod 'enovance/ceph',
 
 mod 'stackforge/glance',
   :git => "#{base_url}/stackforge/puppet-glance",
-  :ref => 'f377c02'
+  :ref => 'f377c0229c006b02f43a14be4979553e983cb98e'
 
 mod 'puppetlabs/keystone',
   :git => "#{base_url}/stackforge/puppet-keystone",
-  :ref => '89a6506'
+  :ref => '89a650631189ffc2f857845d138666a046f0ae5f'
 
 mod 'puppetlabs/mysql',
   :git => "#{base_url}/puppetlabs/puppetlabs-mysql",
@@ -134,7 +134,7 @@ mod 'stackforge/heat',
 
 mod 'saz/memcached',
   :git => "#{base_url}/saz/puppet-memcached",
-  :ref => 'fee24ce'
+  :ref => 'fee24ce46de953bcbb6277f5bdde78788a1800c5'
 
 mod 'stephenrjohnson/puppet',
   :git => "#{base_url}/stephenrjohnson/puppetmodule",
