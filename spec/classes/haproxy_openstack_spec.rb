@@ -14,7 +14,6 @@ describe 'rjil::haproxy::openstack' do
     }
   end
 
-
   let :service_list do
     {
       'horizon'         => '80',

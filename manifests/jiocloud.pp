@@ -13,6 +13,7 @@ class rjil::jiocloud (
   # can introduce race conditions that effect dns
   # and we cannot currently recover if we fail to
   # install python-jiocloud
+  ensure_resource('package','python-six', { ensure => 'latest' })
   package { 'python-jiocloud':
     before => [Package['dnsmasq'], Package['consul']]
   }

@@ -68,7 +68,15 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   cp -Rvf /tmp/rjil/hiera/data /etc/puppet/hiera.overrides
   mkdir -p /etc/puppet/modules.overrides/rjil
   cp -Rvf /tmp/rjil/* /etc/puppet/modules.overrides/rjil/
-  time librarian-puppet install --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
+  if [ -n "${module_git_cache}" ]
+  then
+    cd /etc/puppet/modules.overrides
+    wget -O cache.tar.gz "${module_git_cache}"
+    tar xvzf cache.tar.gz
+    time librarian-puppet update --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
+  else
+    time librarian-puppet install --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
+  fi
   puppet apply -e "ini_setting { basemodulepath: path => \"/etc/puppet/puppet.conf\", section => main, setting => basemodulepath, value => \"/etc/puppet/modules.overrides:/etc/puppet/modules\" }"
   puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests.overrides/site.pp\" }"
   puppet apply -e "ini_setting { disable_per_environment_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => disable_per_environment_manifest, value => \"true\" }"
