@@ -7,7 +7,7 @@ describe 'rjil::openstack_objects' do
     let :params do
       {
         'identity_address' => 'address',
-        'identity_ips'     => ''
+        'override_ips'     => ''
       }
     end
     let :hiera_data do
