@@ -31,10 +31,30 @@ describe 'rjil::system' do
       should contain_file('/etc/issue.net')
       should contain_file('/usr/lib/jiocloud/tests/check_timezone.sh')
       should contain_file('/etc/bash_completion.d/host_complete')
+      should contain_file('/etc/securetty').with_mode('0600')
       should contain_class('timezone')
+      should contain_class('rjil::system::ntp')
       should contain_class('rjil::system::apt')
       should contain_class('rjil::system::accounts')
       should contain_package('molly-guard')
+
+      should contain_file_line('domain_search') \
+        .with_path('/etc/resolvconf/resolv.conf.d/base') \
+        .with_line('search node.consul service.consul') \
+        .with_match('search .*') 
+
+      should create_exec('resolvconf') \
+        .with_subscribe('File_line[domain_search]') \
+        .with_refreshonly(true) \
+        .with_command('resolvconf -u')
+
+      should contain_sysctl__value('net.ipv4.conf.all.accept_redirects').with_value(0)
+      should contain_sysctl__value('net.ipv4.conf.default.accept_redirects').with_value(0)
+      should contain_sysctl__value('net.ipv4.conf.all.secure_redirects').with_value(0)
+      should contain_sysctl__value('net.ipv4.conf.default.secure_redirects').with_value(0)
+      should contain_sysctl__value('net.ipv4.conf.default.accept_source_route').with_value(0)
+      should contain_sysctl__value('net.ipv4.conf.all.send_redirects').with_value(0)
+      should contain_sysctl__value('net.ipv4.conf.default.send_redirects').with_value(0)
     end
   end
 end
