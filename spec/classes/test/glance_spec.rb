@@ -16,7 +16,7 @@ describe 'rjil::test::glance' do
   end
 
   context 'with defaults' do
-    it do 
+    it do
       should contain_class('rjil::test::base')
     end
 
@@ -33,12 +33,5 @@ describe 'rjil::test::glance' do
         .with_ensure('absent')
     end
 
-    it do
-      should contain_file('/usr/lib/jiocloud/tests/glance-registry.sh') \
-        .with_source('puppet:///modules/rjil/tests/glance-registry.sh') \
-        .with_owner('root') \
-        .with_group('root') \
-        .with_mode('755')
-    end
   end
 end
