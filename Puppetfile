@@ -34,8 +34,8 @@ mod 'puppetlabs/vscrepo',
   :ref => '1.2.0'
 
 mod 'stackforge/tempest',
-  :git => "#{base_url}/hkumarmk/puppet-tempest",
-  :ref => 'flavor_name'
+  :git => "#{base_url}/jiocloud/puppet-tempest",
+  :ref => 'master'
 
 mod 'dprince/qpid',
   :git => "#{base_url}/dprince/puppet-qpid",
@@ -110,8 +110,8 @@ mod 'stackforge/neutron',
   :ref => 'origin/master'
 
 mod 'stackforge/nova',
-  :git => "#{base_url}/hkumarmk/puppet-nova",
-  :ref => 'nova_flavor_purge'
+  :git => "#{base_url}/jiocloud/puppet-nova",
+  :ref => 'origin/master'
 
 mod 'puppetlabs/rabbitmq',
   :git => "#{base_url}/puppetlabs/puppetlabs-rabbitmq",
