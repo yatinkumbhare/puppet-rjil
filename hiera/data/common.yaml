@@ -160,6 +160,7 @@ glance::api::bind_host: "%{hiera('localbind_host')}"
 glance::api::bind_port: "%{hiera('glance_api_localbind_port')}"
 glance::api::debug: "%{hiera('debug')}"
 glance::api::verbose: "%{hiera('verbose')}"
+glance::api::show_image_direct_url: true
 
 ##
 # glance-registry can be either connected to localhost using http or
