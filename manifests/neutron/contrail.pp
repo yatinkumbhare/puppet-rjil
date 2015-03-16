@@ -68,9 +68,9 @@ class rjil::neutron::contrail(
       router_external => true,
     }
 
-    if $subnet_ip_start {
-      if !$subnet_ip_end {
-        fail('subnet_ip_end is required if subset of IPs to be added to subnet')
+    if $public_subnet_ip_start {
+      if !$public_subnet_ip_end {
+        fail('public_subnet_ip_end is required if subset of IPs to be added to subnet')
       }
 
       neutron_subnet {$public_subnet_name:

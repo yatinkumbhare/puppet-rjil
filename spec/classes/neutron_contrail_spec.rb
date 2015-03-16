@@ -64,4 +64,23 @@ describe 'rjil::neutron::contrail' do
     end
 
   end
+
+  context 'when public cidr has start/end set' do
+
+    let :params do
+      {
+        'public_cidr'             => '1.1.1.0/24',
+        'keystone_admin_password' => 'pass',
+        'public_subnet_ip_start'  => '1.1.1.4',
+        'public_subnet_ip_end'    => '1.1.1.14',
+      }
+    end
+    it { should contain_neutron_subnet('pub_subnet1').with({
+        'ensure'           => 'present',
+        'cidr'             => '1.1.1.0/24',
+        'network_name'     => 'public',
+        'allocation_pools' => ['start=1.1.1.4,end=1.1.1.14'],
+      })}
+
+  end
 end
