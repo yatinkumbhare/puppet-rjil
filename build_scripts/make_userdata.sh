@@ -88,6 +88,17 @@ echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/co
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
 echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
+
+##
+# Workaround to add the swap partition for baremetal systems, as even though
+# cloudinit is creating the swap partition, its not added to the fstab and not
+# enabled.
+##
+if [ -e /dev/disk/by-label/swap1 ] && [ `grep -cP '^LABEL=swap1[\s\t]+' /etc/fstab` -eq 0 ]; then
+  echo 'LABEL=swap1 none swap sw 0 1' >> /etc/fstab
+  swapon -a
+fi
+
 while true
 do
   # first install all packages to make the build as fast as possible
