@@ -17,21 +17,22 @@
 #   Memcached server port. Default: 11211
 #
 class rjil::nova::controller (
-  $vncproxy_bind_port   = 6080,
-  $consul_check_interval= '10s',
-  $default_floating_pool = 'public',
-  $memcached_servers    = sort(values(service_discover_consul('memcached'))),
-  $admin_email          = 'root@localhost',
-  $server_name          = 'localhost',
-  $localbind_host       = '127.0.0.1',
-  $memcached_port       = 11211,
-  $osapi_public_port    = 8774,
-  $ec2_public_port      = 8773,
-  $osapi_localbind_port = 18774,
-  $ec2_localbind_port   = 18773,
-  $ssl                  = false,
-  $flavors              = {},
-  $nova_auth            = {},
+  $vncproxy_bind_port      = 6080,
+  $consul_check_interval   = '10s',
+  $default_floating_pool   = 'public',
+  $memcached_servers       = sort(values(service_discover_consul('memcached'))),
+  $admin_email             = 'root@localhost',
+  $server_name             = 'localhost',
+  $localbind_host          = '127.0.0.1',
+  $memcached_port          = 11211,
+  $osapi_public_port       = 8774,
+  $ec2_public_port         = 8773,
+  $osapi_localbind_port    = 18774,
+  $ec2_localbind_port      = 18773,
+  $ssl                     = false,
+  $flavors                 = {},
+  $nova_auth               = {},
+  $max_local_block_devices = 3,
 ) {
 
 # Tests
@@ -44,6 +45,7 @@ class rjil::nova::controller (
     'DEFAULT/default_floating_pool':      value => $default_floating_pool;
     'DEFAULT/osapi_compute_listen_port':  value => $osapi_localbind_port;
     'DEFAULT/ec2_listen_port':            value => $ec2_localbind_port;
+    'DEFAULT/max_local_block_devices':    value => $max_local_block_devices;
   }
 
   include rjil::apache
