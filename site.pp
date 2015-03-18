@@ -147,6 +147,7 @@ node /^gcp\d+/ {
   include rjil::openstack_zeromq
   include rjil::nova::compute
   include rjil::tempest
+  include rjil::http_proxy
 }
 
 node /^cp\d+/ {
