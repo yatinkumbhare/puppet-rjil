@@ -189,7 +189,7 @@ mod 'jiocloud/orchestration_utils',
   :ref => 'origin/master'
 
 mod 'thias/squid3',
-  :git => "#{base_url}/bodepd/puppet-squid3",
+  :git => "#{base_url}/sorenh/puppet-squid3",
   :ref => 'origin/master'
 
 mod 'puppetlabs/dhcp',
