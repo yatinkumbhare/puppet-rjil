@@ -1,3 +1,7 @@
+#
+# Class: rjil::jiocloud::dns
+#
+
 class rjil::jiocloud::dns(
   $entries = {}
 ) {

@@ -1,3 +1,7 @@
+# 
+# Class: rjil::test::glance
+#
+
 class rjil::test::glance(
   $api_address      = '127.0.0.1',
   $registry_address = '127.0.0.1',

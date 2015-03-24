@@ -1,3 +1,5 @@
+# Class: rjil::jiocloud::consul
+#
 class rjil::jiocloud::consul($config_hash) {
   include dnsmasq
 

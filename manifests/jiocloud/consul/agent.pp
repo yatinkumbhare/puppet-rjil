@@ -1,3 +1,7 @@
+#
+# Class: rjil::jiocloud::consul::agent
+#
+
 class rjil::jiocloud::consul::agent(
   $bind_addr = '0.0.0.0'
 ) {

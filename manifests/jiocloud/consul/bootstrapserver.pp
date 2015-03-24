@@ -1,3 +1,6 @@
+# Class: rjil::jiocloud::consul::bootstrapserver
+#
+
 class rjil::jiocloud::consul::bootstrapserver(
   $bootstrap_expect = 1,
   $bind_addr        = '0.0.0.0',

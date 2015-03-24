@@ -1,3 +1,7 @@
+#
+# Class: rjil::test::haproxy_openstack
+#
+
 class rjil::test::haproxy_openstack(
   $horizon_ips           = [],
   $keystone_ips          = [],

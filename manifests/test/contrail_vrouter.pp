@@ -1,3 +1,7 @@
+#
+# Class: rjil::test::contrail_vrouter
+#
+
 class rjil::test::contrail_vrouter (
   $vrouter_interface = 'vhost0',
   $vgw_interface     = 'vgw1',

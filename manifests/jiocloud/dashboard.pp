@@ -1,3 +1,7 @@
+#
+# Class: rjil::jiocloud::dashboard
+#
+
 class rjil::jiocloud::dashboard($keystone_url,
                                 $secret_key,
                                 $debug                 = false,

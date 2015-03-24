@@ -1,3 +1,7 @@
+#
+# Class: rjil::jiocloud::consul::base_checks
+# Setup Validation checks for Puppet runs
+#
 class rjil::jiocloud::consul::base_checks(
   # default to 5 days
   $puppet_ttl       = '7200m',
