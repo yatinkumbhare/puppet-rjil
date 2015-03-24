@@ -406,6 +406,9 @@ verified until glance has registered (maybe this is actually not a problem...)
 
 # Development environment
 
+You can setup a Dev environment on a bare-metal node with enough resources using Vagrant. Once you have the bare-metal
+server available, follow these steps.
+
 ## Installing vagrant
 
 [Install Virtualbox](http://www.virtualbox.org/manual/ch01.html#intro-installing)
@@ -419,79 +422,78 @@ The default version of Vagrant in the Ubuntu 14.04 Repo is 1.4.3 which causes an
 
 ## Using vagrant
 
-Vagrant makes it easier to perform iterative development on modules.
-
-It allows you to develop on your local laptop and see the effects of those changes
-on localized VMs in real time.
-
-We have designed a vagrant based solution that can be used to create VMs that
+Vagrant makes it easier to perform iterative development on modules. It allows you to develop on your local laptop and see the effects of those changes on localized VMs in real time. We have designed a vagrant based solution that can be used to create VMs that
 very closely resemble the openstack environments that we are deploying.
 
-When spinning up VMs for local development, Vagrant/VBox would need to be run on the physical host that has VT-x  enabled in its BIOS. Currently, this setup cannot be provisioned and tested inside a VM itself (KVM/VBox).
-
-### getting setup
+When spinning up VMs for local development, Vagrant/VBox would need to be run on the physical host that has VT-x  enabled in its BIOS. Currently, this setup cannot be provisioned and tested inside a VM itself (KVM/VBox). 
 
 The following initial setup steps are required to use the vagrant environment:
 
-* clone project:
+#### 1. Set a local system squid proxy to access the internet from the server
 
-````
-git clone git://github.com/jiocloud/puppet-rjil
-````
+Write following lines at the bottom of .bashrc file
 
-* setup tokens (this is required for setting up consul)
+    export http_proxy="http://10.135.121.138:3128"
+    export https_proxy="https://10.135.121.138:3128"
+    export no_proxy = "localhost, 127.0.0.1"
+    export env=vagrant-lxc # used to customize the environment to use
 
-````
-source newtokens.sh
-````
+Then do `$ source .bashrc`
 
-* install puppet modules
+In order to use proxy with sudo command, use sudo with -E option, e.g., 
+    sudo -E apt-get update
 
-First, you need to make sure that your Puppet module dependencies are
-installed:
+In order to use proxy for apt, e.g., create a file in /etc/apt/apt.conf.d/90_proxy. Write following lines:
+    Acquire::http::proxy "http://10.135.121.138:3128";
+    Acquire::https::proxy "https://10.135.121.138:3128";
 
+#### 2. clone project:
+
+    git clone git://github.com/jiocloud/puppet-rjil 
+    cd puppet-rjil
+
+If the git:// protocol doesn't work, use https://
+
+#### 3. setup tokens (this is required for setting up consul)
+
+    source newtokens.sh
+
+You'll see a consul ID. Copy that consul ID and paste onto last time of ~/.bashrc
+
+    export consul_discovery_token=ca004..7f42f3
+
+#### 4. Install puppet modules (using sudo -E)
+
+First, you need to make sure that your Puppet module dependencies are installed. 
 NOTE: make sure that you install librarian-puppet-simple and *not* librarian-puppet!!!!
 
-````
-gem install librarian-puppet-simple
-# from root level of this repo
-librarian-puppet install
-````
+    gem install librarian-puppet-simple # or sudo -E gem install librarian-puppet-simple
+    librarian-puppet install # from root level of this repo
 
-* create rjil directory in modules
-This step is required b/c the top level directory (ie: puppet-rjil is a module itself and
-it needs to exist in the modulepath for the vagrant environment.
+#### 5. create rjil directory in modules
+This step is required b/c the top level directory (i.e. puppet-rjil is a module itself and
+it needs to exist in the modulepath for the vagrant environment.)
 
-````
-mkdir modules/rjil
-````
+    mkdir modules/rjil
 
-* setup your extra environment variables
+#### 6. setup your extra environment variables
 
-The Vagrantfile accepts a few additional environment variables that can be used to further customize the environment.
+The Vagrantfile accepts a few additional environment variables that can be used to 
+further customize the environment.
 
-````
-# used to set a local system squid proxy (recommended!!!)
-export http\_proxy=http://10.22.3.1:3128
-export https\_proxy=http://10.22.3.1:3128
-# used to customize the environment to use
-export env=vagrant-lxc
-````
+### Vagrant operations
 
-### vagrant operations
+Once you have initialized your vagrant environment using the above steps, you are ready 
+to start using vagrant.
 
-Once you have initialized your vagrant environment using the above steps, you are ready to start using vagrant.
-
-It is highly recommended that if you intend to use this utility that you be familiar with the basics of
-[vagrant](https://www.vagrantup.com/).
+It is highly recommended that if you intend to use this utility that you be familiar 
+with the basics of [vagrant](https://www.vagrantup.com/).
 
 #### vagrant status
 
 To get a list of support roles that can be booted by vagrant, run:
 
-````
-vagrant status
-````
+    vagrant status
 
 This list is populated using the ./environment/full.yaml file by default. It is possible to
 customize the roles to be populated by adjusting
@@ -499,25 +501,20 @@ customize the roles to be populated by adjusting
 #### vagrant up
 
 To boot your desired role in vagrant
-````
-vagrant up <role>
-````
+
+    vagrant up <role>
 
 #### vagrant provision
 
 To re-run Puppet provisioning (for interactive development of modules):
 
-````
-vagrant provision <role>
-````
+    vagrant provision <role>
 
 #### vagrant ssh
 
 To login to VMs:
 
-````
-vagrant ssh <role_name>
-````
+    vagrant ssh <role_name>
 
 ### using vagrant to spin up dev machines:
 
