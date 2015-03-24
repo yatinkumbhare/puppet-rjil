@@ -1,3 +1,8 @@
+#
+# Class rjil::ironic
+# Gets ironic running for undercloud controllers
+#
+
 class rjil::ironic(
   $deploy_ironic_api_url = "http://${::ipaddress}:6385/",
 ) {

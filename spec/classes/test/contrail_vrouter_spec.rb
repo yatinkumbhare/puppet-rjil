@@ -15,7 +15,7 @@ describe 'rjil::test::contrail_vrouter' do
         .with_content(/curl http:\/\/localhost:8085 | grep agent.xml/) \
         .with_owner('root') \
         .with_group('root') \
-        .with_mode('755')
+        .with_mode('0755')
     end
   end
 
@@ -30,7 +30,7 @@ describe 'rjil::test::contrail_vrouter' do
         .with_content(/curl http:\/\/localhost:8085\/Snh_Inet4UcRouteReq/) \
         .with_owner('root') \
         .with_group('root') \
-        .with_mode('755')
+        .with_mode('0755')
     end
   end
 end

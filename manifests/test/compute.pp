@@ -1,3 +1,7 @@
+#
+# Class: rjil::test::compute
+#
+
 class rjil::test::compute {
 
   $scripts = ['nova-compute.sh']
@@ -8,6 +12,6 @@ class rjil::test::compute {
     content => template('rjil/tests/cinder-secret.sh.erb'),
     owner   => 'root',
     group   => 'root',
-    mode    => '755',
+    mode    => '0755',
   }
 }

@@ -1,3 +1,7 @@
+# 
+# Class rjil::jiocloud::consul::server
+# Standup a consul server
+
 class rjil::jiocloud::consul::server(
   $bind_addr = '0.0.0.0'
 ){

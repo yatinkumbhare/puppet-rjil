@@ -25,7 +25,7 @@ describe 'rjil::test::glance' do
         .with_content(/glance image-list/) \
         .with_owner('root') \
         .with_group('root') \
-        .with_mode('755')
+        .with_mode('0755')
     end
 
     it do

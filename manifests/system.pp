@@ -43,7 +43,7 @@ class rjil::system(
     ensure        => file,
     owner         => root,
     group         => root,
-    mode          => 644,
+    mode          => '0644',
     source        => "puppet:///modules/${module_name}/_etc_issue",
   }
 
@@ -76,7 +76,7 @@ class rjil::system(
     ensure        => file,
     owner         => root,
     group         => root,
-    mode          => 644,
+    mode          => '0644',
     source        => "puppet:///modules/${module_name}/bash_completion.d_host_complete"
   }
 

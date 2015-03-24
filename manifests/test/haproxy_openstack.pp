@@ -1,3 +1,7 @@
+#
+# Class: rjil::test::haproxy_openstack
+#
+
 class rjil::test::haproxy_openstack(
   $horizon_ips           = [],
   $keystone_ips          = [],
@@ -18,7 +22,7 @@ class rjil::test::haproxy_openstack(
     content => template('rjil/tests/haproxy_openstack.sh.erb'),
     owner   => 'root',
     group   => 'root',
-    mode    => '755',
+    mode    => '0755',
   }
 
 }

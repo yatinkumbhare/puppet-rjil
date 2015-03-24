@@ -1,3 +1,7 @@
+#
+# Class rjil::http_proxy
+# stands up a squid proxy for gcp node types
+#
 class rjil::http_proxy() {
 
   class { 'squid3':

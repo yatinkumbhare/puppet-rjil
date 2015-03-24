@@ -11,7 +11,7 @@ describe 'rjil::test::compute' do
         .with_content(/virsh -q secret-get-value/)
         .with_owner('root') \
         .with_group('root') \
-        .with_mode('755')
+        .with_mode('0755')
     end
   end
 end

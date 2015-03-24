@@ -6,7 +6,7 @@ define rjil::test {
     source => "puppet:///modules/rjil/tests/${name}",
     owner  => 'root',
     group  => 'root',
-    mode   => '755',
+    mode   => '0755',
   }
 
 }

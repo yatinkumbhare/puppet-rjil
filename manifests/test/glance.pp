@@ -1,3 +1,7 @@
+# 
+# Class: rjil::test::glance
+#
+
 class rjil::test::glance(
   $api_address      = '127.0.0.1',
   $registry_address = '127.0.0.1',
@@ -14,7 +18,7 @@ class rjil::test::glance(
     content => template('rjil/tests/glance-api.sh.erb'),
     owner  => 'root',
     group  => 'root',
-    mode   => '755',
+    mode   => '0755',
   }
 
   file { '/usr/lib/jiocloud/tests/glance-api.sh':
