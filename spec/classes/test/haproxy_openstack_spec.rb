@@ -37,7 +37,7 @@ describe 'rjil::test::haproxy_openstack' do
         .with_content(/keystone catalog/) \
         .with_owner('root') \
         .with_group('root') \
-        .with_mode('755')
+        .with_mode('0755')
     end
 
   end

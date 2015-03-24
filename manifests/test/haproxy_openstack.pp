@@ -18,7 +18,7 @@ class rjil::test::haproxy_openstack(
     content => template('rjil/tests/haproxy_openstack.sh.erb'),
     owner   => 'root',
     group   => 'root',
-    mode    => '755',
+    mode    => '0755',
   }
 
 }

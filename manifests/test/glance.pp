@@ -14,7 +14,7 @@ class rjil::test::glance(
     content => template('rjil/tests/glance-api.sh.erb'),
     owner  => 'root',
     group  => 'root',
-    mode   => '755',
+    mode   => '0755',
   }
 
   file { '/usr/lib/jiocloud/tests/glance-api.sh':

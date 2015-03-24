@@ -16,7 +16,7 @@ class rjil::test::ceph_radosgw (
     content => template('rjil/tests/ceph_radosgw.sh.erb'),
     owner   => 'root',
     group   => 'root',
-    mode    => '755',
+    mode    => '0755',
   }
 
 }

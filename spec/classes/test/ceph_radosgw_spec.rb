@@ -24,7 +24,7 @@ describe 'rjil::test::ceph_radosgw' do
         .with_content(/swift upload/) \
         .with_owner('root') \
         .with_group('root') \
-        .with_mode('755')
+        .with_mode('0755')
     end
   end
 

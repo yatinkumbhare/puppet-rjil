@@ -10,7 +10,7 @@ class rjil::test::contrail_vrouter (
     content => template('rjil/tests/contrail_vrouter.sh.erb'),
     owner   => 'root',
     group   => 'root',
-    mode    => '755',
+    mode    => '0755',
   }
 
   if $vgw_enabled {
@@ -18,7 +18,7 @@ class rjil::test::contrail_vrouter (
       content => template('rjil/tests/contrail_vgw.sh.erb'),
       owner   => 'root',
       group   => 'root',
-      mode    => '755',
+      mode    => '0755',
     }
   }
 }
