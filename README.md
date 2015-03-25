@@ -431,7 +431,13 @@ The following initial setup steps are required to use the vagrant environment:
 
 #### 1. Set a local system squid proxy to access the internet from the server
 
-Write following lines at the bottom of .bashrc file
+Option 1: You can create an rc file in the puppet-rjil directory. Name it something that doesn't 
+actually mean something on the system (like vagrant_http_proxy, etc) (e.g., .mayankrc). 
+Disadvantage: You'll have to source it everytime you login.
+Option 2: You can add the lines to your default .bashrc file in your home directory. That is automatically
+sourced each time you login.
+
+Write following lines at the bottom of the rc file:
 
     export http_proxy="http://10.135.121.138:3128"
     export https_proxy="https://10.135.121.138:3128"
@@ -441,9 +447,11 @@ Write following lines at the bottom of .bashrc file
 Then do `$ source .bashrc`
 
 In order to use proxy with sudo command, use sudo with -E option, e.g., 
+
     sudo -E apt-get update
 
-In order to use proxy for apt, e.g., create a file in /etc/apt/apt.conf.d/90_proxy. Write following lines:
+In order to use proxy for apt, e.g., create a file in /etc/apt/apt.conf.d/90_proxy. Write following lines: 
+
     Acquire::http::proxy "http://10.135.121.138:3128";
     Acquire::https::proxy "https://10.135.121.138:3128";
 
@@ -458,7 +466,10 @@ If the git:// protocol doesn't work, use https://
 
     source newtokens.sh
 
-You'll see a consul ID. Copy that consul ID and paste onto last time of ~/.bashrc
+You'll see a consul ID. Copy that consul ID and paste onto last line of the rc file (.bashrc). 
+Note: There may be problems with reusing the same id. You need to be careful that you recreate 
+the env from scratch every-time, or old machines will join the new cluster. So whenever you create 
+a dev env, always run newtokens.sh.
 
     export consul_discovery_token=ca004..7f42f3
 
@@ -467,7 +478,7 @@ You'll see a consul ID. Copy that consul ID and paste onto last time of ~/.bashr
 First, you need to make sure that your Puppet module dependencies are installed. 
 NOTE: make sure that you install librarian-puppet-simple and *not* librarian-puppet!!!!
 
-    gem install librarian-puppet-simple # or sudo -E gem install librarian-puppet-simple
+    gem install librarian-puppet-simple
     librarian-puppet install # from root level of this repo
 
 #### 5. create rjil directory in modules
