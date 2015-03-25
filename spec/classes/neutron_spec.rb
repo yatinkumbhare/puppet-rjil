@@ -66,7 +66,6 @@ describe 'rjil::neutron' do
         'error_log_file'  => 'neutron.log',
         'access_log_file' => 'neutron.log',
         'proxy_pass'      => [ { 'path' => '/', 'url' => 'http://127.0.0.1:19696/'  } ],
-        'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
       })
 
     end

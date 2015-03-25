@@ -77,7 +77,6 @@ describe 'rjil::cinder' do
           'error_log_file'  => 'cinder.log',
           'access_log_file' => 'cinder.log',
           'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:18776/"  } ],
-          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
         }
       )
       should contain_ceph__conf__clients('cinder_volume').with({

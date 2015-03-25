@@ -50,7 +50,6 @@ describe 'rjil::nova::controller' do
           'error_log_file'  => 'nova-osapi.log',
           'access_log_file' => 'nova-osapi.log',
           'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:18774/"  } ],
-          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
         }
       )
 
@@ -64,7 +63,6 @@ describe 'rjil::nova::controller' do
           'error_log_file'  => 'nova-ec2api.log',
           'access_log_file' => 'nova-ec2api.log',
           'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:18773/"  } ],
-          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
         }
       )
 

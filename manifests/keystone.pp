@@ -17,6 +17,8 @@ class rjil::keystone(
   $cache_backend          = undef,
   $cache_backend_argument = undef,
   $disable_db_sync        = false,
+  $rewrites               = undef,
+  $headers                = undef,
 ) {
 
   if $public_address == '0.0.0.0' {
@@ -76,7 +78,8 @@ class rjil::keystone(
     error_log_file  => 'keystone.log',
     access_log_file => 'keystone.log',
     proxy_pass      => [ { path => '/', url => "http://localhost:${public_port_internal}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   ## Configure apache reverse proxy
@@ -89,7 +92,8 @@ class rjil::keystone(
     error_log_file  => 'keystone.log',
     access_log_file => 'keystone.log',
     proxy_pass      => [ { path => '/', url => "http://localhost:${admin_port_internal}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   ## Keystone cache configuration

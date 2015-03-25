@@ -62,6 +62,8 @@ class rjil::cinder (
   $localbind_port          = 18776,
   $ssl                     = false,
   $volume_nofile           = 10240,
+  $rewrites                = undef,
+  $headers                 = undef,
 ) {
 
   ######################## Service Blockers and Ordering
@@ -118,7 +120,8 @@ class rjil::cinder (
     error_log_file  => 'cinder.log',
     access_log_file => 'cinder.log',
     proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${localbind_port}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   ##

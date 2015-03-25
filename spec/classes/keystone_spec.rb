@@ -52,7 +52,7 @@ describe 'rjil::keystone' do
             'serveradmin' => 'root@rjil.com',
             'port'        => '5001',
             'ssl'         => true,
-            'proxy_pass'  => [ { 'path' => '/', 'url' => "http://localhost:5000/"  } ]
+            'proxy_pass'  => [ { 'path' => '/', 'url' => "http://localhost:5000/"  } ],
           }
         )
         should contain_apache__vhost('keystone-admin').with(
@@ -61,7 +61,7 @@ describe 'rjil::keystone' do
             'serveradmin' => 'root@rjil.com',
             'port'        => '35356',
             'ssl'         => true,
-            'proxy_pass'  => [ { 'path' => '/', 'url' => "http://localhost:35357/"  } ]
+            'proxy_pass'  => [ { 'path' => '/', 'url' => "http://localhost:35357/"  } ],
           }
         )
         should contain_file('/usr/lib/jiocloud/tests/keystone.sh').with_content(/check_http -S -H 127\.0\.0\.1 -p 5001/)

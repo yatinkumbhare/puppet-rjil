@@ -48,7 +48,6 @@ describe 'rjil::glance' do
           'error_log_file'  => 'glance-api.log',
           'access_log_file' => 'glance-api.log',
           'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:19292/"  } ],
-          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
         }
       )
 
@@ -62,7 +61,6 @@ describe 'rjil::glance' do
           'error_log_file'  => 'glance-registry.log',
           'access_log_file' => 'glance-registry.log',
           'proxy_pass'      => [ { 'path' => '/', 'url' => "http://127.0.0.1:19191/"  } ],
-          'headers'         => [ 'set Access-Control-Allow-Origin "*"' ],
         }
       )
 
