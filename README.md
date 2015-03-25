@@ -425,14 +425,14 @@ The default version of Vagrant in the Ubuntu 14.04 Repo is 1.4.3 which causes an
 Vagrant makes it easier to perform iterative development on modules. It allows you to develop on your local laptop and see the effects of those changes on localized VMs in real time. We have designed a vagrant based solution that can be used to create VMs that
 very closely resemble the openstack environments that we are deploying.
 
-When spinning up VMs for local development, Vagrant/VBox would need to be run on the physical host that has VT-x  enabled in its BIOS. Currently, this setup cannot be provisioned and tested inside a VM itself (KVM/VBox). 
+When spinning up VMs for local development, Vagrant/VBox would need to be run on the physical host that has VT-x  enabled in its BIOS. Currently, this setup cannot be provisioned and tested inside a VM itself (KVM/VBox).
 
 The following initial setup steps are required to use the vagrant environment:
 
 #### 1. Set a local system squid proxy to access the internet from the server
 
-Option 1: You can create an rc file in the puppet-rjil directory. Name it something that doesn't 
-actually mean something on the system (like vagrant_http_proxy, etc) (e.g., .mayankrc). 
+Option 1: You can create an rc file in the puppet-rjil directory. Name it something that doesn't
+actually mean something on the system (like vagrant_http_proxy, etc) (e.g., .mayankrc).
 Disadvantage: You'll have to source it everytime you login.
 Option 2: You can add the lines to your default .bashrc file in your home directory. That is automatically
 sourced each time you login.
@@ -446,18 +446,18 @@ Write following lines at the bottom of the rc file:
 
 Then do `$ source .bashrc`
 
-In order to use proxy with sudo command, use sudo with -E option, e.g., 
+In order to use proxy with sudo command, use sudo with -E option, e.g.,
 
     sudo -E apt-get update
 
-In order to use proxy for apt, e.g., create a file in /etc/apt/apt.conf.d/90_proxy. Write following lines: 
+In order to use proxy for apt, e.g., create a file in /etc/apt/apt.conf.d/90_proxy. Write following lines:
 
     Acquire::http::proxy "http://10.135.121.138:3128";
     Acquire::https::proxy "https://10.135.121.138:3128";
 
 #### 2. clone project:
 
-    git clone git://github.com/jiocloud/puppet-rjil 
+    git clone git://github.com/jiocloud/puppet-rjil
     cd puppet-rjil
 
 If the git:// protocol doesn't work, use https://
@@ -466,16 +466,20 @@ If the git:// protocol doesn't work, use https://
 
     source newtokens.sh
 
-You'll see a consul ID. Copy that consul ID and paste onto last line of the rc file (.bashrc). 
-Note: There may be problems with reusing the same id. You need to be careful that you recreate 
-the env from scratch every-time, or old machines will join the new cluster. So whenever you create 
+You'll see a consul ID. Copy that consul ID and paste onto last line of the rc file (.bashrc).
+Note: There may be problems with reusing the same id. You need to be careful that you recreate
+the env from scratch every-time, or old machines will join the new cluster. So whenever you create
 a dev env, always run newtokens.sh.
 
     export consul_discovery_token=ca004..7f42f3
 
 #### 4. Install puppet modules (using sudo -E)
 
-First, you need to make sure that your Puppet module dependencies are installed. 
+NOTE: you will need to run this operation as sudo if you intend to install the gems as system
+gems. Otherwise, consider installing ruby via rvm to ensure that you can install gems in the
+local users environment.
+
+First, you need to make sure that your Puppet module dependencies are installed.
 NOTE: make sure that you install librarian-puppet-simple and *not* librarian-puppet!!!!
 
     gem install librarian-puppet-simple
@@ -489,15 +493,15 @@ it needs to exist in the modulepath for the vagrant environment.)
 
 #### 6. setup your extra environment variables
 
-The Vagrantfile accepts a few additional environment variables that can be used to 
+The Vagrantfile accepts a few additional environment variables that can be used to
 further customize the environment.
 
 ### Vagrant operations
 
-Once you have initialized your vagrant environment using the above steps, you are ready 
+Once you have initialized your vagrant environment using the above steps, you are ready
 to start using vagrant.
 
-It is highly recommended that if you intend to use this utility that you be familiar 
+It is highly recommended that if you intend to use this utility that you be familiar
 with the basics of [vagrant](https://www.vagrantup.com/).
 
 #### vagrant status
