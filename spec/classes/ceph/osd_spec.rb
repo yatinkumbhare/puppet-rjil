@@ -36,7 +36,7 @@ describe 'rjil::ceph::osd' do
         'cluster_address' => '10.2.0.2'
       })
       should contain_ceph__osd__device('/dev/sdb','/dev/sdc','/dev/sdd').with({
-        'osd_journal_type'  => 'first_partition',
+        'osd_journal_type'  => 'filesystem',
         'osd_journal_size'  => 10,
         'autogenerate'      => false,
       })
@@ -48,7 +48,7 @@ describe 'rjil::ceph::osd' do
     let (:params) { {'autodetect' => true } }
     it  do
       should contain_ceph__osd__device('/dev/sdh','/dev/sdi','/dev/sdx').with({
-        'osd_journal_type'  => 'first_partition',
+        'osd_journal_type'  => 'filesystem',
         'osd_journal_size'  => 10,
         'autogenerate'      => false,
       })
@@ -59,7 +59,7 @@ describe 'rjil::ceph::osd' do
     let (:params) { {'autodetect' => true, 'disk_exceptions' => ['sdx'] } }
     it  do
       should contain_ceph__osd__device('/dev/sdh','/dev/sdi').with({
-        'osd_journal_type'  => 'first_partition',
+        'osd_journal_type'  => 'filesystem',
         'osd_journal_size'  => 10,
         'autogenerate'      => false,
       })
@@ -77,7 +77,7 @@ describe 'rjil::ceph::osd' do
       })
 
       should contain_ceph__osd__device('/dev/loop0').with({
-        'osd_journal_type'  => 'first_partition',
+        'osd_journal_type'  => 'filesystem',
         'osd_journal_size'  => 10,
         'autogenerate'      => true,
       })

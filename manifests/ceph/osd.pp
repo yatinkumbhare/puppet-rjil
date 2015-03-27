@@ -47,7 +47,7 @@ class rjil::ceph::osd (
   $osds                     = [],
   $autodetect               = false,
   $disk_exceptions          = [],
-  $osd_journal_type         = 'first_partition',
+  $osd_journal_type         = 'filesystem',
   $osd_journal_size         = 10,
   $storage_cluster_if       = eth1,
   $storage_cluster_address  = undef,

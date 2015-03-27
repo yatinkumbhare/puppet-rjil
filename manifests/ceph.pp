@@ -46,7 +46,7 @@ class rjil::ceph (
   $storage_cluster_network= undef,
   $public_network         = undef,
   $public_if              = eth0,
-  $osd_journal_type       = 'first_partition',
+  $osd_journal_type       = 'filesystem',
   $pool_default_size      = 3
 ) {
 
