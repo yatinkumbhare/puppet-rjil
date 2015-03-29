@@ -32,7 +32,7 @@ describe 'rjil::ceph' do
         'auth_type'           => 'cephx',
         'cluster_network'     => '10.2.0.0/24',
         'public_network'      => '10.1.0.0/24',
-        'osd_journal_type'    => 'first_partition',
+        'osd_journal_type'    => 'filesystem',
         'require'             => 'File[/etc/ceph]',
       })
     end
