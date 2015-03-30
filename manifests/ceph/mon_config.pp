@@ -15,6 +15,8 @@ class rjil::ceph::mon_config (
   if ! empty($mon_config) {
     ::ceph::conf::mon_config{ $mon_config: }
     $fail = false
+  } else {
+    $fail = true
   }
 
   # mon_config should be finished before any ceph::auth execution which will
