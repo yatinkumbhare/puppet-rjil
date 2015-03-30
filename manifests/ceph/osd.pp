@@ -85,6 +85,13 @@ class rjil::ceph::osd (
   }
 
   ##
+  # Ceph osd validation check
+  ##
+  rjil::test::check { 'ceph-osd':
+    type => 'proc'
+  }
+
+  ##
   ## Detect all blank disks (use $::blankorcephdisks facter) if autodetect is
   ##   enabled.
   ##  Disks to be used is difference of $blankorcephdisks and disk_exceptions
