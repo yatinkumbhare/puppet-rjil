@@ -43,6 +43,12 @@ resources:
     image: trusty
     networks: default
     boot_volume: default_volume
+  st:
+    number: 1
+    flavor: storage
+    image: trusty
+    networks: default
+    boot_volume: default_volume
   cp:
     number: 2
     flavor: large
