@@ -52,7 +52,7 @@ class rjil::ceph::mon::mon_config (
     ::ceph::conf::mon_config{ $other_mons: }
   } elsif ! $leader {
     runtime_fail {'monlist_empty_fail':
-      fail    => $fail,
+      fail    => true,
       message => 'External Mon list cannot be empty for non-leader mon nodes',
       # this the exact dependency that we are waiting for...
       before  => Exec['ceph-mon-keyring'],
