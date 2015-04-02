@@ -12,8 +12,6 @@ fixtures:
       repo: https://github.com/bodepd/puppet-openstack_extras
     heat:
       repo: https://github.com/stackforge/puppet-heat
-    nova:
-      repo: https://github.com/stackforge/puppet-nova
     glance:
       repo: https://github.com/stackforge/puppet-glance
     keystone:
@@ -93,8 +91,8 @@ fixtures:
       repo: https://github.com/stackforge/puppet-neutron
       ref: 4.1.0
     nova:
-      repo: https://github.com/stackforge/puppet-nova
-      ref: 4.0.0
+      repo: https://github.com/jiocloud/puppet-nova
+      ref: origin/master
     rabbitmq:
       repo: https://github.com/puppetlabs/puppetlabs-rabbitmq
       ref: 4.0.0
