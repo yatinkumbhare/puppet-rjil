@@ -21,6 +21,6 @@ define rjil::keystone::tenant (
   # anted to use rjil::neutron::contrail::fip_pool
   ##
   if $create_network {
-    rjil::keystone::default_network {$tenants: }
+    rjil::keystone::default_network {$tenant_name: }
   }
 }

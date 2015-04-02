@@ -9,8 +9,8 @@
 ##
 
 define rjil::keystone::default_network (
-  $network_name = 'default_network',
-  $subnet_name  = 'default_subnet',
+  $network_name = "${name}_default_net",
+  $subnet_name  = "${name}_default_subnet",
   $cidr         = '192.168.0.0/24',
   $tenant       = $name,
 ) {
