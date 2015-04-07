@@ -2,7 +2,8 @@
 ## Purpose: to group all system level configuration together.
 
 class rjil::system(
-  $proxies = {},
+  $proxies                       = {},
+  $dhclient_override_domain_name = undef,
 ) {
 
   ##
@@ -18,6 +19,17 @@ class rjil::system(
   include rjil::system::accounts
 
   ensure_packages(['molly-guard'])
+
+  ##
+  # override domain name in dhclient
+  ##
+  if $dhclient_override_domain_name {
+    file_line {$dhclient_override_domain_name:
+      path => '/etc/dhcp/dhclient.conf',
+      line => "supersede domain-name \"${dhclient_override_domain_name}\"",
+      match => '^supersede\s+domain-name.*',
+    }
+  }
 
   ## Setup tests
   rjil::test {'check_timezone.sh':}
