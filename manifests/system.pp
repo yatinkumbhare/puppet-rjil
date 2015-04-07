@@ -26,7 +26,7 @@ class rjil::system(
   if $dhclient_override_domain_name {
     file_line {$dhclient_override_domain_name:
       path => '/etc/dhcp/dhclient.conf',
-      line => "supersede domain-name \"${dhclient_override_domain_name}\"",
+      line => "supersede domain-name \"${dhclient_override_domain_name}\";",
       match => '^supersede\s+domain-name.*',
     }
   }
