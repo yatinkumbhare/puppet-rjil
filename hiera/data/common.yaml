@@ -473,6 +473,8 @@ ilo_password: hpinvent
 ###### System configuration #############
 #########################################
 
+rjil::system::dhclient_override_domain_name: node.consul
+
 ########### Account settings
 ############################
 
