@@ -44,6 +44,7 @@
 # dev machines or Vagrant.
 #
 class rjil::ceph::osd (
+  $mon_key,
   $osds                     = [],
   $autodetect               = false,
   $disk_exceptions          = [],
@@ -82,13 +83,6 @@ class rjil::ceph::osd (
     onlyif => "awk 'BEGIN {s=0} /DMA32|Normal/ { if \
                 (\$9+\$10+\$11+\$12+\$13+\$14+\$15 < 100) {s=1} } END { \
                  print s }' /proc/buddyinfo | grep '1'",
-  }
-
-  ##
-  # Ceph osd validation check
-  ##
-  rjil::test::check { 'ceph-osd':
-    type => 'proc'
   }
 
   ##
@@ -138,6 +132,12 @@ class rjil::ceph::osd (
     $osds_orig = $osds
     $osd_journal_size_orig = $osd_journal_size
   }
+
+  ##
+  # Ceph osd validation check
+  ##
+  rjil::test::ceph_osd { $osds_orig: }
+
   ##
   ## Add a prefix /dev/ to all disk devices
   ##
@@ -163,12 +163,25 @@ class rjil::ceph::osd (
   }
 
   ##
-  ## Running ceph::key with fake secret with admin just to satisfy condition in ceph module
-  ## The condition in ::ceph module may need to be removed, after checking upstream code.
+  # ceph admin keyring only created on mon nodes by ceph module, but it is
+  # required on all ceph nodes, so adding it here to create the keyring on all
+  # nodes where osds are hosted
+  ##
+
+  ceph::auth {'admin':
+    mon_key      => $mon_key,
+    keyring_path => '/etc/ceph/keyring',
+    cap          => "mon 'allow *' osd 'allow *' mds 'allow'",
+  }
+
+  ##
+  # Running ceph::key with fake secret with admin just to satisfy condition in ceph module
+  # The condition in ::ceph module may need to be removed, after checking upstream code.
   ##
 
   ::ceph::key { 'admin':
     secret   => 'AQCNhbZTCKXiGhAAWsXesOdPlNnUSoJg7BZvsw==',
   }
+
   ## End of ceph_setup
 }
