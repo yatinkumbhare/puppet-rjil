@@ -9,6 +9,7 @@ describe 'rjil::ceph::osd' do
       'rjil::ceph::mon::storage_cluster_if' => 'eth1',
       'rjil::ceph::mon::key'                => 'AQBXRgNSQNCMAxAA/wSNgHmHwzjnl2Rk22P4jA==',
       'rjil::ceph::osd::osds'               => ['sdb','sdc','sdd'],
+      'rjil::ceph::osd::mon_key'            => 'AQBXRgNSQNCMAxAA/wSNgHmHwzjnl2Rk22P4jA==',
       'ceph::conf::fsid'                    => '94d178a4-cae5-43fa-b420-8ae1cfedb7dc',
     }
   end

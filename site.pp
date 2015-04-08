@@ -11,6 +11,7 @@ node /^bootstrap\d+/ {
 node /^st\d+/ {
   include rjil::base
   include rjil::ceph
+  include rjil::ceph::mon_config
   include rjil::ceph::osd
   ensure_resource('rjil::service_blocker', 'stmon', {})
   Class['rjil::base'] -> Rjil::Service_blocker['stmon'] ->

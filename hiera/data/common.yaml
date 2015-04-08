@@ -652,6 +652,7 @@ rjil::ceph::mon::public_if: "%{hiera('public_interface')}"
 ####################################
 rjil::ceph::osd::public_if: "%{hiera('public_interface')}"
 rjil::ceph::osd::storage_cluster_if: "%{hiera('private_interface')}"
+rjil::ceph::osd::mon_key: "%{hiera('rjil::ceph::mon::key')}"
 
 ### This may be override in clientcert
 
