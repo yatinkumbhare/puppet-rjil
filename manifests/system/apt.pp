@@ -14,7 +14,11 @@ class rjil::system::apt (
   Apt::Source<||> {
     tag => 'package',
   }
+  Apt::Pin<||> {
+    tag => 'package',
+  }
   Apt::Source<||> -> Package<||>
+  Apt::Pin<||> -> Package<||>
 
   if $enable_puppetlabs {
     include puppet::repo::puppetlabs
