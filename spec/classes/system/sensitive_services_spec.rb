@@ -7,10 +7,11 @@ describe 'rjil::system::sensitive_services' do
     it 'should have default objects' do
       should contain_file('/usr/sbin/policy-rc.d').with({
         'tag'    => 'package',
-        'source' => 'puppet:///modules/rjil/package_start_policy.sh'
+        'source' => 'puppet:///modules/rjil/package_start_policy.sh',
+        'mode'   => '0755',
       })
       should contain_file('/etc/sensitive_services').with({
-        'content' => "# managed by puppet\n# a list of services that should not be started\n# from package based actions. This file is called\n# from policy-rc.d\nzookeeper\ncassandra\ncontrail-api\ncontrail-schema\n",
+        'content' => "# managed by puppet\n# a list of services that should not be started\n# from package based actions. This file is called\n# from policy-rc.d\nzookeeper\ncassandra\ncontrail-api\ncontrail-schema\ncontrail-svc-monitor\ncontrail-discovery\ncontrail-control\ncontrail-dns\ncontrail-query-engine\ncontrail-collector\ncontrail-analytics-api\n",
         'replace' => false,
       })
       ['zookeeper', 'cassandra', 'contrail-api', 'contrail-schema'].each do |x|

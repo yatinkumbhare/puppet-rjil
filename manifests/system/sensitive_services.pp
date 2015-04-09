@@ -3,7 +3,10 @@
 # be started during the initial bootstrappig package install.
 #
 class rjil::system::sensitive_services(
-  $service_list = ['zookeeper', 'cassandra', 'contrail-api', 'contrail-schema']
+  $service_list = [ 'zookeeper', 'cassandra',
+                    'contrail-api', 'contrail-schema', 'contrail-svc-monitor', 'contrail-discovery',
+                    'contrail-control', 'contrail-dns',
+                    'contrail-query-engine', 'contrail-collector', 'contrail-analytics-api']
 ) {
 
   File['/usr/sbin/policy-rc.d'] -> Package<||>
@@ -13,6 +16,7 @@ class rjil::system::sensitive_services(
   # starting services
   file { '/usr/sbin/policy-rc.d':
     source => 'puppet:///modules/rjil/package_start_policy.sh',
+    mode   => '0755',
     tag    => 'package',
   }
 
