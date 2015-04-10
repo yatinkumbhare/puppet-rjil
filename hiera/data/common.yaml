@@ -103,7 +103,7 @@ public_network_name: public
 rjil::openstack_objects::users:
   "%{hiera('test_user_name')}":
     password: "%{hiera('test_user_password')}"
-    tenants: ["%{hiera('test_user_tenant')}"]
+    user_tenant: "%{hiera('test_user_tenant')}"
     create_network: false
 ##
 # rjil::openstack_objects::tenants can be either a array of tenant names or a

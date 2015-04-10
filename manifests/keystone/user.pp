@@ -8,12 +8,11 @@ define rjil::keystone::user (
   $password,
   $username       = $name,
   $email          = "${name}@jiocloud.local",
-  $tenants        = [$name],
-  $roles          = ['_member_'],
+  $user_tenant	  = $name,
   $create_network = true,
 ) {
 
-  keystone_tenant { $tenants:
+  keystone_tenant { $user_tenant:
     ensure      => present,
     enabled     => true,
   }
@@ -22,15 +21,8 @@ define rjil::keystone::user (
     ensure   => present,
     enabled  => true,
     email    => $email,
+    tenant   => $user_tenant,
     password => $password,
-  }
-
-  ##
-  # Create user roles for all tenants he need to have
-  ##
-  rjil::keystone::user_role { $tenants:
-    username => $username,
-    roles    => $roles,
   }
 
   ##
@@ -39,6 +31,6 @@ define rjil::keystone::user (
   # anted to use rjil::neutron::contrail::fip_pool
   ##
   if $create_network {
-    rjil::keystone::default_network {$tenants: }
+    rjil::keystone::default_network {$user_tenant: }
   }
 }
