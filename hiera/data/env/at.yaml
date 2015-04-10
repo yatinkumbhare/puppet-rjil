@@ -20,7 +20,7 @@ ceph::conf::pool_default_pgp_num: 128
 
 rjil::neutron::contrail::fip_pools:
   public:
-    network_name: public_net
+    network_name: "%{hiera('public_network_name')}"
     subnet_name: public_subnet
     cidr: 100.1.0.0/24
     subnet_ip_start: 100.1.0.11
