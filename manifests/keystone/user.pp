@@ -8,7 +8,7 @@ define rjil::keystone::user (
   $password,
   $username       = $name,
   $email          = "${name}@jiocloud.local",
-  $user_tenant	  = $name,
+  $user_tenant    = $name,
   $create_network = true,
 ) {
 
