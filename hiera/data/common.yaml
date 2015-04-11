@@ -100,6 +100,17 @@ public_network_name: public
 ########### auth for test user
 ##################################
 
+rjil::openstack_objects::users:
+  "%{hiera('test_user_name')}":
+    password: "%{hiera('test_user_password')}"
+    user_tenant: "%{hiera('test_user_tenant')}"
+    create_network: false
+##
+# rjil::openstack_objects::tenants can be either a array of tenant names or a
+# hash of tenants with params for rjil::keystone::tenant
+##
+rjil::openstack_objects::tenants: ['mgmt_tenant','internal_tenant']
+
 rjil::keystone::test_user::username: "%{hiera('test_user_name')}"
 rjil::keystone::test_user::tenant_name: "%{hiera('test_user_tenant')}"
 rjil::keystone::test_user::password: "%{hiera('test_user_password')}"
@@ -218,6 +229,9 @@ rjil::neutron::api_extensions_path: extensions:/usr/lib/python2.7/dist-packages/
 rjil::neutron::service_provider: LOADBALANCER:Opencontrail:neutron_plugin_contrail.plugins.opencontrail.loadbalancer.driver.OpencontrailLoadbalancerDriver:default
 rjil::neutron::contrail::keystone_admin_password: "%{hiera('admin_password')}"
 rjil::neutron::contrail::public_network_name: "%{hiera('public_network_name')}"
+
+rjil::neutron::contrail::fip_pool::keystone_admin_password: "%{hiera('admin_password')}"
+
 rjil::neutron::ovs::ctlplane_network_name: ctlplane
 rjil::neutron::server_name: "%{hiera('neutron_public_address')}"
 rjil::neutron::ssl: true
