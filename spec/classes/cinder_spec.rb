@@ -31,6 +31,7 @@ describe 'rjil::cinder' do
       'rjil::cinder::server_name'                   => 'cinder.server',
       'rjil::cinder::localbind_port'                => 18776,
       'rjil::cinder::public_port'                   => 8776,
+      'rjil::cinder::volume_nofile'                 => 100,
     }
   end
 
@@ -53,6 +54,7 @@ describe 'rjil::cinder' do
       should contain_cinder_config('DEFAULT/rpc_zmq_ipc_dir').with_value('/var/run/openstack')
       should contain_cinder_config('DEFAULT/rpc_zmq_matchmaker').with_value('oslo.messaging._drivers.matchmaker_ring.MatchMakerRing')
       should contain_cinder_config('DEFAULT/rpc_zmq_host').with_value('node1')
+      should contain_file('/etc/init/cinder-volume.conf').with_content(/^limit\s+nofile\s+100\s+100$/)
       should contain_class('rjil::ceph::mon_config')
       should contain_class('cinder')
       should contain_class('cinder::api')
