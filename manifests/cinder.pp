@@ -40,6 +40,9 @@
 #   Note: A string "client_" will be prepended to the $rbd_user for actual
 #   username configured on cephx
 #
+# [*volume_nofile*]
+#   Number of open files to be configured in limits.conf
+#
 
 class rjil::cinder (
   $ceph_mon_key,
@@ -58,6 +61,7 @@ class rjil::cinder (
   $localbind_host          = '127.0.0.1',
   $localbind_port          = 18776,
   $ssl                     = false,
+  $volume_nofile           = 10240,
 ) {
 
   ######################## Service Blockers and Ordering
@@ -87,6 +91,17 @@ class rjil::cinder (
 
   Service['cinder-api'] -> Service['httpd']
 
+  ##
+  # Ceph backend causing lot of open sockets to ceph osds, so increasing
+  # number of openfiles
+  ##
+  file {'/etc/init/cinder-volume.conf':
+    ensure  => file,
+    owner   => 'root',
+    mode    => '0644',
+    content => template('rjil/upstart/cinder-volume.conf.erb'),
+    notify  => Service['cinder-volume'],
+  }
   ##
   # Cinder module dont have bind port parameter, so adding here for now.
   ##
