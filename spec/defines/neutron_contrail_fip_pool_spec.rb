@@ -34,7 +34,7 @@ describe 'rjil::neutron::contrail::fip_pool' do
         'network_name' => 'net'
       })
 
-      should contain_contrail_rt('default-domain:services:net').with({
+      should contain_contrail_rt('default-domain:services:net:net').with({
         'ensure'             => 'present',
         'rt_number'          => 10000,
         'router_asn'         => 64512,
@@ -43,7 +43,7 @@ describe 'rjil::neutron::contrail::fip_pool' do
         'require'            => 'Neutron_network[net]',
       })
 
-      should contain_consul_kv('neutron/floatingip_pool/status').with_value('ready').that_requires('Contrail_rt[default-domain:services:net]')
+      should contain_consul_kv('neutron/floatingip_pool/status').with_value('ready').that_requires('Contrail_rt[default-domain:services:net:net]')
 
     end
   end
