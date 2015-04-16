@@ -67,7 +67,7 @@ define rjil::neutron::contrail::fip_pool (
     }
   }
 
-  contrail_rt {"default-domain:${tenant_name}:${network_name}":
+  contrail_rt {"default-domain:${tenant_name}:${network_name}:${network_name}":
     ensure             => present,
     rt_number          => $rt_number,
     router_asn         => $router_asn,
