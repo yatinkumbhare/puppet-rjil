@@ -6,6 +6,10 @@
 # Idea is to enable jumbo frames after completing initial setup.
 ##
 mtu: 1500
+public_address: "%{ipaddress_eth0}"
+public_interface: eth0
+private_address: "%{ipaddress_eth0}"
+private_interface: eth0
 
 ###################################
 ########  Database config #########
