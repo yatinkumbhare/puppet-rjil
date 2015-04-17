@@ -30,5 +30,6 @@ rjil::neutron::contrail::fip_pools:
     network_name: private_shared_net
     subnet_name: private_shared_subnet
     cidr: 99.0.0.0/24
+    rt_number: 10001
     public: false
     tenants: ['tempest','mgmt_tenant','internal_tenant']

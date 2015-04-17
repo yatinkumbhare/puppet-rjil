@@ -56,14 +56,14 @@ define rjil::neutron::contrail::fip_pool (
       cidr             => $cidr,
       network_name     => $network_name,
       allocation_pools => ["start=${subnet_ip_start},end=${subnet_ip_end}"],
-      before           => Contrail_rt["default-domain:${tenant_name}:${network_name}"],
+      before           => Contrail_rt["default-domain:${tenant_name}:${network_name}:${network_name}"],
     }
   } else {
     neutron_subnet {$subnet_name:
       ensure       => present,
       cidr         => $cidr,
       network_name => $network_name,
-      before       => Contrail_rt["default-domain:${tenant_name}:${network_name}"],
+      before       => Contrail_rt["default-domain:${tenant_name}:${network_name}:${network_name}"],
     }
   }
 
@@ -82,6 +82,6 @@ define rjil::neutron::contrail::fip_pool (
   ##
   ensure_resource(consul_kv,'neutron/floatingip_pool/status',{ value   => 'ready' })
 
-  Contrail_rt["default-domain:${tenant_name}:${network_name}"] -> Consul_kv['neutron/floatingip_pool/status']
+  Contrail_rt["default-domain:${tenant_name}:${network_name}:${network_name}"] -> Consul_kv['neutron/floatingip_pool/status']
 
 }
