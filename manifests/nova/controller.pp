@@ -33,6 +33,8 @@ class rjil::nova::controller (
   $flavors                 = {},
   $nova_auth               = {},
   $max_local_block_devices = 3,
+  $rewrites                = undef,
+  $headers                 = undef,
 ) {
 
 # Tests
@@ -61,7 +63,8 @@ class rjil::nova::controller (
     error_log_file  => 'nova-osapi.log',
     access_log_file => 'nova-osapi.log',
     proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${osapi_localbind_port}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   apache::vhost { 'nova-ec2api':
@@ -73,7 +76,8 @@ class rjil::nova::controller (
     error_log_file  => 'nova-ec2api.log',
     access_log_file => 'nova-ec2api.log',
     proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${ec2_localbind_port}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   ##

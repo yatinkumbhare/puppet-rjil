@@ -167,7 +167,15 @@ rjil::glance::api_localbind_port: "%{hiera('glance_api_localbind_port')}"
 rjil::glance::api_public_port: "%{hiera('glance_api_port')}"
 rjil::glance::registry_localbind_port: "%{hiera('glance_registry_localbind_port')}"
 rjil::glance::registry_public_port: "%{hiera('glance_registry_port')}"
-
+rjil::glance::rewrites:
+  - comment: "Return 200 for OPTIONS request"
+    rewrite_cond: '%%{}{REQUEST_METHOD} OPTIONS'
+    rewrite_rule: ".* / [R=200,L]"
+rjil::glance::headers:
+  - 'always set Access-Control-Allow-Origin "*"'
+  - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
 glance::backend::rbd::rbd_store_user: "%{hiera('rjil::glance::rbd_user')}"
 glance::backend::rbd::rbd_store_pool: images
 ### End: rbd backend specific settings
@@ -235,6 +243,15 @@ rjil::neutron::contrail::fip_pool::keystone_admin_password: "%{hiera('admin_pass
 rjil::neutron::ovs::ctlplane_network_name: ctlplane
 rjil::neutron::server_name: "%{hiera('neutron_public_address')}"
 rjil::neutron::ssl: true
+rjil::neutron::rewrites:
+  - comment: "Return 200 for OPTIONS request"
+    rewrite_cond: '%%{}{REQUEST_METHOD} OPTIONS'
+    rewrite_rule: ".* / [R=200,L]"
+rjil::neutron::headers:
+  - 'always set Access-Control-Allow-Origin "*"'
+  - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
 
 ########### Cinder configuration
 ###################################
@@ -246,6 +263,15 @@ rjil::cinder::server_name: "%{hiera('cinder_public_address')}"
 rjil::cinder::localbind_port: "%{hiera('cinder_localbind_port')}"
 rjil::cinder::public_port: "%{hiera('cinder_port')}"
 rjil::cinder::ssl: true
+rjil::cinder::rewrites:
+  - comment: "Return 200 for OPTIONS request"
+    rewrite_cond: '%%{}{REQUEST_METHOD} OPTIONS'
+    rewrite_rule: ".* / [R=200,L]"
+rjil::cinder::headers:
+  - 'always set Access-Control-Allow-Origin "*"'
+  - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
 
 cinder::api::bind_host: "%{hiera('localbind_host')}"
 cinder::rpc_backend: "%{hiera('rpc_backend')}"
@@ -269,6 +295,15 @@ rjil::nova::controller::osapi_public_port: "%{hiera('nova_osapi_port')}"
 rjil::nova::controller::osapi_localbind_port: "%{hiera('nova_osapi_localbind_port')}"
 rjil::nova::controller::server_name: "%{hiera('nova_public_address')}"
 rjil::nova::controller::ssl: true
+rjil::nova::controller::rewrites:
+  - comment: "Return 200 for OPTIONS request"
+    rewrite_cond: '%%{}{REQUEST_METHOD} OPTIONS'
+    rewrite_rule: ".* / [R=200,L]"
+rjil::nova::controller::headers:
+  - 'always set Access-Control-Allow-Origin "*"'
+  - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
 nova::rpc_backend: "%{hiera('rpc_backend')}"
 nova::glance_api_servers: "%{hiera('api_protocol')}://%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
 nova::database_connection: "mysql://%{hiera('nova_db_user')}:%{hiera('nova_db_password')}@%{hiera('db_host')}/nova"
@@ -388,6 +423,15 @@ rjil::keystone::admin_port: "%{hiera('keystone_admin_port')}"
 rjil::keystone::admin_port_internal: "%{hiera('keystone_admin_localbind_port')}"
 rjil::keystone::public_address: "%{hiera('public_address')}"
 rjil::keystone::server_name: "%{hiera('keystone_public_address')}"
+rjil::keystone::rewrites:
+  - comment: "Return 200 for OPTIONS request"
+    rewrite_cond: '%%{}{REQUEST_METHOD} OPTIONS'
+    rewrite_rule: ".* / [R=200,L]"
+rjil::keystone::headers:
+  - 'always set Access-Control-Allow-Origin "*"'
+  - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
 keystone::roles::admin::email: "%{hiera('admin_email')}"
 keystone::roles::admin::password: "%{hiera('admin_password')}"
 keystone::admin_password: "%{hiera('admin_password')}"
@@ -682,9 +726,16 @@ ceph::radosgw::listen_ssl: true
 
 rjil::ceph::radosgw::ssl: true
 
-# below header is required to enable CORS.
+ceph::radosgw::apache::rewrites:
+  - comment: "Return 200 for OPTIONS request"
+    rewrite_cond: '%%{}{REQUEST_METHOD} OPTIONS'
+    rewrite_rule: ".* / [R=200,L]"
+# below headers are required to enable CORS.
 ceph::radosgw::apache::headers:
-  - 'set Access-Control-Allow-Origin "*"'
+  - 'always set Access-Control-Allow-Origin "*"'
+  - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
+  - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
 radosgw_protocol: "%{hiera('api_protocol')}"
 radosgw_port: 80
 

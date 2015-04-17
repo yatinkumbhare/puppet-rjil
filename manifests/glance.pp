@@ -17,6 +17,8 @@ class rjil::glance (
   $registry_public_address = '127.0.0.1',
   $registry_public_port    = '9191',
   $ssl                     = false,
+  $rewrites                = undef,
+  $headers                 = undef,
 ) {
 
   ## Add tests for glance api and registry
@@ -51,7 +53,8 @@ class rjil::glance (
     error_log_file  => 'glance-api.log',
     access_log_file => 'glance-api.log',
     proxy_pass      => [ { path => '/', url => "http://${api_localbind_host}:${api_localbind_port}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   apache::vhost { 'glance-registry':
@@ -63,7 +66,8 @@ class rjil::glance (
     error_log_file  => 'glance-registry.log',
     access_log_file => 'glance-registry.log',
     proxy_pass      => [ { path => '/', url => "http://${registry_localbind_host}:${registry_localbind_port}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   if($backend == 'swift') {

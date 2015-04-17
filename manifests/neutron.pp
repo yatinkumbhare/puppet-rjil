@@ -10,6 +10,8 @@ class rjil::neutron (
   $public_port          = 9696,
   $localbind_port       = 19696,
   $ssl                  = false,
+  $rewrites             = undef,
+  $headers              = undef,
 ) {
 
   ##
@@ -48,7 +50,8 @@ class rjil::neutron (
     error_log_file  => 'neutron.log',
     access_log_file => 'neutron.log',
     proxy_pass      => [ { path => '/', url => "http://${localbind_host}:${localbind_port}/"  } ],
-    headers         => [ 'set Access-Control-Allow-Origin "*"' ],
+    rewrites        => $rewrites,
+    headers         => $headers,
   }
 
   ##
