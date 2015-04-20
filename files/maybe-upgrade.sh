@@ -19,7 +19,8 @@ run_puppet() {
         ret_code=$?
         python -m jiocloud.orchestrate update_own_status puppet $ret_code
         if [[ $ret_code = 1 || $ret_code = 4 || $ret_code = 6 ]]; then
-                echo "Puppet failed with return code ${ret_code}"
+                echo "Puppet failed with return code ${ret_code}, also failing validation"
+                python -m jiocloud.orchestrate update_own_status validation 1
                 sleep 5
                 exit 1
         fi
