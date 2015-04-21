@@ -631,6 +631,8 @@ contrail::vrouter::manage_repo: false
 contrail::neutron_ip: "%{hiera('neutron_public_address')}"
 contrail::enable_analytics: false
 
+rjil::contrail::server::enable_analytics: false
+
 ##
 # Adding common setting for contrail::interface, this may need to be override in
 # environment specific interface
