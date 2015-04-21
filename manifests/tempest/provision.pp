@@ -13,6 +13,7 @@ class rjil::tempest::provision (
   $convert_to_raw         = true,
   $image_name             = 'cirros',
   $staging_path           = '/opt/staging',
+  $configure_neutron      = true,
 ) {
 
 ##
