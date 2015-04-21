@@ -273,10 +273,10 @@ nova::rpc_backend: "%{hiera('rpc_backend')}"
 nova::glance_api_servers: "%{hiera('api_protocol')}://%{hiera('glance_public_address')}:%{hiera('glance::keystone::auth::public_port')}"
 nova::database_connection: "mysql://%{hiera('nova_db_user')}:%{hiera('nova_db_password')}@%{hiera('db_host')}/nova"
 nova::mysql_module: 2.3
+nova::debug: "%{hiera('debug')}"
+nova::verbose: "%{hiera('verbose')}"
 
 nova::api::api_bind_address: "%{hiera('localbind_host')}"
-nova::api::debug: "%{hiera('debug')}"
-nova::api::verbose: "%{hiera('verbose')}"
 nova::api::auth_host: "%{hiera('keystone_public_address')}"
 nova::api::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 nova::api::auth_uri: "%{hiera('rjil::keystone::protocol')}://%{hiera('nova::api::auth_host')}:%{hiera('keystone_port')}/%{hiera('rjil::keystone::version')}"
