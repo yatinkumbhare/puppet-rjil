@@ -195,3 +195,7 @@ mod 'thias/squid3',
 mod 'puppetlabs/dhcp',
   :git => "#{base_url}/JioCloud/puppetlabs-dhcp",
   :ref => 'origin/master'
+
+mod 'rodjek/logrotate',
+  :git => "#{base_url}/rodjek/puppet-logrotate/",
+  :ref => '1.1.1'

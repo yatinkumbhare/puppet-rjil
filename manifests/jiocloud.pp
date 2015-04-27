@@ -36,6 +36,7 @@ class rjil::jiocloud (
   include "rjil::jiocloud::consul::${consul_role}"
 
   include rjil::jiocloud::consul::base_checks
+  include rjil::jiocloud::logrotate
 
   package { 'run-one':
     ensure => present,
