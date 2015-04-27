@@ -11,7 +11,3 @@ class rjil::jiocloud::logrotate {
       source  => 'puppet:///modules/rjil/logrotate-default.conf';
   }
 }
-
-
-
-
