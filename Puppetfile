@@ -196,6 +196,6 @@ mod 'puppetlabs/dhcp',
   :git => "#{base_url}/JioCloud/puppetlabs-dhcp",
   :ref => 'origin/master'
 
-mod 'rodjek/logrotate',
-  :git => "#{base_url}/rodjek/puppet-logrotate/",
-  :ref => '1.1.1'
+mod 'Jiocloud/logrotate',
+  :git => "#{base_url}/JioCloud/puppet-logrotate/",
+  :ref => 'origin/master'
