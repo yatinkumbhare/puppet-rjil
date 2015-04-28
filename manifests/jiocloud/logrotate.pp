@@ -7,7 +7,7 @@ define rjil::jiocloud::logrotate(
   $delaycompress = true,
   $ifempty = false,
 ) {
-  ::logrotate::rule{$service:
+  logrotate::rule{$service:
     path => $logfile,
     rotate => $rotate,
     rotate_every => $rotate_every,
