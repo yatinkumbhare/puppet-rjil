@@ -1,4 +1,4 @@
-class rjil::jiocloud::logrotate(
+define rjil::jiocloud::logrotate(
   $service,
   $logfile,
   $rotate_every = 'daily',
@@ -7,7 +7,6 @@ class rjil::jiocloud::logrotate(
   $delaycompress = true,
   $ifempty = false,
 ) {
-  include logrotate
   ::logrotate::rule{$service:
     path => $logfile,
     rotate => $rotate,
