@@ -8,7 +8,7 @@ class rjil::jiocloud::logrotate(
   $ifempty = false,
 ) {
   include logrotate
-  logrotate::rule{$service:
+  ::logrotate::rule{$service:
     path => $logfile,
     rotate => $rotate,
     rotate_every => $rotate_every,
@@ -17,4 +17,3 @@ class rjil::jiocloud::logrotate(
     ifempty => $ifempty
     }
   }
-
