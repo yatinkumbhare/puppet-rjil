@@ -260,5 +260,9 @@ class rjil::cinder (
   }
 
   rjil::jiocloud::consul::service { 'cinder-backup': }
-
+  
+  class  { 'rjil::jiocloud::logrotate': 
+    service => 'cinder',
+    logfile => '/var/log/cinder/cinder.log'
+  }
 }
