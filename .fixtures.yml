@@ -140,3 +140,6 @@ fixtures:
     squid3:
       repo: https://github.com/bodepd/puppet-squid3
       ref: origin/master
+    logrotate:
+      repo: https://github.com/JioCloud/puppet-logrotate
+      ref: origin/master
