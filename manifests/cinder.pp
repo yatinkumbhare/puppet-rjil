@@ -261,8 +261,16 @@ class rjil::cinder (
 
   rjil::jiocloud::consul::service { 'cinder-backup': }
   
-  rjil::jiocloud::logrotate { 'cinder':
-    service => 'cinder',
-    logfile => '/var/log/cinder/cinder.log'
+  rjil::jiocloud::logrotate { 'cinder-api':
+    service => 'cinder-api',
+    logfile => '/var/log/cinder/cinder-api.log'
+  }
+  rjil::jiocloud::logrotate { 'cinder-schedular':
+    service => 'cinder-schedule',
+    logfile => '/var/log/cinder/cinder-schedular.log'
+  }
+  rjil::jiocloud::logrotate { 'cinder-volume':
+    service => 'cinder-volume',
+    logfile => '/var/log/cinder/cinder-volume.log'
   }
 }
