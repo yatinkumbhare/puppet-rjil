@@ -233,8 +233,8 @@ neutron::server::auth_password: "%{hiera('neutron::keystone::auth::password')}"
 neutron::server::auth_host: "%{hiera('keystone_public_address')}"
 neutron::server::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 neutron::server::mysql_module: 2.3
-neutron::rabbit_user: "%{hiera('neutron_rabbit_user')}"
-neutron::rabbit_password: "%{hiera('neutron_rabbit_password')}"
+neutron::rabbit_user: "%{hiera('rabbit_admin_user')}"
+neutron::rabbit_password: "%{hiera('rabbit_admin_pass')}"
 neutron::core_plugin: neutron_plugin_contrail.plugins.opencontrail.contrail_plugin.NeutronPluginContrailCoreV2
 neutron::service_plugins:
   - neutron_plugin_contrail.plugins.opencontrail.loadbalancer.plugin.LoadBalancerPlugin
@@ -396,8 +396,8 @@ rjil::nova::controller::flavors:
 ########### Ironic config
 ###################################
 
-ironic_rabbit_user: guest
-ironic_rabbit_password: guest
+ironic_rabbit_user: "%{hiera('rabbit_admin_user')}"
+ironic_rabbit_password: "%{hiera('rabbit_admin_pass')}"
 ironic::verbose: "%{hiera('verbose')}"
 ironic::debug: "%{hiera('debug')}"
 ironic::rabbit_user: "%{hiera('ironic_rabbit_user')}"
@@ -631,8 +631,8 @@ contrail::keystone_admin_password: "%{hiera('admin_password')}"
 contrail::keystone_auth_password: "%{hiera('neutron::keystone::auth::password')}"
 contrail::keystone_protocol: "%{hiera('api_protocol')}"
 contrail::nova_metadata_address: "lb.nova.service.consul"
-contrail::rabbit_user: "%{hiera('contrail_rabbit_user')}"
-contrail::rabbit_password: "%{hiera('contrail_rabbit_password')}"
+contrail::rabbit_user: "%{hiera('rabbit_admin_user')}"
+contrail::rabbit_password: "%{hiera('rabbit_admin_pass')}"
 contrail::vrouter::metadata_proxy_secret: "%{hiera('nova_metadata_proxy_secret')}"
 contrail::vrouter::keystone_admin_password: "%{hiera('admin_password')}"
 
