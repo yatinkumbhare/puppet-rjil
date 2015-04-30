@@ -6,6 +6,7 @@ class rjil::base (
 ) {
   include rjil::jiocloud
   include rjil::system
+  include logrotate::base
   include rjil::jiocloud::dns
   include rjil::default_manifest
   include rjil::system::sensitive_services

@@ -141,5 +141,5 @@ fixtures:
       repo: https://github.com/bodepd/puppet-squid3
       ref: origin/master
     logrotate:
-      repo: https://github.com/JioCloud/puppet-logrotate
+      repo: https://github.com/rodjek/puppet-logrotate
       ref: origin/master
