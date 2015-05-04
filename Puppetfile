@@ -115,7 +115,7 @@ mod 'stackforge/nova',
 
 mod 'puppetlabs/rabbitmq',
   :git => "#{base_url}/puppetlabs/puppetlabs-rabbitmq",
-  :ref => '4.0.0'
+  :ref => '5.0.0'
 
 mod 'puppetlabs/stdlib',
   :git => "#{base_url}/puppetlabs/puppetlabs-stdlib",
@@ -143,7 +143,7 @@ mod 'stephenrjohnson/puppet',
 
 mod 'jiocloud/contrail',
   :git => "#{base_url}/jiocloud/jiocloud-contrail",
-  :ref => 'origin/master'
+  :ref => 'master'
 
 mod 'deric/zookeeper',
   :git => "#{base_url}/deric/puppet-zookeeper",

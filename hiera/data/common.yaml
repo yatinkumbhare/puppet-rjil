@@ -151,6 +151,12 @@ nova_osapi_port: 8774
 neutron_localbind_port: 19696
 neutron_port: 9696
 
+########### rabbitmq config
+###################################
+
+rjil::rabbitmq::rabbit_admin_user: "%{hiera('rabbit_admin_user')}"
+rjil::rabbitmq::rabbit_admin_pass: "%{hiera('rabbit_admin_pass')}"
+
 ########### glance config
 ###################################
 
@@ -227,7 +233,8 @@ neutron::server::auth_password: "%{hiera('neutron::keystone::auth::password')}"
 neutron::server::auth_host: "%{hiera('keystone_public_address')}"
 neutron::server::auth_protocol: "%{hiera('rjil::keystone::protocol')}"
 neutron::server::mysql_module: 2.3
-neutron::rabbit_password: guest
+neutron::rabbit_user: "%{hiera('rabbit_admin_user')}"
+neutron::rabbit_password: "%{hiera('rabbit_admin_pass')}"
 neutron::core_plugin: neutron_plugin_contrail.plugins.opencontrail.contrail_plugin.NeutronPluginContrailCoreV2
 neutron::service_plugins:
   - neutron_plugin_contrail.plugins.opencontrail.loadbalancer.plugin.LoadBalancerPlugin
@@ -389,8 +396,8 @@ rjil::nova::controller::flavors:
 ########### Ironic config
 ###################################
 
-ironic_rabbit_user: guest
-ironic_rabbit_password: guest
+ironic_rabbit_user: "%{hiera('rabbit_admin_user')}"
+ironic_rabbit_password: "%{hiera('rabbit_admin_pass')}"
 ironic::verbose: "%{hiera('verbose')}"
 ironic::debug: "%{hiera('debug')}"
 ironic::rabbit_user: "%{hiera('ironic_rabbit_user')}"
@@ -615,6 +622,8 @@ rjil::system::apt::repositories:
 
 rabbitmq::manage_repos: false
 rabbitmq::admin_enable: false
+rabbitmq::port: '5672'
+rabbitmq::delete_guest_user: true
 
 contrail::keystone_address: "%{hiera('keystone_public_address')}"
 contrail::keystone_admin_token: "%{hiera('keystone::admin_token')}"
@@ -622,7 +631,8 @@ contrail::keystone_admin_password: "%{hiera('admin_password')}"
 contrail::keystone_auth_password: "%{hiera('neutron::keystone::auth::password')}"
 contrail::keystone_protocol: "%{hiera('api_protocol')}"
 contrail::nova_metadata_address: "lb.nova.service.consul"
-
+contrail::rabbit_user: "%{hiera('rabbit_admin_user')}"
+contrail::rabbit_password: "%{hiera('rabbit_admin_pass')}"
 contrail::vrouter::metadata_proxy_secret: "%{hiera('nova_metadata_proxy_secret')}"
 contrail::vrouter::keystone_admin_password: "%{hiera('admin_password')}"
 
