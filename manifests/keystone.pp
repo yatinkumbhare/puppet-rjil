@@ -110,12 +110,12 @@ class rjil::keystone(
   Class['rjil::keystone'] -> Rjil::Service_blocker<| title == 'keystone-admin' |>
 
   rjil::jiocloud::logrotate { 'keystone-manage':
-    service => 'cinder-volume',
+    service => 'keystone-manage',
     logfile => '/var/log/keystone/keystone-manage.log'
   }
 
   rjil::jiocloud::logrotate { 'keystone-all':
-    service => 'cinder-volume',
+    service => 'keystone-all',
     logfile => '/var/log/keystone/keystone-all.log'
   }
 
