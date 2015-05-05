@@ -120,4 +120,3 @@ class rjil::keystone(
   }
 
 }
-}
