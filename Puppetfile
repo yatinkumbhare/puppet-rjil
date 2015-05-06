@@ -198,4 +198,4 @@ mod 'puppetlabs/dhcp',
 
 mod 'rodjek/logrotate',
   :git => "#{base_url}/rodjek/puppet-logrotate/",
-  :ref => 'origin/master'
+  :ref => '89ee645e2350045be48df7ac3ef86cbe4cd9b096'
