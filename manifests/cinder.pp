@@ -181,6 +181,12 @@ class rjil::cinder (
     require => [ User['cinder'], File['/var/log/cinder'] ],
   }
 
+  rjil::jiocloud::logrotate { 'cinder-manage':
+    service => 'cinder-manage',
+    logfile => '/var/log/cinder/cinder-manage.log'
+  }
+
+
   ##
   # Include rjil::ceph::mon_config because of dependancy.
   ##
@@ -260,5 +266,17 @@ class rjil::cinder (
   }
 
   rjil::jiocloud::consul::service { 'cinder-backup': }
-
+  
+  rjil::jiocloud::logrotate { 'cinder-api':
+    service => 'cinder-api',
+    logfile => '/var/log/cinder/cinder-api.log'
+  }
+  rjil::jiocloud::logrotate { 'cinder-scheduler':
+    service => 'cinder-scheduler',
+    logfile => '/var/log/cinder/cinder-scheduler.log'
+  }
+  rjil::jiocloud::logrotate { 'cinder-volume':
+    service => 'cinder-volume',
+    logfile => '/var/log/cinder/cinder-volume.log'
+  }
 }
