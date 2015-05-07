@@ -70,7 +70,16 @@ class rjil::nova::compute (
   include ::nova::compute::libvirt
   include ::nova::compute::neutron
   include ::nova::network::neutron
+  
+  rjil::jiocloud::logrotate { 'nova-compute':
+    service => 'nova-compute',
+    logfile => '/var/log/nova/nova-compute.log'
+  }
 
+  rjil::jiocloud::logrotate { 'nova-manage':
+    service => 'nova-manage',
+    logfile => '/var/log/nova/nova-manage.log'
+  }
   ##
   # Add ceph keyring for cinder_volume. This is required cinder to connect to
   # ceph.
