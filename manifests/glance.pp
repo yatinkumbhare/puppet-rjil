@@ -79,7 +79,7 @@ class rjil::glance (
     service => 'glance-registry',
     logfile => '/var/log/glance/registry.log'
   }
-  
+
   if($backend == 'swift') {
     ## Swift backend
     include ::glance::backend::swift
