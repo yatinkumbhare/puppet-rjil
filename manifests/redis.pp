@@ -10,9 +10,4 @@ class rjil::redis {
 
   include ::redis
 
-  rjil::jiocloud::logrotate { 'redis-server':
-    service         => 'redis-server',
-    logfile         => '/var/log/redis/redis-server.log',
-  }
-
 }
