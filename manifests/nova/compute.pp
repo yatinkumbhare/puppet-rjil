@@ -76,6 +76,7 @@ class rjil::nova::compute (
   }
 
   include rjil::nova::logrotate::manage
+
   ##
   # Add ceph keyring for cinder_volume. This is required cinder to connect to
   # ceph.

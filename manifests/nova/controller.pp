@@ -191,7 +191,9 @@ class rjil::nova::controller (
   }
 
   class { 'rjil::nova::logrotate': }
+
   include rjil::nova::logrotate::manage
+
 
   ##
   # Consul service registration
