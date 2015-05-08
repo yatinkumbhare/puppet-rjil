@@ -190,6 +190,9 @@ class rjil::nova::controller (
     owner   => 'nova',
   }
 
+  class { 'rjil::nova::logrotate': }
+  include rjil::nova::logrotate::manage
+
   ##
   # Consul service registration
   # nova api bind port is not there in nova::api class param, so adding that

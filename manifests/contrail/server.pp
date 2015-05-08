@@ -19,4 +19,7 @@ class rjil::contrail::server (
   }
 
   include ::contrail
+
+  class { 'rjil::contrail::logrotate': }
+
 }

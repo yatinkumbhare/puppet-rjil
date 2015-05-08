@@ -70,6 +70,16 @@ class rjil::glance (
     headers         => $headers,
   }
 
+  rjil::jiocloud::logrotate { 'glance-api':
+    service => 'glance-api',
+    logfile => '/var/log/glance/api.log'
+  }
+
+  rjil::jiocloud::logrotate { 'glance-registry':
+    service => 'glance-registry',
+    logfile => '/var/log/glance/registry.log'
+  }
+
   if($backend == 'swift') {
     ## Swift backend
     include ::glance::backend::swift
