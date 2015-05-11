@@ -70,9 +70,9 @@ class rjil::glance (
     headers         => $headers,
   }
 
-  $glance_logs = [ 'glance-api',
-                   'glance-registry'
-                 ]
+  $glance_logs = ['glance-api',
+                  'glance-registry'
+                  ]
   rjil::jiocloud::logrotate { $glance_logs:
     logdir => '/var/log/glance'
   }

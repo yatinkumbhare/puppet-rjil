@@ -261,10 +261,10 @@ class rjil::cinder (
 
   rjil::jiocloud::consul::service { 'cinder-backup': }
 
-  $cinder_logs = [ 'cinder-api',
-                   'cinder-scheduler',
-                   'cinder-volume',
-                   'cinder-manage',
+  $cinder_logs = ['cinder-api',
+                  'cinder-scheduler',
+                  'cinder-volume',
+                  'cinder-manage',
                   ]
   rjil::jiocloud::logrotate { $cinder_logs:
     logdir => '/var/log/cinder'

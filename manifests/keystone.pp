@@ -111,7 +111,7 @@ class rjil::keystone(
 
   $keystone_logs = ['keystone-manage',
                     'keystone-all',
-                   ]
+                    ]
   rjil::jiocloud::logrotate { $keystone_logs:
     logdir => '/var/log/keystone'
   }
