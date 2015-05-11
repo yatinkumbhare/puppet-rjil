@@ -52,8 +52,7 @@ class rjil::cinder::backup (
     keyring => $ceph_keyring_bkp_path,
   }
   rjil::jiocloud::logrotate { 'cinder-backup':
-    service => 'cinder-backup',
-    logfile => '/var/log/cinder/cinder-backup.log'
+    logdir => '/var/log/cinder/'
   }
 
 }

@@ -190,8 +190,16 @@ class rjil::nova::controller (
     owner   => 'nova',
   }
 
-  class { 'rjil::nova::logrotate': }
-
+  $nova_logs = ['nova-api',
+                'nova-cert',
+                'nova-conductor',
+                'nova-consoleauth',
+                'nova-novncproxy',
+                'nova-scheduler',
+  ]
+  rjil::jiocloud::logrotate { $nova_logs:
+    logdir => "/var/log/nova/"
+  }
   include rjil::nova::logrotate::manage
 
 

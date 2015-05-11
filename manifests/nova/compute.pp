@@ -71,8 +71,7 @@ class rjil::nova::compute (
   include ::nova::network::neutron
 
   rjil::jiocloud::logrotate { 'nova-compute':
-    service => 'nova-compute',
-    logfile => '/var/log/nova/nova-compute.log'
+    logdir => '/var/log/nova/'
   }
 
   include rjil::nova::logrotate::manage

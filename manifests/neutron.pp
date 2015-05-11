@@ -31,8 +31,7 @@ class rjil::neutron (
   include ::neutron::quota
 
   rjil::jiocloud::logrotate { 'neutron-server':
-    service => 'neutron-server',
-    logfile => '/var/log/neutron/server.log'
+    logdir => '/var/log/neutron'
   }
 
   ensure_resource('package','python-six', { ensure => 'latest' })
