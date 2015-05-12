@@ -54,5 +54,8 @@ class rjil::system::metrics(
     memory_warn => '100000',
   }
 
+  file { '/usr/lib/jiocloud/metrics/check_thresholds.py':
+    source => 'puppet:///modules/rjil/tests/check_thresholds.py'
+  }
 
 }
