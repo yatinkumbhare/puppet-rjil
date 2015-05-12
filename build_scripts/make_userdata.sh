@@ -24,6 +24,9 @@ then
   export https_proxy=${env_https_proxy}
   echo https_proxy="'${env_https_proxy}'" >> /etc/environment
 fi
+if [ -n "${dns_override}" ]; then
+  echo 'nameserver ${dns_override}' > /etc/resolv.conf
+fi
 wget -O puppet.deb -t 5 -T 30 http://apt.puppetlabs.com/puppetlabs-release-\${release}.deb
 if [ "${env}" == "at" ]
 then

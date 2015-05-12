@@ -717,6 +717,12 @@ Protocol to use when fetching puppet modules. Defaults to `git`.
 export git_protocol=https
 ````
 
+### dns\_override
+
+Provide a DNS server to use during bootstrapping. This will replace the
+contents of /etc/resolv.conf during the bootstrapping process and until
+it is changed back to localhost for consul.
+
 ## Example of a full invocation
 
 This is what I used for testing:
