@@ -1,5 +1,6 @@
 define rjil::jiocloud::logrotate(
   $logdir        = "/var/log",
+  $logfile       = "notset",
   $service       = $name,
   $rotate_every  = 'daily',
   $rotate        = 60,
@@ -7,13 +8,17 @@ define rjil::jiocloud::logrotate(
   $delaycompress = true,
   $ifempty       = false,
 ) {
-  if ($logdir =~ /\/$/) {
-    $logfile = "${logdir}${name}.log"
+  if ($logfile == "notset"){
+      if ($logdir =~ /\/$/) {
+        $logfile_c = "${logdir}${name}.log"
+      } else {
+        $logfile_c = "${logdir}/${name}.log"
+      }
   } else {
-    $logfile = "${logdir}/${name}.log"
+    $logfile_c = $logfile
   }
   logrotate::rule{ $service:
-    path          => $logfile,
+    path          => $logfile_c,
     rotate        => $rotate,
     rotate_every  => $rotate_every,
     compress      => $compress,
