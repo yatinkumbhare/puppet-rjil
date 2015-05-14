@@ -1,24 +1,27 @@
 ## Class: rjil::openstack::glance
 class rjil::glance (
-  $ceph_mon_key            = undef,
-  $backend                 = 'file',
-  $rbd_user                = 'glance',
-  $ceph_keyring_file_owner = 'glance',
-  $ceph_keyring_path       = '/etc/ceph/keyring.ceph.client.glance',
-  $ceph_keyring_cap        = 'mon "allow r" osd "allow class-read object_prefix rbd_children, allow rwx pool=images"',
-  $admin_email             = 'root@localhost',
+  $ceph_mon_key                   = undef,
+  $backend                        = 'file',
+  $rbd_user                       = 'glance',
+  $ceph_keyring_file_owner        = 'glance',
+  $ceph_keyring_path              = '/etc/ceph/keyring.ceph.client.glance',
+  $ceph_keyring_cap               = 'mon "allow r" osd "allow class-read object_prefix rbd_children, allow rwx pool=images"',
+  $admin_email                    = 'root@localhost',
 
-  $server_name             = 'localhost',
-  $api_localbind_host      = '127.0.0.1',
-  $api_localbind_port      = '19292',
-  $api_public_port         = '9292',
-  $registry_localbind_host = '127.0.0.1',
-  $registry_localbind_port = '19191',
-  $registry_public_address = '127.0.0.1',
-  $registry_public_port    = '9191',
-  $ssl                     = false,
-  $rewrites                = undef,
-  $headers                 = undef,
+  $server_name                    = 'localhost',
+  $api_localbind_host             = '127.0.0.1',
+  $api_localbind_port             = '19292',
+  $api_public_port                = '9292',
+  $registry_localbind_host        = '127.0.0.1',
+  $registry_localbind_port        = '19191',
+  $registry_public_address        = '127.0.0.1',
+  $registry_public_port           = '9191',
+  $ssl                            = false,
+  $rewrites                       = undef,
+  $headers                        = undef,
+  $allow_add_img_admin_only       = true,
+  $allow_del_img_admin_only       = true,
+  $allow_publicize_img_admin_only = true
 ) {
 
   ## Add tests for glance api and registry
@@ -129,6 +132,11 @@ class rjil::glance (
   rjil::jiocloud::consul::service { 'glance-registry':
     tags          => ['real'],
     port          => $::glance::registry::bind_port,
+  }
+
+  file { "/etc/glance/policy.json":
+    ensure  => file,
+    content => template('rjil/glance_policy.erb'),
   }
 
 }

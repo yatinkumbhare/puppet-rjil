@@ -1,0 +1,22 @@
+{
+  "context_is_admin":  "role:admin",
+  "default": "",
+<% if @allow_add_img_admin_only == True %>
+  "add_image": "role:admin",
+<% else %>
+  "add_image": "",
+<% end %>
+
+<% if @allow_del_img_admin_only == True %>
+  "delete_image": "role:admin",
+<% else %>
+  "delete_image": "",
+<% end %>
+
+<% if @allow_publicize_img_admin_only == True%>
+  "publicize_image": "role:admin",
+<% else %>
+  "publicize_image": "",
+<% end %>
+  "manage_image_cache": "role:admin",
+}
