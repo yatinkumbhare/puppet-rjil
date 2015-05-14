@@ -28,7 +28,7 @@ class rjil::ceph::mon (
   $public_if        = 'eth0',
   $mon_service_name = 'stmon',
   $pools            = ['volumes','backups','images'],
-  $rgw_index_pools  = ['.rgw.root', '.rgw.control', '.rgw.gc', '.users.uid', '.rgw.buckets.index'],
+  $rgw_index_pools  = ['.rgw.root', '.rgw.control', '.rgw.gc', '.rgw', '.users.uid', '.rgw.buckets.index'],
   $rgw_data_pools   = ['.rgw.buckets'],
   $pool_pg_num      = 128,
   $index_pool_pg_num= 32,
