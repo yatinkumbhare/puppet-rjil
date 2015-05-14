@@ -124,6 +124,9 @@ describe 'rjil::nova::controller' do
         'tags'          => ['real'],
         'check_command' => "/usr/lib/nagios/plugins/check_http -H localhost -p 101 -u /vnc_auto.html",
       })
+      ['nova-api', 'nova-manage', 'nova-cert', 'nova-conductor', 'nova-consoleauth', 'nova-novncproxy', 'nova-scheduler'].each do |x|
+        should contain_rjil__jiocloud__logrotate(x).with_logdir('/var/log/nova/')
+      end
     end
   end
 end

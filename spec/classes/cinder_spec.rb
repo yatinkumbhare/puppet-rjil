@@ -95,6 +95,9 @@ describe 'rjil::cinder' do
         'port'          => 0,
         'check_command' => "/usr/lib/jiocloud/tests/service_checks/cinder-scheduler.sh"
       })
+      ['cinder-api', 'cinder-scheduler', 'cinder-volume', 'cinder-manage'].each do |x|
+        should contain_rjil__jiocloud__logrotate(x).with_logdir('/var/log/cinder')
+      end
     end
   end
   context 'with ssl' do
