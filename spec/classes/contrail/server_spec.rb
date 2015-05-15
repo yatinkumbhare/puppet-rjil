@@ -33,6 +33,9 @@ describe 'rjil::contrail::server' do
       should contain_file('/usr/lib/jiocloud/tests/contrail-webui-webserver.sh')
       should contain_file('/usr/lib/jiocloud/tests/contrail-webui-jobserver.sh')
       should contain_class('contrail')
+      ['contrail-analytic-api','contrail-collector','query-engine','api','discovery','schema','svc-monitor','contrail-control','webserver','jobserver']. each do |x|
+        should contain_rjil__jiocloud__logrotate(x).with_logdir('/var/log/contrail')
+      end
     end
   end
 end

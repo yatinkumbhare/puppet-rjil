@@ -1,7 +1,7 @@
-# 
+#
 # Class: rjil::jiocloud
 # This is called by rjil::base for setting up of repositories, consul role, puppet and system upgrade related stuff
-# 
+#
 
 class rjil::jiocloud (
   $consul_role = 'agent'

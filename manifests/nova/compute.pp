@@ -1,4 +1,3 @@
-##
 # Class: rjil::nova::compute
 ##
 class rjil::nova::compute (
@@ -71,6 +70,12 @@ class rjil::nova::compute (
   include ::nova::compute::neutron
   include ::nova::network::neutron
 
+  rjil::jiocloud::logrotate { 'nova-compute':
+    logdir => '/var/log/nova/'
+  }
+
+  include rjil::nova::logrotate::manage
+
   ##
   # Add ceph keyring for cinder_volume. This is required cinder to connect to
   # ceph.
@@ -116,7 +121,7 @@ class rjil::nova::compute (
                 --base64 $(ceph --name mon. --key ${ceph_mon_key} auth get-key \
                 client.cinder_volume)",
     unless => "virsh -q secret-get-value $cinder_rbd_secret_uuid | \
-	           grep \"$(grep ceph --name mon. --key ${ceph_mon_key} auth get-key \
+             grep \"$(grep ceph --name mon. --key ${ceph_mon_key} auth get-key \
                         client.cinder_volume)\"",
     require => Exec["secret_define_cinder_volume"],
     notify => Service ['libvirt'],

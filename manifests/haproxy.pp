@@ -58,6 +58,7 @@ class rjil::haproxy (
     defaults_options => $haproxy_defaults
   }
 
+  rjil::jiocloud::logrotate { 'haproxy': }
 #
 # commented out configuration related to keepalive d
 # for multiple lbs

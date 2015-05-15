@@ -31,6 +31,9 @@ describe 'rjil::keystone' do
       should contain_file('/usr/lib/jiocloud/tests/service_checks/keystone.sh').with_content(/check_http -H 127\.0\.0\.1 -p 443/)
       should contain_file('/usr/lib/jiocloud/tests/service_checks/keystone-admin.sh').with_content(/check_http -H 127\.0\.0\.1 -p 35357/)
       should contain_class('keystone')
+      ['keystone-manage', 'keystone-all'].each do |x|
+        should contain_rjil__jiocloud__logrotate(x).with_logdir('/var/log/keystone')
+      end
     end
   end
 

@@ -190,6 +190,19 @@ class rjil::nova::controller (
     owner   => 'nova',
   }
 
+  $nova_logs = ['nova-api',
+                'nova-cert',
+                'nova-conductor',
+                'nova-consoleauth',
+                'nova-novncproxy',
+                'nova-scheduler',
+  ]
+  rjil::jiocloud::logrotate { $nova_logs:
+    logdir => "/var/log/nova/"
+  }
+  include rjil::nova::logrotate::manage
+
+
   ##
   # Consul service registration
   # nova api bind port is not there in nova::api class param, so adding that

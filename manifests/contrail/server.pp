@@ -19,4 +19,19 @@ class rjil::contrail::server (
   }
 
   include ::contrail
+
+  $contrail_logs = [  'contrail-analytic-api',
+                      'contrail-collector',
+                      'query-engine',
+                      'api',
+                      'discovery',
+                      'schema',
+                      'svc-monitor',
+                      'contrail-control',
+                      'webserver',
+                      'jobserver',
+  ]
+  rjil::jiocloud::logrotate { $contrail_logs:
+    logdir => '/var/log/contrail'
+  }
 }

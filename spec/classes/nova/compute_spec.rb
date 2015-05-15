@@ -60,6 +60,10 @@ describe 'rjil::nova::compute' do
       'onlyif'  => "virsh -q net-list | grep -q default",
     })
 
+    ['nova-compute', 'nova-manage'].each do |x|
+      should contain_rjil__jiocloud__logrotate(x).with_logdir('/var/log/nova/')
+    end
+
   end
 
 end
