@@ -76,7 +76,7 @@ describe 'rjil::glance' do
       })
       should contain_class('glance::backend::file')
       ['glance-api', 'glance-registry'].each do |x|
-        should contain_rjil__jiocloud__logrotate(x).with_logdir('/var/log/glance')
+        should contain_rjil__jiocloud__logrotate(x).with_logfile("/var/log/glance/#{x}")
       end
     end
   end
