@@ -75,8 +75,8 @@ describe 'rjil::glance' do
         'keystone_password' => 'pass',
       })
       should contain_class('glance::backend::file')
-      ['glance-api', 'glance-registry'].each do |x|
-        should contain_rjil__jiocloud__logrotate(x).with_logfile("/var/log/glance/#{x}")
+      ['api', 'registry'].each do |x|
+        should contain_rjil__jiocloud__logrotate("glance-#{x}").with_logfile("/var/log/glance/#{x}.log")
       end
     end
   end
