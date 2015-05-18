@@ -136,7 +136,9 @@ class rjil::glance (
 
   file { "/etc/glance/policy.json":
     ensure  => file,
+    owner   => 'root',
+    mode    => '0644',
     content => template('rjil/glance_policy.erb'),
+    notify  => Service['glance-api'],
   }
-
 }
