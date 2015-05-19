@@ -9,6 +9,7 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export layout="${layout}"
 release="\$(lsb_release -cs)"
+sudo mkdir -p /etc/facter/facts.d
 if [ -n "${git_protocol}" ]; then
   export git_protocol="${git_protocol}"
 fi
@@ -47,6 +48,10 @@ do
   n=\$((\$n+1))
   sleep 5
 done
+if [ -n "${override_repo}" ]; then
+  echo "override_repo=${override_repo}" > /etc/facter/facts.d/override_repo.txt
+  time gem install faraday faraday_middleware --no-ri --no-rdoc;
+fi
 if [ -n "${python_jiocloud_source_repo}" ]; then
   apt-get install -y python-pip python-jiocloud python-dev libffi-dev libssl-dev git
   pip install -e "${python_jiocloud_source_repo}@${python_jiocloud_source_branch}#egg=jiocloud"
@@ -93,7 +98,6 @@ INISETTING
 else
   puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests/site.pp\" }"
 fi
-sudo mkdir -p /etc/facter/facts.d
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt

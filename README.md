@@ -723,6 +723,10 @@ Provide a DNS server to use during bootstrapping. This will replace the
 contents of /etc/resolv.conf during the bootstrapping process and until
 it is changed back to localhost for consul.
 
+### override\_repo
+
+a file location for a tgz file that stores a repo that needs to be added for development or testing of new repo features.
+
 ## Example of a full invocation
 
 This is what I used for testing:
