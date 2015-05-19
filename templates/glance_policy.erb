@@ -1,15 +1,15 @@
 {
   "context_is_admin":  "role:admin",
   "default": "",
-<% if @allow_add_img_admin_only == true %>
-  "add_image": "role:admin",
+<% if @allow_upload_img_admin_only == true %>
+  "upload_image": "role:admin",
 <% else %>
-  "add_image": "",
+  "upload_image": "",
 <% end %>
-<% if @allow_del_img_admin_only == true %>
-  "delete_image": "role:admin",
+<% if @allow_copy_img_admin_only == true %>
+  "copy_from": "role:admin",
 <% else %>
-  "delete_image": "",
+  "copy_from": "",
 <% end %>
 <% if @allow_publicize_img_admin_only == true%>
   "publicize_image": "role:admin",

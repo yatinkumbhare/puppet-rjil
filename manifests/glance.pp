@@ -19,8 +19,8 @@ class rjil::glance (
   $ssl                            = false,
   $rewrites                       = undef,
   $headers                        = undef,
-  $allow_add_img_admin_only       = true,
-  $allow_del_img_admin_only       = true,
+  $allow_upload_img_admin_only    = true,
+  $allow_copy_img_admin_only      = true,
   $allow_publicize_img_admin_only = true
 ) {
 
