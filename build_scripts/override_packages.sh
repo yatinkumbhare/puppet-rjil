@@ -23,7 +23,7 @@ if [ -n "${repoconf_repo_source}" ]; then
   # run majic autobuild command to create a pkg repo called foofil
   bash -x ./debian/sync-repo.sh build
   popd
-  sbuild -d trusty -A rjil-cicd_2014.2.179ubuntu1.dsc
+  sbuild -n -d trusty -A rjil-cicd_2014.2.179ubuntu1.dsc
   mkdir new_repo
   cp *.deb new_repo/
   pushd new_repo
