@@ -20,18 +20,35 @@ class rjil::contrail::server (
 
   include ::contrail
 
-  $contrail_logs = [  'contrail-analytic-api',
-                      'contrail-collector',
-                      'query-engine',
-                      'api',
-                      'discovery',
-                      'schema',
-                      'svc-monitor',
-                      'contrail-control',
-                      'webserver',
-                      'jobserver',
+  $contrail_logs = ['contrail-api-daily',
+                    'contrail-discovery-daily',
+                    'contrail-schema-daily',
+                    'contrail-svc-monitor-daily',
+                    'contrail-ifmap-server'
   ]
+
   rjil::jiocloud::logrotate { $contrail_logs:
     logdir => '/var/log/contrail'
   }
+  
+  $contrail_logs_copytruncate = ['contrail-control',
+                                'contrail-dns',
+  
+  ]
+  
+  rjil::jiocloud::logrotate { $contrail_logs_copytruncate:
+    logdir       => '/var/log/contrail',
+    copytruncate => true,
+  }
+  
+  include rjil::contrail::logrotate::consolidate
+
+  $contrail_logrotate_delete = ['contrail-config',
+                                'contrail-config-openstack',
+                                'ifmap-server',
+                                ]
+  rjil::jiocloud::logrotate { $contrail_logrotate_delete:
+    ensure => absent
+  }
+  
 }
