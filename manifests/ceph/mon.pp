@@ -28,7 +28,12 @@ class rjil::ceph::mon (
   $public_if        = 'eth0',
   $mon_service_name = 'stmon',
   $pools            = ['volumes','backups','images'],
+  $rgw_index_pools  = ['.rgw.root', '.rgw.control', '.rgw.gc', '.rgw', '.users.uid', '.rgw.buckets.index'],
+  $rgw_data_pools   = ['.rgw.buckets'],
   $pool_pg_num      = 128,
+  $index_pool_pg_num= 32,
+  $pool_size  = 3,
+  $data_pool_pg_num = 128,
 ) {
 
 
@@ -62,6 +67,22 @@ class rjil::ceph::mon (
 
   ::ceph::osd::pool{ $pools:
     num_pgs => $pool_pg_num,
+    require => Ceph::Mon[$::hostname],
+  }
+
+  # Create rgw index pools
+  ::ceph::pool{ $rgw_index_pools:
+    pg_num => $index_pool_pg_num,
+    pgp_num => $index_pool_pg_num,
+    size => $pool_size,
+    require => Ceph::Mon[$::hostname],
+  }
+
+  # Create rgw data pools
+  ::ceph::pool{ $rgw_data_pools:
+    pg_num => $data_pool_pg_num,
+    pgp_num => $data_pool_pg_num,
+    size => $pool_size,
     require => Ceph::Mon[$::hostname],
   }
 
