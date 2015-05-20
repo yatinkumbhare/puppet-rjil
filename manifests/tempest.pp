@@ -146,6 +146,7 @@ class rjil::tempest (
     'python-testscenarios',
     'python-ecdsa',
     'python-mox3',
+    'testrepository',
     'subunit',
   ])
 
