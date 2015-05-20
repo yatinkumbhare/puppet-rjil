@@ -140,7 +140,6 @@ class rjil::tempest (
     'python-neutronclient',
     'python-cinderclient',
     'python-heatclient',
-    'oslo.config',
     'python-oslo.config',
     'python-iso8601',
     'python-fixtures',
