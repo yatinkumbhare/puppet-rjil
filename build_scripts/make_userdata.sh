@@ -40,8 +40,13 @@ if no_proxy= wget -t 2 -T 30 -O internal.deb http://apt.internal.jiocloud.com/in
 then
   dpkg -i internal.deb
 fi
-apt-get update
-apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate
+n=0
+while [ \$n -le 5 ]
+do
+  apt-get update && apt-get install -y puppet software-properties-common puppet-jiocloud jiocloud-ssl-certificate && break
+  n=\$((\$n+1))
+  sleep 5
+done
 if [ -n "${python_jiocloud_source_repo}" ]; then
   apt-get install -y python-pip python-jiocloud python-dev libffi-dev libssl-dev git
   pip install -e "${python_jiocloud_source_repo}@${python_jiocloud_source_branch}#egg=jiocloud"
