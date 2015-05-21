@@ -654,6 +654,13 @@ rjil::contrail::server::enable_analytics: false
 contrail::interface: "%{hiera('public_interface')}"
 contrail::vrouter::vrouter_physical_interface: "%{hiera('contrail::interface')}"
 
+contrail::config::quota_floating_ip: 5
+contrail::config::quota_logical_router: 10
+contrail::config::quota_security_group: 100
+contrail::config::quota_security_group_rule: 50
+contrail::config::quota_subnet: 20
+contrail::config::quota_virtual_machine_interface: 100
+contrail::config::quota_virtual_network: 5
 
 ###########################################
 ############ Ceph Configuration ###########
