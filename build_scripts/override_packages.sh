@@ -31,18 +31,3 @@ if [ -n "${repoconf_repo_source}" ]; then
   tar -cvzf ../new_repo.tgz *
   popd
 fi
-
-create_gpg_key() {
-  echo '
-    Key-Type: 1
-    Key-Length: 4096
-    Subkey-Type: ELG-E
-    Subkey-Length: 4096
-    Name-Real: foo repository
-    Expire-Date: 0
-    %%commit
-' > foo
-  gpg --batch --gen-key foo
-  key_id=`gpg --list-keys | grep pub | awk '{print $2}' | awk -F'/' '{print $2}'`
-  gpg --output keyFile --armor --export $key_id
-}
