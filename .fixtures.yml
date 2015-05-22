@@ -68,7 +68,7 @@ fixtures:
       ref: 'origin/svn_to_git_2'
     apt:
       repo: https://github.com/puppetlabs/puppetlabs-apt
-      ref: 1.6.0
+      ref: 1.8.0
     cinder:
       repo: https://github.com/stackforge/puppet-cinder
       ref: 4.0.0

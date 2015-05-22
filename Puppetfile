@@ -67,7 +67,7 @@ mod 'puppetlabs/apache',
 
 mod 'puppetlabs/apt',
   :git => "#{base_url}/puppetlabs/puppetlabs-apt",
-  :ref => '1.6.0'
+  :ref => '1.8.0'
 
 mod 'stackforge/cinder',
   :git => "#{base_url}/stackforge/puppet-cinder",

@@ -50,10 +50,11 @@ class rjil::system::apt (
       origin   => '""',
     }
     apt::source { 'overrides':
-      location    => 'file:/var/lib/jiocloud/overrides',
-      release     => './',
-      repos       => '',
-      include_src => false,
+      location       => 'file:/var/lib/jiocloud/overrides',
+      release        => './',
+      repos          => '',
+      include_src    => false,
+      trusted_source => true,
     }
   }
 
