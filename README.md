@@ -12,7 +12,7 @@ puppet-rjil
 4. [Development Workflow](#development-environment)
 5. [Running Behind Proxy Server](#running-behind-proxy-server)
 6. [Build script - command line tool for generating test deployments](#build-script)
-7. [Development - Resources for Developers](#developers)
+7. [Development - Resources for Developers](#development)
 
 # Overview
 
