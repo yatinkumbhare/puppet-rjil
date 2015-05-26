@@ -1,9 +1,16 @@
 ## Class rjil::system::apt
 ## Purpose: configure apt sources
+#
+#
+# == Parameters
+#   [override_repo] specifies the location to an optional override_repo that should be previously set up on disk.
+#     This is intended to be used for cases where you may want to modify and create your own versions of packages
+#     for testing. Defaults to the value of the override_repos fact.
 class rjil::system::apt (
   $enable_puppetlabs = true,
   $proxy             = false,
   $repositories      = {},
+  $override_repo     = $::override_repo,
 ) {
 
   ## two settings to be overrided here in hiera
@@ -22,6 +29,33 @@ class rjil::system::apt (
 
   if $enable_puppetlabs {
     include puppet::repo::puppetlabs
+  }
+
+  if ($override_repo) {
+    file { ['/var/lib/jiocloud', '/var/lib/jiocloud/overrides']:
+      ensure => directory,
+      tag    => 'package',
+    }
+    archive { '/var/lib/jiocloud/overrides/repo.tgz':
+      source       => $override_repo,
+      extract      => true,
+      extract_path => '/var/lib/jiocloud/overrides',
+      tag          => 'package',
+      creates      => '/var/lib/jiocloud/overrides/Packages',
+      before       => Apt::Source['overrides'],
+    }
+    # pin local repos to have the highest priority
+    apt::pin { 'local_repos':
+      priority => '999',
+      origin   => '""',
+    }
+    apt::source { 'overrides':
+      location       => 'file:/var/lib/jiocloud/overrides',
+      release        => './',
+      repos          => '',
+      include_src    => false,
+      trusted_source => true,
+    }
   }
 
   if ($proxy) {

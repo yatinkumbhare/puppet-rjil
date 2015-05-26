@@ -140,13 +140,13 @@ class rjil::tempest (
     'python-neutronclient',
     'python-cinderclient',
     'python-heatclient',
-    'oslo.config',
     'python-oslo.config',
     'python-iso8601',
     'python-fixtures',
     'python-testscenarios',
     'python-ecdsa',
     'python-mox3',
+    'testrepository',
     'subunit',
   ])
 
