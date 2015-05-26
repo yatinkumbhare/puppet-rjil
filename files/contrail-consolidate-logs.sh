@@ -1,9 +1,20 @@
 #!/bin/bash
+##
+# The contrail codebase we use does not support log configuration for most
+# logs. The default is rotated based upon size. The non-configurable default
+# size is too less (few MBs) and hence with the default retention of 10 logs,
+# we end up with only few hours of logs for these. Hence this script collates
+# these smaller files into a single daily logfile which can then be rotated
+# via logrotate. The upstream has added config options for some modules but not
+# all are still covered. Hence till upstream is completely patched, this will
+# still be useful
+##
 
 contrail_logs=('contrail-api'
 		'contrail-schema'
 		'contrail-vrouter'
 		'contrail-discovery'
+		'contrail-collector'
 		'vnc_openstack.err'
 		'svc-monitor.err'
 		'schema.err'

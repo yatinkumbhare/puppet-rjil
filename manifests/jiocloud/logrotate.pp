@@ -1,17 +1,17 @@
 define rjil::jiocloud::logrotate(
   $logdir        = "/var/log",
-  $logfile       = 'undef',
+  $logfile       = undef,
   $service       = $name,
   $rotate_every  = 'daily',
   $rotate        = 60,
   $compress      = true,
   $delaycompress = true,
   $ifempty       = false,
-  $copytruncate  = 'undef',
+  $copytruncate  = undef,
   $dateext       = true,
   $ensure        = 'present',
 ) {
-  if ($logfile == 'undef'){
+  if ( !$logfile ){
       if ($logdir =~ /\/$/) {
         $logfile_c = "${logdir}${name}.log"
       } else {
