@@ -20,7 +20,6 @@ class rjil::glance (
   $rewrites                       = undef,
   $headers                        = undef,
   $allow_upload_img_admin_only    = true,
-  $allow_copy_img_admin_only      = true,
   $allow_publicize_img_admin_only = true
 ) {
 
