@@ -19,7 +19,7 @@ class rjil::glance (
   $ssl                            = false,
   $rewrites                       = undef,
   $headers                        = undef,
-  $allow_upload_img_admin_only    = true,
+  $allow_upload_img_admin_only    = true
 ) {
 
   ## Add tests for glance api and registry
