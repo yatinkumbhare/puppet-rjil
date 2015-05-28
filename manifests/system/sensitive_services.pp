@@ -6,7 +6,8 @@ class rjil::system::sensitive_services(
   $service_list = [ 'zookeeper', 'cassandra',
                     'contrail-api', 'contrail-schema', 'contrail-svc-monitor', 'contrail-discovery',
                     'contrail-control', 'contrail-dns',
-                    'contrail-query-engine', 'contrail-collector', 'contrail-analytics-api']
+                    'contrail-query-engine', 'contrail-collector', 'contrail-analytics-api',
+                    'collectd']
 ) {
 
   File['/usr/sbin/policy-rc.d'] -> Package<||>
