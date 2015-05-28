@@ -725,7 +725,17 @@ it is changed back to localhost for consul.
 
 ### override\_repo
 
-a file location for a tgz file that stores a repo that needs to be added for development or testing of new repo features.
+A file location for a tgz file that stores an apt repo that needs to be
+added for development or testing of new repo features. This repo will be
+downloaded onto all compute instances of your build, and pinned at a
+higher precedence than your other package repos (specifically at 999).
+
+The current workflow assumes that this file location is the URL of the
+location of an artifact created by jenkins. It is assumed that apt
+repos will be created by using the `build_scripts/override_packages.sh`
+which builds a set of packages based on the [repoconf](https://github.com/jiocloud/repoconf) repo
+
+By default, builds assume that no override repo is being used.
 
 ## Example of a full invocation
 
