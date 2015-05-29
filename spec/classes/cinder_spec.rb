@@ -61,6 +61,7 @@ describe 'rjil::cinder' do
       should contain_class('cinder::scheduler')
       should contain_class('cinder::volume')
       should contain_class('cinder::volume::rbd')
+      should contain_class('cinder::quota')
       should contain_ceph__auth('cinder_volume').with({
         'mon_key'      => 'AQBRSfNSQNCMAxAA/wSNgHmHwzjnl2Rk22P4jA==',
         'client'       => 'cinder_volume',
