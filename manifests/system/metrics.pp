@@ -5,6 +5,9 @@
 class rjil::system::metrics(
   $notification_type = 'log',
   $log_file          = '/usr/lib/jiocloud/metrics/collectd_notifications.log',
+  $disk_percent_warn = '10',
+  $disk_percent_fail = '5',
+  $memory_warn       = '200000'
 ) {
 
   # remove all default plugins so that we can fully customize
@@ -31,7 +34,6 @@ class rjil::system::metrics(
   }
 
   include collectd::plugin::memory
-  #include collectd::plugin::thresold
 
   class { 'collectd::plugin::df':
     valuespercentage => true
@@ -43,19 +45,29 @@ class rjil::system::metrics(
     persist           => 'True',
     persistok         => 'True',
     disks             => ['root'],
-    disk_percent_warn => '10',
-    disk_percent_fail => '5',
+    disk_percent_warn => $disk_percent_warn,
+    disk_percent_fail => $disk_percent_fail,
   }
   #register memory thresold
   rjil::system::define_metrics { 'memory':
     instance    => 'free',
     persist     => 'True',
     persistok   => 'True',
-    memory_warn => '100000',
+    memory_warn => $memory_warn,
   }
 
   file { '/usr/lib/jiocloud/metrics/check_thresholds.py':
     source => 'puppet:///modules/rjil/tests/check_thresholds.py'
+  }
+
+  file { "/usr/lib/jiocloud/metrics/check_thresholds.sh":
+    mode    => '0755',
+    source  => 'puppet:///modules/rjil/tests/check_thresholds.sh',
+  }
+
+  cron { 'check_thresholds':
+    command => '/usr/lib/jiocloud/metrics/check_thresholds.py --filename /usr/lib/jiocloud/metrics/collectd_notifications.log',
+    minute  => '*/5',
   }
 
 }

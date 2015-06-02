@@ -6,10 +6,5 @@
 # can be used atomically
 new_file=/tmp/`basename /usr/lib/jiocloud/metrics/collectd_notifications.log``date +%Y%m%d%H%M%S`
 FILE="/usr/lib/jiocloud/metrics/collectd_notifications.log"
-if [ -f $FILE ];
-then
-sudo mv $FILE $new_file
-
-python /usr/lib/jiocloud/metrics/check_thresholds.py --filename $new_file --servicename <%= @name %>
-
-fi
+sudo mv $FILE $new_file || exit 1
+python /usr/lib/jiocloud/metrics/check_thresholds.py --filename $new_file

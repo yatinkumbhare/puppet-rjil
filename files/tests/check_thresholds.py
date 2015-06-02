@@ -2,6 +2,8 @@
 import argparse
 import re
 import sys
+import urllib3
+import urllib
 
 #
 # This class is used to parse collectd log notifications. It returns 0,1,2
@@ -13,65 +15,55 @@ import sys
 # about those failures and warning to stdout
 #
 class NotificationParser:
-    def parse(self, filename, servicename):
-        data_hash = {
-          'OKAY':    [],
-          'WARNING': [],
-          'FAILURE': []
-        }
+    # go through all events in a file of a given type, and just keep a record
+    # of the last event for each type.
+    def parse(self, filename):
+        data_hash = {}
         with open(filename, 'r') as f:
             for line in f:
-                spl_line = line.split(', ')
-                #print spl_line.pop(2)
-                m = re.search('Notification: severity = (OKAY|WARNING|FAILURE)', spl_line.pop(0))
-                n = spl_line[1].split(' = ')
-                if n[1] == servicename:
-                  if m:
-                      local_data = {}
-                      for l in spl_line:
-                          # assumes that message is the last field, so it we have
-                          # encountered it, then all remaining text should be
-                          # considered part of the message
-                          if 'message' in local_data:
-                              local_data['message']+=l
-                          else:
-                              data = l.split(' = ', 2)
-                              local_data[data[0]] = data[1]
-                      data_hash[m.group(1)].append(local_data)
-                  #else:
-                  #    print "Line %s did not match expected output line" % line
+                try:
+                    spl_line = line.split(', ')
+                    m     = re.search('Notification: severity = (OKAY|WARNING|FAILURE)', spl_line.pop(0))
+                    if m:
+                        n     = spl_line[1].split(' = ')
+                        level = m.group(1)
+                        name  = n[1]
+                        local_data = {}
+                        for l in spl_line:
+                            # assumes that message is the last field, so it we have
+                            # encountered it, then all remaining text should be
+                            # considered part of the message
+                            if 'message' in local_data:
+                                local_data['message']+=l
+                            else:
+                                data = l.split(' = ', 2)
+                                local_data[data[0]] = data[1]
+                        data_hash[name] = [level, local_data['message']]
+                except:
+                    print "Line: %s, lead to an unexpected exception, skipping" % line
+                    pass
         f.close()
-        return self.dedup(data_hash)
+        return data_hash
 
-    # remove duplicates from threshold data
-    def dedup(self, data):
-        new_hash = {}
-        for k in data:
-            dedup_hash = {}
-            for i in data[k]:
-                # to split out unique entry types, we are doing the following:
-                # - popping off message
-                # - combining everything else to make an id
-                message = i.pop('message')
-                str_id=''
-                for k2 in sorted(i.keys()):
-                    str_id += "%s=%s," % (k2, i[k2])
-                dedup_hash[str_id] = message
-            new_hash[k] = []
-            for msg in dedup_hash.values():
-                new_hash[k].append(msg)
-        return new_hash
+    def update_service_status(self, status, service_name, note=''):
+        http = urllib3.PoolManager()
+        note = urllib.quote(note)
+        url = "http://localhost:8500/v1/agent/check/%s/service:metric_thresholds_%s?note=%s" % (status, service_name, note)
+        r = http.request('GET', url)
+
+    def send_alerts(self, data):
+        for k, v in data.iteritems():
+            if v[0] == 'OKAY':
+                resp = self.update_service_status('pass', k, v[1])
+            elif v[0] == 'WARNING':
+                resp = self.update_service_status('warn', k, v[1])
+            elif v[0] == 'FAILURE':
+                resp = self.update_service_status('fail', k, v[1])
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('--filename', help='Notification file to parse')
-    argparser.add_argument('--servicename', help='Notification file to parse')
     args = argparser.parse_args()
     notification_parser = NotificationParser()
-    data = notification_parser.parse(args.filename, args.servicename)
-    if len(data['FAILURE']) > 0:
-        print data
-        sys.exit(2)
-    elif len(data['WARNING']) > 0:
-        print data
-        sys.exit(1)
+    data = notification_parser.parse(args.filename)
+    notification_parser.send_alerts(data)
