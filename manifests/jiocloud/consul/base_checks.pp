@@ -3,21 +3,20 @@
 # Setup Validation checks for Puppet runs
 #
 class rjil::jiocloud::consul::base_checks(
-  # default to 5 days
-  $puppet_ttl       = '7200m',
-  $validation_ttl   = '7200m',
-  $puppet_notes     = 'Status of Puppet run',
-  $validation_notes = 'Status of configuration validation checks'
+  # default to 24 hours
+  $puppet_ttl       = '1440m',
+  # default to one hour
+  $validation_ttl   = '60m',
 ) {
 
-  consul::check { 'puppet':
-    ttl   => $puppet_ttl,
-    notes => $puppet_notes,
+  rjil::jiocloud::consul::service { 'puppet':
+    check_command => false,
+    ttl           => $puppet_ttl,
   }
 
-  consul::check { 'validation':
-    ttl   => $validation_ttl,
-    notes => $validation_notes,
+  rjil::jiocloud::consul::service { 'validation':
+    check_command => false,
+    ttl           => $validation_ttl,
   }
 
 }
