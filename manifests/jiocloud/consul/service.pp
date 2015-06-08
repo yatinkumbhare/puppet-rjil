@@ -2,17 +2,29 @@ define rjil::jiocloud::consul::service(
   $port          = 0,
   $check_command = "/usr/lib/jiocloud/tests/service_checks/${name}.sh",
   $interval      = '10s',
+  $ttl           = false,
   $tags          = [],
 ) {
+
+  if $check_command {
+    $check = {
+      script => $check_command,
+      interval => $interval
+    }
+  } elsif $ttl {
+    $check = {
+      ttl => $ttl,
+    }
+  } else {
+    fail("Must specify either ttl or check_command")
+  }
+
   $service_hash = {
     service => {
       name  => $name,
       port  => $port + 0,
       tags  => $tags,
-      check => {
-        script => $check_command,
-        interval => $interval
-      }
+      check => $check,
     }
   }
 

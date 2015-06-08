@@ -17,10 +17,10 @@ run_puppet() {
         puppet apply --detailed-exitcodes --logdest=syslog `puppet config print default_manifest`
         # publish the results of that run
         ret_code=$?
-        python -m jiocloud.orchestrate update_own_status puppet $ret_code
+        python -m jiocloud.orchestrate update_own_status puppet_service $ret_code
         if [[ $ret_code = 1 || $ret_code = 4 || $ret_code = 6 ]]; then
                 echo "Puppet failed with return code ${ret_code}, also failing validation"
-                python -m jiocloud.orchestrate update_own_status validation 1
+                python -m jiocloud.orchestrate update_own_status validation_service 1
                 sleep 5
                 exit 1
         fi
@@ -29,7 +29,7 @@ run_puppet() {
 validate_service() {
         run-parts --regex=. --verbose --exit-on-error  --report /usr/lib/jiocloud/tests/
         ret_code=$?
-        python -m jiocloud.orchestrate update_own_status validation $ret_code
+        python -m jiocloud.orchestrate update_own_status validation_service $ret_code
         if [[ $ret_code != 0 ]]; then
                 echo "Validation failed with return code ${ret_code}"
                 sleep 5
