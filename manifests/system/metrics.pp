@@ -66,7 +66,7 @@ class rjil::system::metrics(
   }
 
   cron { 'check_thresholds':
-    command => '/usr/lib/jiocloud/metrics/check_thresholds.py --filename /usr/lib/jiocloud/metrics/collectd_notifications.log',
+    command => '/usr/lib/jiocloud/metrics/check_thresholds.sh --filename /usr/lib/jiocloud/metrics/collectd_notifications.log',
     minute  => '*/5',
   }
 
