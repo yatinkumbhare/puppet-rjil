@@ -14,7 +14,7 @@ rv=$?
 run_puppet() {
         # ensure that our service catalog hiera data is available
         # now run puppet
-        puppet apply --detailed-exitcodes --logdest=syslog `puppet config print default_manifest`
+        puppet apply --config_version='python -m jiocloud.orchestrate current_version' --detailed-exitcodes --logdest=syslog `puppet config print default_manifest`
         # publish the results of that run
         ret_code=$?
         python -m jiocloud.orchestrate update_own_status puppet_service $ret_code
@@ -43,7 +43,7 @@ then
        echo current_version=$pending_version > /etc/facter/facts.d/current_version.txt
 
        # Update apt sources to point to new snapshot version
-       (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'File<| title == "sources.list.d" |> { purge => false }'; echo 'include rjil::system::apt' ) | puppet apply --logdest=syslog
+       (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'File<| title == "sources.list.d" |> { purge => false }'; echo 'include rjil::system::apt' ) | puppet apply --logdest=syslog --config_version='python -m jiocloud.orchestrate current_version'
 
        apt-get update
        apt-get dist-upgrade -o Dpkg::Options::="--force-confold" -y
