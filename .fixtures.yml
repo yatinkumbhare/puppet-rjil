@@ -73,7 +73,7 @@ fixtures:
       repo: https://github.com/stackforge/puppet-cinder
       ref: 4.0.0
     openstacklib:
-      repo: https://github.com/stackforge/puppet-openstacklib
+      repo: https://github.com/jiocloud/puppet-openstacklib
       ref: origin/master
     ironic:
       repo: https://github.com/stackforge/puppet-ironic
