@@ -64,6 +64,7 @@ class rjil::cinder (
   $volume_nofile           = 10240,
   $rewrites                = undef,
   $headers                 = undef,
+  $use_default_quota_class = false,
 ) {
 
   ######################## Service Blockers and Ordering
@@ -109,6 +110,11 @@ class rjil::cinder (
   ##
 
   cinder_config { 'DEFAULT/osapi_volume_listen_port': value => $localbind_port }
+
+  ##
+  # Cinder default quotas read from the config file.
+
+  cinder_config { 'DEFAULT/use_default_quota_class': value => $use_default_quota_class }
 
   ## Configure apache reverse proxy
   apache::vhost { 'cinder':
