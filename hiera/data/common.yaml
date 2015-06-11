@@ -6,10 +6,17 @@
 # Idea is to enable jumbo frames after completing initial setup.
 ##
 mtu: 1500
-public_address: "%{ipaddress_eth0}"
-public_interface: eth0
-private_address: "%{ipaddress_eth0}"
-private_interface: eth0
+##
+# instead of assuming the ipaddess will be on specific network interface, just
+# provide the network in the format <network with dot replaced with>_<cidr>
+# This will avoid issues on using different nic on the servers because of any
+# reasons like nic port failures. It also fix the problem of the ip address
+# being moved to vhost0 interface in compute node.
+##
+public_address: "%{ipaddress_10_0_0_0_16}"
+public_interface: "%{interface_10_0_0_0_16}"
+private_address: "%{ipaddress_10_0_0_0_16}"
+private_interface: "%{interface_10_0_0_0_16}"
 
 ###################################
 ########  Database config #########
