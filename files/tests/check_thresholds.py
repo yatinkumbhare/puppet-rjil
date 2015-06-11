@@ -41,8 +41,6 @@ class NotificationParser:
                         data_hash[name] = [level, local_data['message']]
                 except:
                     print "Line: %s, lead to an unexpected exception, skipping" % line
-                    pass
-        f.close()
         return data_hash
 
     def update_service_status(self, status, service_name, note=''):
@@ -62,7 +60,7 @@ class NotificationParser:
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--filename', help='Notification file to parse')
+    argparser.add_argument('filename', help='Notification file to parse')
     args = argparser.parse_args()
     notification_parser = NotificationParser()
     data = notification_parser.parse(args.filename)
