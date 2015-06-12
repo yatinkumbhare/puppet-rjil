@@ -40,6 +40,13 @@ class rjil::contrail::vrouter (
     discovery_address => $discovery_address,
     api_address       => $api_address,
   }
+
+  include rjil::contrail::logrotate::consolidate
+
+  rjil::jiocloud::logrotate { 'contrail-vrouter-daily.log':
+    logdir       => '/var/log/contrail',
+  }
+  
   ##
   # validation checks
   ##
