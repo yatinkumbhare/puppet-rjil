@@ -175,6 +175,7 @@ node /^uc\d+/ {
   include rjil::keystone
   include rjil::glance
   include rjil::neutron::ovs
+  include rjil::neutron::network::undercloud
   include rjil::ironic
   include rjil::nova::controller
   include rjil::openstack_zeromq

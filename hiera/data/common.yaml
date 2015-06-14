@@ -251,7 +251,6 @@ rjil::neutron::contrail::public_network_name: "%{hiera('public_network_name')}"
 
 rjil::neutron::contrail::fip_pool::keystone_admin_password: "%{hiera('admin_password')}"
 
-rjil::neutron::ovs::ctlplane_network_name: ctlplane
 rjil::neutron::server_name: "%{hiera('neutron_public_address')}"
 rjil::neutron::ssl: true
 rjil::neutron::rewrites:
@@ -263,6 +262,17 @@ rjil::neutron::headers:
   - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
   - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
   - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
+
+########### Neutron ovs configuration
+######################################
+##
+# OVS is used in undercloud neutron
+##
+rjil::neutron::network::undercloud::gateway: 10.130.182.1
+rjil::neutron::network::undercloud::pool_start: 10.130.182.12
+rjil::neutron::network::undercloud::pool_end: 10.130.182.254
+rjil::neutron::network::undercloud::cidr: 10.130.182.0/24
+rjil::neutron::network::undercloud::dns_nameservers: [8.8.8.8]
 
 ########### Cinder configuration
 ###################################

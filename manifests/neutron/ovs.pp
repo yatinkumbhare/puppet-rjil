@@ -3,14 +3,6 @@
 #
 
 class rjil::neutron::ovs(
-  $ctlplane_address,
-  $ctlplane_netmask,
-  $ctlplane_network,
-  $ctlplane_broadcast,
-  $ctlplane_gateway,
-  $ctlplane_cidr,
-  $ctlplane_dhcp_start,
-  $ctlplane_dhcp_end,
   $ctlplane_network_name       = 'ctlplane',
   $ctlplane_physical_interface = 'eth0',
   $ctlplane_nameservers        = '8.8.8.8',
@@ -54,23 +46,6 @@ class rjil::neutron::ovs(
   exec { 'network-up':
     command     => '/sbin/ifup -a',
     refreshonly => true,
-  }
-
-  neutron_network { "${ctlplane_network_name}":
-    tenant_name               => 'openstack',
-    provider_network_type     => 'flat',
-    provider_physical_network => "${ctlplane_network_name}",
-  }
-
-  neutron_subnet { "${ctlplane_network_name}":
-    cidr             => $ctlplane_cidr,
-    ip_version       => '4',
-    allocation_pools => ["start=${ctlplane_dhcp_start},end=${ctlplane_dhcp_end}"],
-    gateway_ip       => $ctlplane_gateway,
-    enable_dhcp      => true,
-    host_routes      => ["destination=169.254.169.254/32,nexthop=${::ipaddress}"],
-    network_name     => "${ctlplane_network_name}",
-    tenant_name      => 'openstack',
   }
 
   file { '/etc/init/neutron-plugin-openvswitch-agent.conf':
