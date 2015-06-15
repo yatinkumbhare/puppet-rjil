@@ -7,6 +7,7 @@ class rjil::neutron::ovs(
   $ctlplane_physical_interface = 'eth0',
   $ctlplane_nameservers        = '8.8.8.8',
   $ctlplane_domain             = 'undercloud.local',
+  $l3_agent_enabled            = false,
 ) {
 
   include ::rjil::neutron
@@ -23,7 +24,13 @@ class rjil::neutron::ovs(
     require => File['/etc/init/neutron-plugin-openvswitch-agent.conf']
   }
 
-  class { '::neutron::agents::l3': } # Is this needed at all? I don't think so. - Soren
+
+  ##
+  # Undercloud will not need l3 agent.
+  ##
+  if $l3_agent_enabled {
+    contain ::neutron::agents::l3
+  }
 
   vs_bridge { "br-${ctlplane_network_name}":
     ensure => present,
