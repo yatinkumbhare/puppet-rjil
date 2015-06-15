@@ -91,8 +91,7 @@ class rjil::neutron::ovs(
         content   => template('rjil/undercloud_etc_network_interfaces.erb'),
         notify    => Exec['network-down'],
         require   => [ Vs_bridge[$br_name],
-                         Vs_port[$br_physical_interface],
-                       ],
+                        Vs_port[$br_physical_interface]],
       }
     }
   } else {
@@ -100,8 +99,7 @@ class rjil::neutron::ovs(
       content   => template('rjil/undercloud_etc_network_interfaces.erb'),
       notify    => Exec['network-down'],
       require   => [ Vs_bridge[$br_name],
-                       Vs_port[$br_physical_interface],
-                       ],
+                    Vs_port[$br_physical_interface]],
     }
   }
 
