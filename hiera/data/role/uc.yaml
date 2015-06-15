@@ -65,3 +65,5 @@ rjil::nova::compute::rbd_enabled: false
 rjil::nova::compute::compute_driver: ironic
 
 rjil::nova::controller::manage_flavors: false
+rjil::test::neutron::fip_available: false
+rjil::test::neutron::test_netcreate: false
