@@ -1,6 +1,8 @@
 public_address: "%{ipaddress_br_ctlplane_or_eth0}"
 private_address: "%{ipaddress_br_ctlplane_or_eth0}"
 rjil::jiocloud::consul_role: bootstrapserver
+rjil::keystone::disable_db_sync: false
+rjil::system::ntp::run_ntpdate: false
 rjil::system::ntp::server: true
 ntp::servers:
   - pool.ntp.org
@@ -51,6 +53,9 @@ rjil::openstack_objects::lb_available: false
 rjil::neutron::api_extensions_path: false
 rjil::neutron::service_provider: false
 
+rjil::openstack_objects::tenants: []
+tempest::neutron_available: false
+tempest::provision::networkname: false
 neutron::core_plugin: ml2
 neutron::service_plugins: [router]
 neutron::quota::quota_driver: neutron.db.quota_db.DbQuotaDriver
