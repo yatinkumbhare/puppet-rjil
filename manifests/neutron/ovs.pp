@@ -56,11 +56,13 @@ class rjil::neutron::ovs(
     $br_network_orig = $br_network
   }
 
-  include ::rjil::neutron
+  contain ::rjil::neutron
 
-  contain ::neutron::plugins::ovs
+  contain ::neutron::plugins::ml2
 
   contain ::neutron::agents::ml2::ovs
+
+  contain ::neutron::agents::dhcp
 
   neutron_plugin_ovs {
     'OVS/bridge_mappings':   value => "${ctlplane_network_name}:br-${ctlplane_network_name}";
@@ -78,16 +80,12 @@ class rjil::neutron::ovs(
     contain ::neutron::agents::l3
   }
 
-  vs_bridge { "br-${ctlplane_network_name}":
-    ensure => present,
-  } ->
-  vs_port { $ctlplane_physical_interface:
-    ensure => present,
-    bridge => "br-${ctlplane_network_name}",
-  } ->
   file { '/etc/network/interfaces.new':
     content => template('rjil/undercloud_etc_network_interfaces.erb'),
     notify => Exec['network-down']
+    require   => [ Vs_bridge[$br_name],
+                     Vs_port[$br_physical_interface],
+                   ],
   } ~>
   exec { 'network-down':
     command     => '/sbin/ifdown -a',
@@ -99,10 +97,6 @@ class rjil::neutron::ovs(
   exec { 'network-up':
     command     => '/sbin/ifup -a',
     refreshonly => true,
-  }
-
-  file { '/etc/init/neutron-plugin-openvswitch-agent.conf':
-    source => 'puppet:///modules/rjil/neutron-plugin-openvswitch-agent.conf',
   }
 
 }

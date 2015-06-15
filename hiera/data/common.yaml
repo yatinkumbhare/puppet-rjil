@@ -278,6 +278,15 @@ rjil::neutron::network::undercloud::pool_end: 10.130.182.254
 rjil::neutron::network::undercloud::cidr: 10.130.182.0/24
 rjil::neutron::network::undercloud::dns_nameservers: [8.8.8.8]
 
+
+neutron::agents::ml2::ovs::bridge_uplinks: ['br-ctlplane:eth0']
+neutron::agents::ml2::ovs::bridge_mappings: ['ctlplane:br-ctlplane']
+
+neutron::plugins::ml2::type_drivers: ['flat']
+neutron::plugins::ml2::tenant_network_types: ['flat']
+neutron::plugins::ml2::mechanism_drivers: ['openvswitch']
+neutron::plugins::ml2::flat_networks: ['ctlplane']
+
 ########### Cinder configuration
 ###################################
 rjil::cinder::rpc_backend: "%{hiera('rpc_backend')}"
