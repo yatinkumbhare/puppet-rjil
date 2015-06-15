@@ -78,32 +78,47 @@ class rjil::neutron::ovs(
   # to different mac address.
   ##
   if $swap_macs {
-    if inline_template("<%= scope.lookupvar('ipaddress_' + @br_physical_interface) %>") {
-      $br_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
-      $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_name_for_facter) %>")
-    } elsif inline_template("<%= scope.lookupvar('ipaddress_' + @br_name_for_facter) %>") {
-      $br_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_name_for_facter) %>")
-      $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
+    if has_interface_with($br_name_for_facter) {
+      if inline_template("<%= scope.lookupvar('ipaddress_' + @br_physical_interface) %>") {
+        $br_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
+        $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_name_for_facter) %>")
+      } elsif inline_template("<%= scope.lookupvar('ipaddress_' + @br_name_for_facter) %>") {
+        $br_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_name_for_facter) %>")
+        $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
+      }
+
+      file { '/etc/network/interfaces.new':
+        content   => template('rjil/undercloud_etc_network_interfaces.erb'),
+        notify    => Exec['network-down'],
+        require   => [ Vs_bridge[$br_name],
+                         Vs_port[$br_physical_interface],
+                       ],
+      }
+    }
+  } else {
+    file { '/etc/network/interfaces.new':
+      content   => template('rjil/undercloud_etc_network_interfaces.erb'),
+      notify    => Exec['network-down'],
+      require   => [ Vs_bridge[$br_name],
+                       Vs_port[$br_physical_interface],
+                       ],
     }
   }
 
-  file { '/etc/network/interfaces.new':
-    content => template('rjil/undercloud_etc_network_interfaces.erb'),
-    notify => Exec['network-down']
-    require   => [ Vs_bridge[$br_name],
-                     Vs_port[$br_physical_interface],
-                   ],
-  } ~>
   exec { 'network-down':
     command     => '/sbin/ifdown -a',
     refreshonly => true,
-  } ->
+  }
+
   file { '/etc/network/interfaces':
-    source => '/etc/network/interfaces.new'
-  } ~>
+    source  => '/etc/network/interfaces.new',
+    require => Exec['network-down'],
+  }
+
   exec { 'network-up':
     command     => '/sbin/ifup -a',
     refreshonly => true,
+    subscribe   => File['/etc/network/interfaces'],
   }
 
 }
