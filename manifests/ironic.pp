@@ -22,10 +22,6 @@ class rjil::ironic(
     notify => Service['nova-compute']
   }
 
-  file { '/etc/default/neutron-server':
-    source => 'puppet:///modules/rjil/neutron-server.defaults',
-  }
-
   user {'ironic':
     ensure => present,
     before => [ Package['ironic-api'], Package['ironic-conductor'] ],
