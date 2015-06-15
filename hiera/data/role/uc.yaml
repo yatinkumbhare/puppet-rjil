@@ -1,3 +1,5 @@
+public_address: "%{ipaddress_br_ctlplane_or_eth0}"
+private_address: "%{ipaddress_br_ctlplane_or_eth0}"
 rjil::jiocloud::consul_role: bootstrapserver
 rjil::system::ntp::server: true
 ntp::servers:
@@ -43,3 +45,12 @@ neutron_internal_address: network-uc.jiocloud.com
 
 ironic_public_address: ironic-uc.jiocloud.com
 ironic_internal_address: ironic-uc.jiocloud.com
+
+rjil::openstack_objects::lb_available: false
+
+rjil::neutron::api_extensions_path: false
+rjil::neutron::service_provider: false
+
+neutron::core_plugin: ml2
+neutron::service_plugins: [router]
+neutron::quota::quota_driver: neutron.db.quota_db.DbQuotaDriver
