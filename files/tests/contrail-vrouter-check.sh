@@ -4,39 +4,58 @@ log_file="/var/log/contrail/rjil-vrouter-restart.log"
 test_cmd='curl -s -m 5 -o /dev/null http://localhost:8085/Snh_ItfReq?name='
 lock_file='/var/run/contrail-vrouter-restart.err.lock'
 
-flag_warning=0
 last_step='Curl'
+
+##
+# Perform the check
+##
+
 ${test_cmd}
 rv=$?
+
+##
+# If it succeeds, delete any lockfile, exit 0
+##
+if [ $rv == 0 ]
+then
+    if [ -f $lock_file ]
+    then
+        rm $lock_file
+    fi
+    exit $rv
+fi
+
+##
+# If it fails, check for lock file.
+# If lock file exists, exit 2.
+# If lock file does not exist, create it, issue the restart, exit 1.
+# Exit code status per existing code
+# 0 - OK
+# 1 - WARNING
+# 2 - CRITICAL
+# 3 - Param Error
+# 4+- Other Error
+##
+
 if [ $rv == 28 ]
 then
-    if [ ! -f $lock_file ]
+    if [ -f $lock_file ]
     then
-        echo "[INFO] `date` `hostname` [`date +%s`] Restarting vrouter ">>${log_file}
-        last_step='Agent restart'
-        flag_warning=1
-        service contrail-vrouter-agent restart
-        sleep 5
-        ${test_cmd}
-        rv=$?
-    else
-        exit 1
+        exit 2
     fi
+    echo "[WARN] `date` `hostname` [`date +%s`] Restarting vrouter ">>${log_file}
+    echo "[ERROR] `date`" >>${lock_file}
+    last_step='Agent restart'
+    service contrail-vrouter-agent restart
+    exit 1
 fi
 if [ $rv != 0 ]
 then
+    ##
+    # Non-28 Error happening, need to check what is it
+    # No need to put a lock file here as restart (and hence lock) are done only
+    # on exit 28 of curl
+    ##
     echo "[ERROR] `date` `hostname` [`date +%s`] ${last_step} failure - code ${rv}">>${log_file}
-    echo "[ERROR] `date`" >>${lock_file}
-    exit 2
+    exit $rv
 fi
-##  
-# If we have reached here, then the check is ok or warning. We dont need the
-# lock file as the check is not failed.
-##
-
-if [ -f $lock_file ]
-then
-    rm $lock_file
-fi
-
-exit $flag_warning
