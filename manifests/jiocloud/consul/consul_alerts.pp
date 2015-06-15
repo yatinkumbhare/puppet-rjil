@@ -10,7 +10,6 @@ class rjil::jiocloud::consul::consul_alerts (
   $slack_cluster_name     = 'consul-alerts',
   $slack_username         = 'WatchBot',
   $slack_channel          = 'consul-alerts',
-  $bin_dir                = '/usr/bin',
 ) {
 
   package { 'consul-alerts':
@@ -41,7 +40,7 @@ class rjil::jiocloud::consul::consul_alerts (
   file { '/etc/init/consul-alerts.conf':
     owner   => 'root',
     group   => 'root',
-    mode    => '0444',
+    mode    => '0644',
     require => Package['consul-alerts'],
     content => template('rjil/consul-alerts.erb'),
     notify  => Service[consul-alerts]
