@@ -22,11 +22,17 @@ class rjil::jiocloud::consul::consul_alerts (
 
   if $slack_url {
     $enabled = 'true'
-    consul_kv {
-      'consul-alerts/config/notifiers/slack/url':          value => $slack_url;
+    $service_ensure = 'running'
+    consul_kv { 'consul-alerts/config/notifiers/slack/url':
+      value => $slack_url,
     }
   } else {
+    $service_ensure = 'stopped'
     $enabled = 'false'
+    consul_kv { 'consul-alerts/config/notifiers/slack/url':
+      ensure => absent,
+      value  => '',
+    }
   }
   consul_kv {
     'consul-alerts/config/checks/enabled':               value => $enabled;
@@ -47,7 +53,8 @@ class rjil::jiocloud::consul::consul_alerts (
   }
 
   service {'consul-alerts':
-    ensure  => 'running',
+    ensure  => $service_ensure,
+    enable  => $enabled,
   }
 
 }
