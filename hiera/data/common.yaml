@@ -865,7 +865,7 @@ rjil::tempest::tempest_clone_path: "%{hiera('tempest::tempest_clone_path')}"
 rjil::tempest::provision::auth_host: "%{hiera('keystone_public_address')}"
 rjil::tempest::provision::auth_port: "%{hiera('keystone_port')}"
 rjil::tempest::provision::auth_protocol: "%{hiera('api_protocol')}"
-
+rjil::tempest::provision::neutron_admin_password: "%{hiera('neutron::keystone::auth::password')}"
 
 tempest::provision::imagename: "%{hiera('tempest::image_name')}"
 tempest::provision::tenantname: "%{hiera('tempest::tenant_name')}"
