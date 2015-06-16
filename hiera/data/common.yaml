@@ -643,6 +643,8 @@ contrail::vrouter::manage_repo: false
 contrail::neutron_ip: "%{hiera('neutron_public_address')}"
 contrail::enable_analytics: false
 
+contrail::vrouter::debug: true
+
 rjil::contrail::server::enable_analytics: false
 
 ##
