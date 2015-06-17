@@ -60,4 +60,9 @@ class rjil::contrail::vrouter (
   rjil::test {
     'contrail-vrouter-check.sh':
   }
+
+  rjil::jiocloud::consul::service { 'contrail-vrouter-check':
+    interval      => '10s',
+    check_command => '/usr/lib/jiocloud/tests/contrail-vrouter-check.sh',
+  }
 }
