@@ -12,6 +12,7 @@ class rjil::neutron::ovs(
   $nameservers           = undef,
   $domain                = 'openstack.local',
   $l3_agent_enabled      = false,
+  $swap_macs             = false,
 ) {
 
   $br_name_for_facter = regsubst($br_name,'-','_','G')
@@ -64,20 +65,26 @@ class rjil::neutron::ovs(
 
   contain ::neutron::agents::dhcp
 
-  neutron_plugin_ovs {
-    'OVS/bridge_mappings':   value => "${ctlplane_network_name}:br-${ctlplane_network_name}";
-  }
-
-  class { '::neutron::agents::dhcp':
-    require => File['/etc/init/neutron-plugin-openvswitch-agent.conf']
-  }
-
-
   ##
   # Undercloud will not need l3 agent.
   ##
   if $l3_agent_enabled {
     contain ::neutron::agents::l3
+  }
+
+  ##
+  # gate/virtual environments may need to swap the mac address between
+  # physical and the bridge interface, as neutron will not allow to send packets
+  # to different mac address.
+  ##
+  if $swap_macs {
+    if inline_template("<%= scope.lookupvar('ipaddress_' + @br_physical_interface) %>") {
+      $br_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
+      $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_name_for_facter) %>")
+    } elsif inline_template("<%= scope.lookupvar('ipaddress_' + @br_name_for_facter) %>") {
+      $br_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_name_for_facter) %>")
+      $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
+    }
   }
 
   file { '/etc/network/interfaces.new':

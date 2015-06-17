@@ -33,3 +33,4 @@ rjil::neutron::contrail::fip_pools:
     tenants: ['tempest','testtenant']
 
 contrail::vrouter::vgw_subnets: ['100.1.0.0/24']
+rjil::neutron::ovs::swap_macs: true
