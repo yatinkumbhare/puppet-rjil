@@ -170,6 +170,7 @@ node /^haproxy\d+/ {
 node /^uc\d+/ {
   include rjil::base
   include rjil::memcached
+  include rjil::rabbitmq
   include openstack_extras::client
   include rjil::db
   include rjil::keystone
