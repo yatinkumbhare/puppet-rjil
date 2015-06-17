@@ -71,4 +71,12 @@ class rjil::ironic(
     port          => 6385,
     check_command => "/usr/lib/nagios/plugins/check_http -I 0.0.0.0 -p 6385"
   }
+
+  rjil::test::check {'tftp':
+    type       => 'udp',
+    check_type => 'validation',
+    port       => 69
+  }
+
+  rjil::test::check {'  
 }
