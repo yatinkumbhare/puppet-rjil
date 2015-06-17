@@ -102,7 +102,9 @@ echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/co
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
 echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
-
+if [ -n "${slack_url}" ]; then
+  echo 'slack_url=${slack_url}' > /etc/facter/facts.d/slack_url.txt
+fi
 ##
 # Workaround to add the swap partition for baremetal systems, as even though
 # cloudinit is creating the swap partition, its not added to the fstab and not

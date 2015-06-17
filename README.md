@@ -737,6 +737,10 @@ which builds a set of packages based on the [repoconf](https://github.com/jioclo
 
 By default, builds assume that no override repo is being used.
 
+### slack\_url
+
+Slack url to post consul alerts.
+
 ## Example of a full invocation
 
 This is what I used for testing:
