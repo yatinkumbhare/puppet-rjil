@@ -90,13 +90,13 @@ if [ -n "${puppet_modules_source_repo}" ]; then
   else
     time librarian-puppet install --puppetfile=/tmp/rjil/Puppetfile --path=/etc/puppet/modules.overrides
   fi
-  cat <<INISETTING | puppet apply
+  cat <<INISETTING | puppet apply --config_version='echo settings'
   ini_setting { basemodulepath: path => "/etc/puppet/puppet.conf", section => main, setting => basemodulepath, value => "/etc/puppet/modules.overrides:/etc/puppet/modules" }
   ini_setting { default_manifest: path => "/etc/puppet/puppet.conf", section => main, setting => default_manifest, value => "/etc/puppet/manifests.overrides/site.pp" }
   ini_setting { disable_per_environment_manifest: path => "/etc/puppet/puppet.conf", section => main, setting => disable_per_environment_manifest, value => "true" }
 INISETTING
 else
-  puppet apply -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests/site.pp\" }"
+  puppet apply --config_version='echo settings' -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests/site.pp\" }"
 fi
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
@@ -118,10 +118,10 @@ fi
 while true
 do
   # first install all packages to make the build as fast as possible
-  puppet apply --detailed-exitcodes \`puppet config print default_manifest\` --tags package
+  puppet apply --detailed-exitcodes \`puppet config print default_manifest\` --config_version='echo packages' --tags package
   ret_code_package=\$?
   # now perform base config
-  (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'include rjil::jiocloud' ) | puppet apply --detailed-exitcodes --debug
+  (echo 'File<| title == "/etc/consul" |> { purge => false }'; echo 'include rjil::jiocloud' ) | puppet apply --config_version='echo bootstrap' --detailed-exitcodes --debug
   ret_code_jio=\$?
   if [[ \$ret_code_jio = 1 || \$ret_code_jio = 4 || \$ret_code_jio = 6 || \$ret_code_package = 1 || \$ret_code_package = 4 || \$ret_code_package = 6 ]]
   then
