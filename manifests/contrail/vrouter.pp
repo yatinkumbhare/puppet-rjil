@@ -43,8 +43,10 @@ class rjil::contrail::vrouter (
 
   include rjil::contrail::logrotate::consolidate
 
-  rjil::jiocloud::logrotate { 'contrail-vrouter-daily.log':
+# Vrouter is now honoring the filesize, so no need for consolidate here
+  rjil::jiocloud::logrotate { 'contrail-vrouter':
     logdir       => '/var/log/contrail',
+    copytruncate => true,
   }
   
   ##
