@@ -12,7 +12,6 @@
 
 contrail_logs=('contrail-api'
 		'contrail-schema'
-		'contrail-vrouter'
 		'contrail-discovery'
 		'contrail-collector'
 		'vnc_openstack.err'
