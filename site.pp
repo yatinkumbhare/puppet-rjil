@@ -181,6 +181,7 @@ node /^uc\d+/ {
   include rjil::nova::controller
   include rjil::openstack_zeromq
   include rjil::openstack_objects
+  include rjil::nova::compute
 
   Class['rjil::db'] -> Rjil::Service_blocker['neutron']
   Class['rjil::db'] -> Rjil::Service_blocker['glance']

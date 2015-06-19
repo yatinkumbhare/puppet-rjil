@@ -10,19 +10,11 @@ class rjil::ironic(
   $ssl            = false,
 ) {
 
-  class { '::nova::compute': }
-  class { '::nova::compute::ironic' :}
-
   class { '::ironic': }
   class { '::ironic::api': }
   class { '::ironic::conductor': }
   class { '::ironic::drivers::ipmi': }
   class { '::ironic::keystone::auth': }
-
-  file { '/etc/init/nova-compute.conf':
-    source => 'puppet:///modules/rjil/nova-compute.conf',
-    notify => Service['nova-compute']
-  }
 
   user {'ironic':
     ensure => present,
