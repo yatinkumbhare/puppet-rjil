@@ -105,4 +105,12 @@ class rjil::neutron (
     tags          => ['real'],
     port          => $public_port,
   }
+
+  file { "/etc/neutron/policy.json":
+    ensure  => file,
+    owner   => 'root',
+    mode    => '0644',
+    source => 'puppet:///modules/rjil/neutron_policy.json',
+    notify  => Service['neutron-server'],
+  }
 }
