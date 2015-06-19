@@ -4,7 +4,10 @@
 #
 
 class rjil::ironic(
-  $deploy_ironic_api_url = "http://${::ipaddress}:6385/",
+  $listen_address = $::ipaddress,
+  $api_port       = 6385,
+  $api_protocol   = 'http',
+  $ssl            = false,
 ) {
 
   class { '::nova::compute': }
@@ -57,7 +60,9 @@ class rjil::ironic(
     ensure => 'present'
   }
 
-  ironic_config { 'conductor/ironic_api_url': value => $deploy_ironic_api_url }
+  ironic_config { 'conductor/ironic_api_url':
+    value => "${api_protocol}://${listen_address}:${api_port}/"
+  }
 
   package { 'tftpd-hpa':
     ensure => 'present'
@@ -68,8 +73,7 @@ class rjil::ironic(
 
   rjil::jiocloud::consul::service { 'ironic':
     tags          => ['real'],
-    port          => 6385,
-    check_command => "/usr/lib/nagios/plugins/check_http -I 0.0.0.0 -p 6385"
+    port          => $api_port,
   }
 
   rjil::test::check {'tftp':
@@ -78,5 +82,18 @@ class rjil::ironic(
     port       => 69
   }
 
-  rjil::test::check {'  
+  rjil::test::check {'ironic':
+    port => $api_port,
+    ssl  => $ssl,
+  }
+
+
+  rjil::jiocloud::consul::service { 'ironic-conductor':
+    tags          => ['real'],
+  }
+
+  rjil::test::check {'ironic-conductor':
+    type       => 'proc',
+  }
+
 }
