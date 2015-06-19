@@ -54,4 +54,17 @@ class rjil::contrail::vrouter (
   ##
 
   include rjil::test::contrail_vrouter
+
+  ##
+  # Temporary consul check to test and restart vrouter
+  ##
+
+  rjil::test {
+    'contrail-vrouter-check.sh':
+  }
+
+  rjil::jiocloud::consul::service { 'contrail-vrouter-check':
+    interval      => '10s',
+    check_command => '/usr/lib/jiocloud/tests/contrail-vrouter-check.sh',
+  }
 }
