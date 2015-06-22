@@ -5,9 +5,9 @@
 
 class rjil::jiocloud::dhcp (
   $dnsdomain   = [ 'ilo.jio'],
-  $nameservers = ['10.204.1.1'],
+  $nameservers = ['8.8.8.4','8.8.8.8'],
   $interfaces  = ['eth0'],
-  $ntpservers  = ['pool.ntp.org'],
+  $ntpservers  = [$::ipaddress],
   $fakenetwork = '100.100.100.0',
   $fakenetmask = '255.255.255.0',
   $dhcppools   = {},
