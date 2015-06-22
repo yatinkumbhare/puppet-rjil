@@ -14,6 +14,13 @@ class rjil::nova::compute::rbd (
 ) {
 
   ##
+  # Test rbd key is installed to libvirt.
+  ##
+  class {'rjil::test::compute::rbd':
+    cinder_rbd_secret_uuid => $cinder_rbd_secret_uuid,
+  }
+
+  ##
   # service blocker to stmon before mon_config to be run.
   # Mon_config must be run on all ceph client nodes also.
   # Also mon_config should be setup before cinder_volume to be started,
