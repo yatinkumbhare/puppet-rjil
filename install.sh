@@ -19,7 +19,7 @@ Add any additional users to be set up on this host by adding them to
            Rjil::Localuser['amar'],
            < etc. etc. >
          )
-
+ 
 Once you're done, run:
 
   puppet apply /etc/puppet/manifests/site.pp
