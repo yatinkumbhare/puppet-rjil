@@ -9,6 +9,10 @@ class rjil::tempest::provision (
   $neutron_admin_user     = 'neutron',
   $neutron_admin_password = 'neutron',
   $configure_neutron      = true,
+  $image_source           = 'http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img',
+  $convert_to_raw         = true,
+  $image_name             = 'cirros',
+  $staging_path           = '/opt/staging',
 ) {
 
 ##
@@ -44,7 +48,27 @@ class rjil::tempest::provision (
     }
   }
 
-  include ::tempest::provision
+  include staging
 
+  staging::file {"image_stage_${image_name}":
+    source => $image_source,
+    target => "${staging_path}/${image_name}"
+  }
+
+  if $convert_to_raw {
+    exec {'convert_image_to_raw':
+      command => "qemu-img convert -O raw ${staging_path}/${image_name} ${staging_path}/${image_name}.img",
+      creates => "${staging_path}/${image_name}.img",
+      require => Staging::File["image_stage_${image_name}"],
+    }
+
+    $image_source_path = "${staging_path}/${image_name}.img"
+  } else {
+    $image_source_path = "${staging_path}/${image_name}"
+  }
+
+  class {'::tempest::provision':
+    image_source => $image_source_path,
+  }
 }
 
