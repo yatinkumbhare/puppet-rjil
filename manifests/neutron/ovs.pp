@@ -10,7 +10,7 @@ class rjil::neutron::ovs(
   $br_name               = 'br-ctlplane',
   $br_physical_interface = 'eth0',
   $nameservers           = undef,
-  $domain                = 'openstack.local',
+  $domain                = ['openstack.local'],
   $l3_agent_enabled      = false,
   $swap_macs             = false,
 ) {
@@ -76,6 +76,11 @@ class rjil::neutron::ovs(
   # gate/virtual environments may need to swap the mac address between
   # physical and the bridge interface, as neutron will not allow to send packets
   # to different mac address.
+  #
+  # If swap_macs, network should not be reconfigured before the macaddress fact
+  # for bridge interface (or any other fact for that interface), otherwise macs
+  # would not be swapped because of the fact that the facts and functions are getting
+  # created on compile phase where the bridge would be created on execution phase.
   ##
   if $swap_macs {
     if has_interface_with($br_name_for_facter) {
@@ -87,36 +92,56 @@ class rjil::neutron::ovs(
         $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
       }
 
-      file { '/etc/network/interfaces.new':
-        content   => template('rjil/undercloud_etc_network_interfaces.erb'),
-        notify    => Exec['network-down'],
-        require   => [ Vs_bridge[$br_name],
-                        Vs_port[$br_physical_interface]],
+       rjil::netconfig::interface { $br_physical_interface:
+        method     => 'manual',
+        options    => {
+            'up' => 'ifconfig $IFACE 0.0.0.0 up'
+          },
+        onboot     => true,
+        macaddress => $physical_mac,
+      }
+
+      rjil::netconfig::interface { $br_name:
+        method        => 'static',
+        macaddress    => $br_mac,
+        ipaddress     => $br_address_orig,
+        netmask       => $br_netmask_orig,
+        network       => $br_network_orig,
+        gateway       => $gateway,
+        nameservers   => $nameservers,
+        searchdomains => $domain,
+        options       => {
+            'up'   => "iptables -t nat -A PREROUTING -d 169.254.169.254/32 -i \$IFACE -p tcp -m tcp --dport 80 -j DNAT --to-destination ${br_address_orig}:8775",
+            'down' => "iptables -t nat -D PREROUTING -d 169.254.169.254/32 -i \$IFACE -p tcp -m tcp --dport 80 -j DNAT --to-destination ${br_address_orig}:8775"
+          },
+        require       => [ Vs_bridge[$br_name],
+                          Vs_port[$br_physical_interface] ]
       }
     }
   } else {
-    file { '/etc/network/interfaces.new':
-      content   => template('rjil/undercloud_etc_network_interfaces.erb'),
-      notify    => Exec['network-down'],
-      require   => [ Vs_bridge[$br_name],
-                    Vs_port[$br_physical_interface]],
+    rjil::netconfig::interface { $br_physical_interface:
+        method     => 'manual',
+        options    => {
+            'up' => 'ifconfig $IFACE 0.0.0.0 up'
+          },
+        onboot     => true,
+      }
+
+    rjil::netconfig::interface { $br_name:
+      method        => 'static',
+      ipaddress     => $br_address_orig,
+      netmask       => $br_netmask_orig,
+      network       => $br_network_orig,
+      gateway       => $gateway,
+      nameservers   => $nameservers,
+      searchdomains => $domain,
+      options       => {
+          'up'   => "iptables -t nat -A PREROUTING -d 169.254.169.254/32 -i \$IFACE -p tcp -m tcp --dport 80 -j DNAT --to-destination ${br_address_orig}:8775",
+          'down' => "iptables -t nat -D PREROUTING -d 169.254.169.254/32 -i \$IFACE -p tcp -m tcp --dport 80 -j DNAT --to-destination ${br_address_orig}:8775"
+        },
+      require       => [ Vs_bridge[$br_name],
+                        Vs_port[$br_physical_interface] ]
     }
-  }
-
-  exec { 'network-down':
-    command     => '/sbin/ifdown -a',
-    refreshonly => true,
-  }
-
-  file { '/etc/network/interfaces':
-    source  => '/etc/network/interfaces.new',
-    require => Exec['network-down'],
-  }
-
-  exec { 'network-up':
-    command     => '/sbin/ifup -a',
-    refreshonly => true,
-    subscribe   => File['/etc/network/interfaces'],
   }
 
 }
