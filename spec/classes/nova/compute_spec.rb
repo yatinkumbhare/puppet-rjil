@@ -32,14 +32,14 @@ describe 'rjil::nova::compute' do
         'rjil::nova::zmq_config',
         'nova::client',
         'nova',
+        'nova::compute',
         'nova::compute::neutron',
+        'nova::compute::libvirt',
         'rjil::nova::compute::rbd',
         'rjil::nova::logrotate::manage'
       ].each do |x|
         should contain_class(x)
       end
-
-      should contain_class('nova::compute')
 
       should contain_rjil__jiocloud__logrotate('nova-compute') \
         .with_logdir('/var/log/nova/')
@@ -80,25 +80,30 @@ describe 'rjil::nova::compute' do
           :refreshonly => true
         }
       )
+
+      should contain_package('libvirt').that_comes_before('Exec[rm_virbr0]')
+
     end
   end
 
-  context 'with ironic and no rbd' do
+  context 'with ironic' do
 
     let :params do
       {
-        :rbd_enabled    => false,
         :compute_driver => 'ironic',
       }
     end
 
-    it 'should deploy with ironic and without rbd' do
+    it 'should deploy with ironic' do
 
       should contain_class('nova::compute::ironic')
 
       should_not contain_class('nova::compute::neutron')
 
       should_not contain_class('rjil::nova::compute::rbd')
+
+      should_not contain_package('libvirt')
+
     end
   end
 

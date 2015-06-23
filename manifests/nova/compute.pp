@@ -8,12 +8,11 @@
 # [*rbd_enabled*]
 #   whether rbd is enabled or not, if rbd is enabled, ceph specific
 #   configurations would be added.
+#   with the current setup, rbd is not going to work with ironic, so this
+#   parameter have no effect in case of ironic compute_driver.
 #
 # [*consul_check_interval*]
 #   Consul service health check interval
-#
-# [*private_interface*]
-#   Private interface on which compute listen for vncserver
 #
 # [*compute_driver*]
 #   Which compute driver to be used, example: libvirt, ironic. Default: libvirt.
@@ -22,7 +21,6 @@
 class rjil::nova::compute (
   $rbd_enabled           = true,
   $consul_check_interval = '120s',
-  $private_address       = $::ipaddress,
   $compute_driver        = 'libvirt',
 ) {
 
@@ -48,16 +46,21 @@ class rjil::nova::compute (
   ##
   # ironic doesnt need vif specific configurations.
   ##
-  if $compute_driver != 'ironic' {
+  if $compute_driver == 'libvirt' {
     include ::nova::compute::neutron
+
+    Package['libvirt'] -> Exec['rm_virbr0']
+
+    ##
+    # if rbd is enabled, configure ceph.
+    # rbd will not support ironic with current setup, so only to be enabled in
+    # case of libvirt.
+    ##
+    if $rbd_enabled {
+      include ::rjil::nova::compute::rbd
+    }
   }
 
-  ##
-  # if rbd is enabled, configure ceph
-  ##
-  if $rbd_enabled {
-    include ::rjil::nova::compute::rbd
-  }
 
   rjil::jiocloud::logrotate { 'nova-compute':
     logdir => '/var/log/nova/'
