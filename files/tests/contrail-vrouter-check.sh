@@ -1,6 +1,6 @@
 #!/bin/bash
 
-log_file="/var/log/contrail/rjil-vrouter-restart.log"
+log_file="/var/log/consul/contrail-vrouter-check.log"
 test_cmd='curl -s -m 5 -o /dev/null http://localhost:8085/Snh_ItfReq?name='
 lock_file='/var/run/contrail-vrouter-restart.err.lock'
 

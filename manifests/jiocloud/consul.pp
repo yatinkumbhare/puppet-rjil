@@ -23,4 +23,16 @@ class rjil::jiocloud::consul($config_hash) {
   }
   File['/etc/consul'] ~> Exec['reload-consul']
 
+##
+# Adding log folder for using with checks as required
+# Cannot use the respective service directory as consul user cannot
+# write to them
+##
+
+  file { '/var/log/consul':
+    ensure => directory,
+    owner  => 'consul',
+    require => [ User['consul'] ],
+  }
+
 }
