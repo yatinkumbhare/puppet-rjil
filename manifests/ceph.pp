@@ -106,4 +106,19 @@ class rjil::ceph (
     pool_default_size=> $pool_default_size,
     require          => File['/etc/ceph'],
   }
+
+  ## File for logrotate postrotate
+  file { '/usr/local/bin/ceph-postrotate.sh':
+    source => 'puppet:///modules/rjil/ceph-postrotate.sh',
+    mode => '0755',
+    owner => 'root',
+    group => 'root'
+  }
+
+  rjil::jiocloud::logrotate{'ceph':
+    logfile       => '/var/log/ceph/*log',
+    postrotate    => '/usr/local/bin/ceph-postrotate.sh',
+    sharedscripts => true,
+    missingok     => true,
+  }
 }

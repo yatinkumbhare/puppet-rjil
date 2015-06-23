@@ -3,13 +3,16 @@ define rjil::jiocloud::logrotate(
   $logfile       = undef,
   $service       = $name,
   $rotate_every  = 'daily',
-  $rotate        = 60,
+  $rotate        = '60',
   $compress      = true,
   $delaycompress = true,
   $ifempty       = false,
   $copytruncate  = undef,
   $dateext       = true,
   $ensure        = 'present',
+  $postrotate    = undef,
+  $sharedscripts = undef,
+  $missingok     = undef,
 ) {
   if ( !$logfile ){
       if ($logdir =~ /\/$/) {
@@ -30,5 +33,8 @@ define rjil::jiocloud::logrotate(
     copytruncate  => $copytruncate,
     dateext       => $dateext,
     ensure        => $ensure,
+    postrotate    => $postrotate,
+    sharedscripts => $sharedscripts,
+    missingok     => $missingok,
   }
 }
