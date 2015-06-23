@@ -182,6 +182,7 @@ node /^uc\d+/ {
   include rjil::openstack_zeromq
   include rjil::openstack_objects
   include rjil::nova::compute
+  include rjil::jiocloud::dhcp
 
   Class['rjil::db'] -> Rjil::Service_blocker['neutron']
   Class['rjil::db'] -> Rjil::Service_blocker['glance']
@@ -191,7 +192,6 @@ node /^uc\d+/ {
   Service['httpd'] -> Rjil::Service_blocker['glance']
 
   #include rjil::jiocloud::aptmirror
-  #include rjil::jiocloud::dhcp
 }
 
 node /^httpproxy\d+/ {

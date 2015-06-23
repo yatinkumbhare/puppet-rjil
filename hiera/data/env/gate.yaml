@@ -34,3 +34,11 @@ rjil::neutron::contrail::fip_pools:
 
 contrail::vrouter::vgw_subnets: ['100.1.0.0/24']
 rjil::neutron::ovs::swap_macs: true
+
+ilo::network: 10.1.0.0
+ilo::netmask: 255.255.255.0
+ilo::gateway: 10.1.0.1
+
+rjil::jiocloud::dhcp::interface: eth1
+rjil::jiocloud::dhcp::server_ipaddress: 10.1.0.2
+rjil::jiocloud::dhcp::server_netmask: "%{hiera('ilo::netmask')}"

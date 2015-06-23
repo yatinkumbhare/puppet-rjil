@@ -44,3 +44,11 @@ contrail::edge_routers:
   router2: {host_address: '1.1.1.2'}
 
 rjil::neutron::ovs::swap_macs: true
+
+ilo::network: 10.1.0.0
+ilo::netmask: 255.255.255.0
+ilo::gateway: 10.1.0.1
+
+rjil::jiocloud::dhcp::interface: eth1
+rjil::jiocloud::dhcp::server_ipaddress: 10.1.0.2
+rjil::jiocloud::dhcp::server_netmask: "%{hiera('ilo::netmask')}"
