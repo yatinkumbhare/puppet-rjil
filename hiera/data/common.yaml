@@ -856,9 +856,72 @@ tempest::setup_venv: false
 tempest::swift_available: true
 tempest::tempest_clone_path: /home/jenkins/tempest
 tempest::tempest_clone_owner: jenkins
-tempest::allow_tenant_isolation: true
 tempest::volume_storage_protocol: ceph
-
+tempest::extra_config:
+  auth/allow_tenant_isolation:
+    value: true
+  compute/run_ssh:
+    value: true
+  compute/ssh_auth_method:
+    value: keypair
+  compute/ssh_connect_method:
+    value: floating
+  compute/ssh_user:
+    value: cirros
+  compute/network_for_ssh:
+    value: public
+  compute/use_floatingip_for_ssh:
+    value: true
+  compute-feature-enabled/disk_config:
+    value: true
+  compute-feature-enabled/boot_from_volume_only:
+    value: true
+  compute-feature-enabled/api_extensions:
+    value: all
+  compute-feature-enabled/change_password:
+    value: false 
+  compute-feature-enabled/console_output:
+    value: true
+  compute-feature-enabled/resize:
+    value: false
+  compute-feature-enabled/pause:
+    value: true
+  compute-feature-enabled/shelve:
+    value: false
+  compute-feature-enabled/suspend:
+    value: true
+  compute-feature-enabled/live_migration:
+    value: false
+  compute-feature-enabled/block_migration_for_live_migration:
+    value: false
+  compute-feature-enabled/block_migrate_cinder_iscsi:
+    value: false
+  compute-feature-enabled/vnc_console:
+    value: false
+  compute-feature-enabled/spice_console:
+    value: false
+  compute-feature-enabled/rdp_console:
+    value: false
+  compute-feature-enabled/rescue:
+    value: false
+  compute-feature-enabled/enable_instance_password:
+    value: true
+  compute-feature-enabled/interface_attach:
+    value: true
+  compute-feature-enabled/snapshot:
+    value: true
+  compute-feature-enabled/ec2_api:
+    value: true
+  oslo_concurrency/disable_process_locking:
+    value: true
+  validation/run_validation:
+    value: true
+  validation/connect_method:
+    value: floating
+  validation/auth_method:
+    value: keypair
+  volume/volume_size:
+    value: 4
 
 rjil::tempest::keystone_admin_token: "%{hiera('keystone::admin_token')}"
 rjil::tempest::auth_host: "%{hiera('keystone_public_address')}"
