@@ -367,9 +367,8 @@ nova::compute::libvirt::libvirt_images_type: raw
 
 nova::compute::neutron::libvirt_vif_driver: nova_contrail_vif.contrailvif.VRouterVIFDriver
 
-
-rjil::nova::compute::cinder_rbd_secret_uuid: "%{hiera('cinder_rbd_secret_uuid')}"
-rjil::nova::compute::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
+rjil::nova::compute::rbd::cinder_rbd_secret_uuid: "%{hiera('cinder_rbd_secret_uuid')}"
+rjil::nova::compute::rbd::ceph_mon_key: "%{hiera('rjil::ceph::mon::key')}"
 
 rjil::nova::controller::nova_auth:
   username: nova
