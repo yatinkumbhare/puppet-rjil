@@ -31,3 +31,5 @@ rjil::neutron::contrail::fip_pools:
     cidr: 99.0.0.0/24
     public: false
     tenants: ['tempest','testtenant']
+
+contrail::vrouter::vgw_subnets: ['100.1.0.0/24']
