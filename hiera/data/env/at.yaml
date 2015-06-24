@@ -35,3 +35,5 @@ rjil::neutron::contrail::fip_pools:
     rt_number: 10001
     public: false
     tenants: ['tempest','mgmt_tenant','internal_tenant']
+
+contrail::vrouter::vgw_subnets: ['100.1.0.0/24']
