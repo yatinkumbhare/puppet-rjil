@@ -1,5 +1,7 @@
 rustedhalo_apt_repo_release: 'trusty-unstable'
 
+contrail::vrouter::vrouter_physical_interface: eth0
+
 rjil::ceph::osd::autogenerate: true
 rjil::ceph::osd::autodisk_size: 10
 rjil::ceph::osd::osd_journal_size: 2

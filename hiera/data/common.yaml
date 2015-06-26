@@ -655,17 +655,6 @@ contrail::vrouter::debug: true
 
 rjil::contrail::server::enable_analytics: false
 
-##
-# Adding common setting for contrail::interface, this may need to be override in
-# environment specific interface
-# contrail::interface must be the interface which is dedicated for VM network -
-# in case of two NIC scenario on openstack nodes (Compute, control etc), one nic would be dedicated for control plane,
-# storage access etc (private) and other would be used for SDN (VM communication
-# - public).
-##
-contrail::interface: "%{hiera('public_interface')}"
-contrail::vrouter::vrouter_physical_interface: "%{hiera('contrail::interface')}"
-
 contrail::config::quota_floating_ip: 5
 contrail::config::quota_logical_router: 10
 contrail::config::quota_security_group: 100
