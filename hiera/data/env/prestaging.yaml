@@ -4,8 +4,6 @@ rjil::ceph::osd::autogenerate: true
 rjil::ceph::osd::autodisk_size: 10
 rjil::ceph::osd::osd_journal_size: 2
 
-# Only Qemu is supported on virtual testing environment
-nova::compute::libvirt::libvirt_virt_type: qemu
 
 rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet]
 rjil::system::accounts::sudo_users:
@@ -32,23 +30,23 @@ rjil::neutron::contrail::fip_pools:
     public: false
     tenants: ['tempest','testtenant']
 
-contrail::vrouter::vgw_subnets: ['100.1.0.0/24']
-rjil::neutron::ovs::swap_macs: true
 
-ilo::network: 10.1.0.0
-ilo::netmask: 255.255.255.0
-ilo::gateway: 10.1.0.1
+ilo::network: 10.204.117.0
+ilo::netmask: 255.255.255.192
+ilo::gateway: 10.204.117.1
+ilo::dhcp_range: '10.204.117.15 10.204.117.60'
 
-rjil::jiocloud::dhcp::interface: eth1
-rjil::jiocloud::dhcp::server_ipaddress: 10.1.0.2
+rjil::jiocloud::dhcp::interface: em1
+rjil::jiocloud::dhcp::server_ipaddress: 10.204.117.12
 rjil::jiocloud::dhcp::server_netmask: "%{hiera('ilo::netmask')}"
 
-rjil::neutron::ovs::br_physical_interface: eth0
+rjil::neutron::ovs::br_physical_interface: em4
 rjil::neutron::ovs::br_name: br-ctlplane
-rjil::neutron::ovs::gateway: 10.130.182.1
-rjil::neutron::ovs::nameservers: [8.8.8.8]
-rjil::neutron::network::undercloud::gateway: 10.130.182.1
-rjil::neutron::network::undercloud::pool_start: 10.130.182.12
-rjil::neutron::network::undercloud::pool_end: 10.130.182.254
-rjil::neutron::network::undercloud::cidr: 10.130.182.0/24
-rjil::neutron::network::undercloud::dns_nameservers: [8.8.8.8]
+rjil::neutron::ovs::gateway: 10.140.223.1
+# Setting up gcp1 as dns server for uc for now
+rjil::neutron::ovs::nameservers: [10.140.192.34]
+rjil::neutron::network::undercloud::dns_nameservers: [10.140.192.34]
+rjil::neutron::network::undercloud::gateway: 10.130.223.1
+rjil::neutron::network::undercloud::pool_start: 10.130.223.15
+rjil::neutron::network::undercloud::pool_end: 10.130.223.62
+rjil::neutron::network::undercloud::cidr: 10.130.223.0/26

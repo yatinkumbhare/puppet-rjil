@@ -52,3 +52,13 @@ ilo::gateway: 10.1.0.1
 rjil::jiocloud::dhcp::interface: eth1
 rjil::jiocloud::dhcp::server_ipaddress: 10.1.0.2
 rjil::jiocloud::dhcp::server_netmask: "%{hiera('ilo::netmask')}"
+
+rjil::neutron::ovs::br_physical_interface: eth0
+rjil::neutron::ovs::br_name: br-ctlplane
+rjil::neutron::ovs::gateway: 10.130.182.1
+rjil::neutron::ovs::nameservers: [8.8.8.8]
+rjil::neutron::network::undercloud::gateway: 10.130.182.1
+rjil::neutron::network::undercloud::pool_start: 10.130.182.12
+rjil::neutron::network::undercloud::pool_end: 10.130.182.254
+rjil::neutron::network::undercloud::cidr: 10.130.182.0/24
+rjil::neutron::network::undercloud::dns_nameservers: [8.8.8.8]
