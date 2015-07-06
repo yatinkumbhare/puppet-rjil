@@ -5,10 +5,10 @@ rjil::ceph::osd::autodisk_size: 10
 rjil::ceph::osd::osd_journal_size: 2
 
 
-rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet]
+rjil::system::accounts::active_users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,amar]
 rjil::system::accounts::sudo_users:
   admin:
-    users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet]
+    users: [soren,bodepd,hkumar,jenkins,consul,pandeyop,jaspreet,amar]
 
 rjil::base::self_signed_cert: true
 
