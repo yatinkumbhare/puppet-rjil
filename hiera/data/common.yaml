@@ -812,8 +812,6 @@ baremetal::ilo_password: hpinvent
 
 ######## ilo dhcp server settings
 #################################
-baremetal::active_nic_number: 3
-
 dhcp::default_lease_time: 2592000
 dhcp::max_lease_time: 2592000
 ##
@@ -839,15 +837,34 @@ dhcp::max_lease_time: 2592000
 #      - 'set cmac = binary-to-ascii(16, 8, ":", substring(hardware, 1, 6))'
 #      - 'execute("/tmp/script.sh","commit", cip, cmac)'
 
+rjil::jiocloud::dhcp::apparmor_rules:
+    '/etc/apparmor.d/local/usr.sbin.dhcpd':
+      content: |
+        /usr/bin/python2.7 ix,
+        /usr/local/lib/python2.7/dist-packages/ r,
+        /etc/python2.7/sitecustomize.py r,
+        /usr/share/pyshared/jiocloud/__init__.py r,
+        /usr/share/pyshared/jiocloud/enroll.py r,
+        /bin/dash ix,
 rjil::jiocloud::dhcp::dhcppools:
   ilo_net:
     network: "%{hiera('ilo::network')}"
     mask: "%{hiera('ilo::netmask')}"
     gateway: "%{hiera('ilo::gateway')}"
     range: ["%{hiera('ilo::dhcp_range')}"]
+    files:
+      '/var/log/dhcp':
+        ensure: directory
+      '/var/log/dhcp/enroll_nodes.log':
+        ensure: file
+        mode: '0644'
+      '/usr/lib/jiocloud/enroll_nodes.sh':
+        content: "#!/bin/bash\n/usr/bin/python2.7 -m jiocloud.enroll --ilo_username %{hiera('baremetal::ilo_user')} --ilo_password %{hiera('baremetal::ilo_password')} --os_username admin --os_tenant openstack --os_password %{hiera('admin_password')} --os_auth_url %{hiera('keystone::endpoint::public_url')}/%{hiera('rjil::keystone::version')} --nic %{hiera('baremetal::active_nic_number')} --ilo_address $1 2>&1 >> /var/log/dhcp/enroll_nodes.log"
+        mode: '0700'
+
     oncommit:
       - set cip = binary-to-ascii(10, 8, ".", leased-address)
-      - execute("/usr/bin/python2.7", "-m", "jiocloud.enroll", "--ilo_username", "%{hiera('baremetal::ilo_user')}", "--ilo_password", "%{hiera('baremetal::ilo_password')}", "--os_username", "admin", "--os_tenant", "openstack", "--os_password", "%{hiera('admin_password')}", "--os_auth_url", "%{hiera('keystone::endpoint::public_url')}", "--nic", "%{hiera('baremetal::active_nic_number')}", "--ilo_address", cip)
+      - execute("/usr/lib/jiocloud/enroll_nodes.sh", cip)
 
 
 ########## Common apache settings

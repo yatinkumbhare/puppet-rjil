@@ -15,6 +15,7 @@ class rjil::jiocloud::dhcp (
   $server_netmask      = undef,
   $server_network      = undef,
   $configure_interface = true,
+  $apparmor_rules      = {},
 ) {
 
   ##
@@ -28,6 +29,11 @@ class rjil::jiocloud::dhcp (
       network   => $server_network,
     }
   }
+
+  ##
+  # setup apparmor rules
+  ##
+  create_resources('rjil::apparmor::rule',$apparmor_rules)
 
   #Rjil::Netconfig::Interface[$interface] -> Class['dhcp']
 

@@ -10,8 +10,8 @@ define rjil::jiocloud::dhcp::pool (
   $oncommit         = undef,
   $onrelease        = undef,
   $onexpiry         = undef,
+  $files            = {},
 ) {
-
 
   ::dhcp::pool{ $name:
     network   => $network,
@@ -23,6 +23,6 @@ define rjil::jiocloud::dhcp::pool (
     onexpiry  => $onexpiry,
   }
 
-  ensure_resource('file','/etc/apparmor.d/local/usr.sbin.dhcpd', {'ensure' => 'present'})
+  create_resources('file',$files,{ensure => present, mode => '0644', owner => 'dhcpd', group => 'dhcpd'})
 
 }

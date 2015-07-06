@@ -50,3 +50,5 @@ rjil::neutron::network::undercloud::gateway: 10.130.223.1
 rjil::neutron::network::undercloud::pool_start: 10.130.223.15
 rjil::neutron::network::undercloud::pool_end: 10.130.223.62
 rjil::neutron::network::undercloud::cidr: 10.130.223.0/26
+
+baremetal::active_nic_number: 4
