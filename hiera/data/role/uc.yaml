@@ -63,3 +63,5 @@ neutron::quota::quota_driver: neutron.db.quota_db.DbQuotaDriver
 
 rjil::nova::compute::rbd_enabled: false
 rjil::nova::compute::compute_driver: ironic
+
+rjil::nova::controller::manage_flavors: false
