@@ -928,6 +928,10 @@ rjil::tempest::auth_host: "%{hiera('keystone_public_address')}"
 rjil::tempest::auth_protocol: "%{hiera('api_protocol')}"
 rjil::tempest::tempest_test_file: /home/jenkins/tempest_tests.txt
 rjil::tempest::tempest_clone_path: "%{hiera('tempest::tempest_clone_path')}"
+rjil::tempest::neutron_admin_password: "%{hiera('neutron::keystone::auth::password')}"
+rjil::tempest::glance_admin_password: "%{hiera('glance::keystone::auth::password')}"
+rjil::tempest::nova_admin_password: "%{hiera('nova::keystone::auth::password')}"
+
 rjil::tempest::provision::auth_host: "%{hiera('keystone_public_address')}"
 rjil::tempest::provision::auth_port: "%{hiera('keystone_port')}"
 rjil::tempest::provision::auth_protocol: "%{hiera('api_protocol')}"
