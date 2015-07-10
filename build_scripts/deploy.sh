@@ -15,7 +15,7 @@ fi
 # jiocloud module for the validation and all.
 ##
 
-if [ $provisioner == 'overcast' ]; then
+if [ "${provisioner}" == 'overcast' ]; then
     overcast deploy --cfg ${overcast_yaml:-.overcast.yaml} --cleanup ${cleanup_dir}/./cleanup-${project_tag} --suffix ${project_tag} ${mappings_arg} --key ${ssh_key_file:-${HOME}/.ssh/id_rsa.pub} ${stack:-overcloud}
 else
     . $(dirname $0)/make_userdata.sh
