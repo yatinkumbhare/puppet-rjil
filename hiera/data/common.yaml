@@ -115,6 +115,12 @@ rjil::openstack_objects::users:
 ##
 rjil::openstack_objects::tenants: ['mgmt_tenant','internal_tenant']
 
+##
+# rjil::openstack_objects::roles can be either a array of role names or a
+# hash of roles with params for rjil::keystone::role
+##
+rjil::openstack_objects::roles: ['tenant_admin','engineering']
+
 rjil::keystone::test_user::username: "%{hiera('test_user_name')}"
 rjil::keystone::test_user::tenant_name: "%{hiera('test_user_tenant')}"
 rjil::keystone::test_user::password: "%{hiera('test_user_password')}"

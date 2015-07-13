@@ -10,6 +10,7 @@ class rjil::openstack_objects(
   $override_ips      = false,
   $users             = {},
   $tenants           = undef,
+  $roles             = undef,
   $lb_available      = true,
 ) {
 
@@ -77,4 +78,11 @@ class rjil::openstack_objects(
     create_resources('rjil::keystone::tenants',$tenants)
   }
 
+  if is_array($roles) {
+    keystone_role { $roles:
+      ensure => present,
+    }
+  } elsif is_hash($roles) {
+    create_resources('keystone_role',$roles,{ensure =>present})
+  }
 }
