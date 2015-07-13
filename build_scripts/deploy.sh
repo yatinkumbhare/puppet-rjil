@@ -16,9 +16,13 @@ fi
 
 ##
 # overcast can run scripts independantly, so no need to run anything else.
+# overcast is not able to resolve the environment variables in case of remote
+# exec, added an issue there in overcast. Until that fixed, we have to use
+# jiocloud module for the validation and all.
 ##
+
 if [ $provisioner == 'overcast' ]; then
-    overcast deploy --cfg ${overcast_yaml:-.overcast.yaml} --cleanup cleanup-${project_tag} --suffix ${project_tag} ${mappings_arg} --key ${ssh_key_file:-${HOME}/.ssh/id_rsa.pub} ${stack:-overcloud}
+    overcast deploy --cfg ${overcast_yaml:-.overcast.yaml} --cleanup "${cleanup_dir}./cleanup-${project_tag}" --suffix ${project_tag} ${mappings_arg} --key ${ssh_key_file:-${HOME}/.ssh/id_rsa.pub} ${stack:-overcloud}
 else
     . $(dirname $0)/make_userdata.sh
 
@@ -30,14 +34,14 @@ else
         sleep 270
         nova list | grep test${BUILD_NUMBER} | cut -f2 -d' ' | while read uuid; do nova console-log $uuid | grep Giving.up.on.md && nova reboot $uuid || true; done
     fi
-
-    time $timeout 1200 bash -c 'while ! bash -c "ip=$(python -m jiocloud.utils get_ip_of_node ${consul_bootstrap_node:-bootstrap1}_${project_tag});ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \${ssh_user:-jenkins}@\${ip} python -m jiocloud.orchestrate ping"; do sleep 5; done'
-
-    ip=$(python -m jiocloud.utils get_ip_of_node ${consul_bootstrap_node:-bootstrap1}_${project_tag})
-
-    time $timeout 600 bash -c "while ! ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
-
-    time $timeout 4000 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/${layout}.yaml | sed -e 's/_/-/g' | ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
-    time $timeout 2400 bash -c "while ! ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
-    time $timeout 600 bash -c "while ! ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate get_failures --hosts; do sleep 5; done"
 fi
+
+
+ip=$(python -m jiocloud.utils get_ip_of_node ${consul_bootstrap_node:-bootstrap1}_${project_tag})
+
+time $timeout 1200 bash -c "while ! bash -c 'ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate ping'; do sleep 5; done"
+time $timeout 600 bash -c "while ! ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate trigger_update ${BUILD_NUMBER}; do sleep 5; done"
+
+time $timeout 4000 bash -c "while ! python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/${layout}.yaml | sed -e 's/_/-/g' | ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate verify_hosts ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 2400 bash -c "while ! ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate check_single_version -v ${BUILD_NUMBER} ; do sleep 5; done"
+time $timeout 600 bash -c "while ! ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate get_failures --hosts; do sleep 5; done"
