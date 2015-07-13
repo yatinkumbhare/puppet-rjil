@@ -440,6 +440,7 @@ nova::compute::ironic::keystone_password: "%{hiera('ironic::api::admin_password'
 nova::compute::ironic::keystone_url: "%{hiera('ironic::api::auth_uri')}"
 
 rjil::ironic::deploy_ironic_api_url: "http://%{::ipaddress}:6385/"
+rjil::ironic::neutron_url: "%{hiera('api_protocol')}://%{hiera('neutron_public_address')}:%{hiera('neutron_port')}"
 
 ########### Keystone config
 ###################################

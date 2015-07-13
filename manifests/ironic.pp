@@ -8,6 +8,7 @@ class rjil::ironic(
   $api_port       = 6385,
   $api_protocol   = 'http',
   $ssl            = false,
+  $neutron_url   = 'http://localhost:9696',
 ) {
 
   class { '::ironic': }
@@ -20,6 +21,16 @@ class rjil::ironic(
     ensure => present,
     before => [ Package['ironic-api'], Package['ironic-conductor'] ],
     tag    => 'package',
+  }
+
+  ##
+  # it seems another bug in ironic packaging, /var/lib/ironic is not present.
+  ##
+  file {'/var/lib/ironic':
+    ensure  => 'directory',
+    owner   => 'ironic',
+    group   => 'ironic',
+    require => User['ironic']
   }
 
   file { '/tftpboot':
@@ -52,9 +63,11 @@ class rjil::ironic(
     ensure => 'present'
   }
 
-  ironic_config { 'conductor/ironic_api_url':
+  ironic_config { 'conductor/api_url':
     value => "${api_protocol}://${listen_address}:${api_port}/"
   }
+
+  ironic_config { 'neutron/url': value => $neutron_url }
 
   package { 'tftpd-hpa':
     ensure => 'present'
