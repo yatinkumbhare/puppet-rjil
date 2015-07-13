@@ -66,6 +66,12 @@ class rjil::neutron::ovs(
   contain ::neutron::agents::dhcp
 
   ##
+  # lock_path is required to get dhcp worked, $state_path is not supposed to be
+  # resolved in puppet, so single quoted.
+  ##
+  neutron_config {'DEFAULT/lock_path': value => '$state_path/lock'}
+
+  ##
   # Undercloud will not need l3 agent.
   ##
   if $l3_agent_enabled {

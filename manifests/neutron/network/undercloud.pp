@@ -18,15 +18,17 @@ class rjil::neutron::network::undercloud (
   $dns_nameservers           = [],
 ) {
 
+  $br_name_for_fact = regsubst($br_name,'-','_','G')
+
   if ! $cidr {
-    $br_netmask  = inline_template("<%= scope.lookupvar('netmask_' + @br_name) %>")
+    $br_netmask  = inline_template("<%= scope.lookupvar('netmask_' + @br_name_for_fact) %>")
     $cidr_orig = netmask2cidr($br_netmask)
   } else {
     $cidr_orig = $cidr
   }
 
   if ! $host_routes {
-    $ipaddr_bridge = inline_template("<%= scope.lookupvar('ipaddr_' + @br_name) %>")
+    $ipaddr_bridge = inline_template("<%= scope.lookupvar('ipaddr_' + @br_name_for_fact) %>")
     if $ipaddr_bridge {
       $host_routes_orig = ["destination=169.254.169.254/32,nexthop=${ipaddr_bridge}"]
     }

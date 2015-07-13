@@ -46,9 +46,9 @@ rjil::neutron::ovs::gateway: 10.140.223.1
 # Setting up gcp1 as dns server for uc for now
 rjil::neutron::ovs::nameservers: [10.140.192.34]
 rjil::neutron::network::undercloud::dns_nameservers: [10.140.192.34]
-rjil::neutron::network::undercloud::gateway: 10.130.223.1
-rjil::neutron::network::undercloud::pool_start: 10.130.223.15
-rjil::neutron::network::undercloud::pool_end: 10.130.223.62
-rjil::neutron::network::undercloud::cidr: 10.130.223.0/26
+rjil::neutron::network::undercloud::gateway: 10.140.223.1
+rjil::neutron::network::undercloud::pool_start: 10.140.223.15
+rjil::neutron::network::undercloud::pool_end: 10.140.223.62
+rjil::neutron::network::undercloud::cidr: 10.140.223.0/26
 
 baremetal::active_nic_number: 4
