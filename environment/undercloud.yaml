@@ -1,6 +1,6 @@
 nodes:
   uc1:
-    flavor: uc
+    flavor: medium
     image: trusty
     disk: 100
     networks:
