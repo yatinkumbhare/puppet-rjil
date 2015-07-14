@@ -99,6 +99,8 @@ else
   puppet apply --config_version='echo settings' -e "ini_setting { default_manifest: path => \"/etc/puppet/puppet.conf\", section => main, setting => default_manifest, value => \"/etc/puppet/manifests/site.pp\" }"
 fi
 echo 'consul_discovery_token='${consul_discovery_token} > /etc/facter/facts.d/consul.txt
+# default to first 16 bytes of discovery token
+echo 'consul_gossip_encrypt'=`echo ${consul_discovery_token} | cut -b 1-15 | base64` >> /etc/facter/facts.d/consul.txt
 echo 'current_version='${BUILD_NUMBER} > /etc/facter/facts.d/current_version.txt
 echo 'env='${env} > /etc/facter/facts.d/env.txt
 echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
