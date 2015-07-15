@@ -2,12 +2,6 @@
 
 . $(dirname $0)/common.sh
 
-function debug(){
-  bash -c "ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate debug_timeout ${BUILD_NUMBER};python -m jiocloud.apply_resources ssh_config --project_tag=${project_tag} ${mappings_arg} environment/${layout}.yaml > ${project_tag}_ssh_config;for i in \`python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/${layout}.yaml \`; do ssh -o LogLevel=Error -F ${project_tag}_ssh_config \${i} \'hostname\' ;done"
-}
-
-trap "debug" EXIT
-
 # If these aren't yet set (from credentials file, typically),
 if [ -z "${consul_discovery_token}" ]
 then
@@ -22,7 +16,7 @@ fi
 ##
 
 if [ $provisioner == 'overcast' ]; then
-    overcast deploy --cfg ${overcast_yaml:-.overcast.yaml} --cleanup "${cleanup_dir}./cleanup-${project_tag}" --suffix ${project_tag} ${mappings_arg} --key ${ssh_key_file:-${HOME}/.ssh/id_rsa.pub} ${stack:-overcloud}
+    overcast deploy --cfg ${overcast_yaml:-.overcast.yaml} --cleanup ${cleanup_dir}/./cleanup-${project_tag} --suffix ${project_tag} ${mappings_arg} --key ${ssh_key_file:-${HOME}/.ssh/id_rsa.pub} ${stack:-overcloud}
 else
     . $(dirname $0)/make_userdata.sh
 
@@ -34,6 +28,12 @@ else
         sleep 270
         nova list | grep test${BUILD_NUMBER} | cut -f2 -d' ' | while read uuid; do nova console-log $uuid | grep Giving.up.on.md && nova reboot $uuid || true; done
     fi
+    function debug(){
+        bash -c "ssh -o LogLevel=Error -o ServerAliveInterval=30 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${ssh_user:-jenkins}@${ip} python -m jiocloud.orchestrate debug_timeout ${BUILD_NUMBER};python -m jiocloud.apply_resources ssh_config --project_tag=${project_tag} ${mappings_arg} environment/${layout}.yaml > ${project_tag}_ssh_config;for i in \`python -m jiocloud.apply_resources list --project_tag=${project_tag} environment/${layout}.yaml \`; do ssh -o LogLevel=Error -F ${project_tag}_ssh_config \${i} \'hostname\' ;done"
+    }
+
+    trap "debug" EXIT
+
 fi
 unset ip
 
