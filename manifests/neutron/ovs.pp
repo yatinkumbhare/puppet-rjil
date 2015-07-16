@@ -98,7 +98,7 @@ class rjil::neutron::ovs(
         $physical_mac = inline_template("<%= scope.lookupvar('macaddress_' + @br_physical_interface) %>")
       }
 
-       rjil::netconfig::interface { $br_physical_interface:
+      rjil::netconfig::interface { $br_physical_interface:
         method     => 'manual',
         options    => {
             'up' => 'ifconfig $IFACE 0.0.0.0 up'

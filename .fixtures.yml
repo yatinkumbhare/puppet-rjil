@@ -10,6 +10,8 @@ fixtures:
       ref: 41e2ddbc1cd861247e57d16b778cbe891602f509
     openstack_extras:
       repo: https://github.com/bodepd/puppet-openstack_extras
+    dhcp:
+      repo: https://github.com/JioCloud/puppetlabs-dhcp
     heat:
       repo: https://github.com/stackforge/puppet-heat
     glance:
@@ -76,7 +78,7 @@ fixtures:
       repo: https://github.com/jiocloud/puppet-openstacklib
       ref: origin/master
     ironic:
-      repo: https://github.com/stackforge/puppet-ironic
+      repo: https://github.com/jiocloud/puppet-ironic
       ref: origin/master
     concat:
       repo: https://github.com/puppetlabs/puppetlabs-concat
