@@ -107,6 +107,18 @@ echo 'cloud_provider='${cloud_provider} > /etc/facter/facts.d/cloud_provider.txt
 if [ -n "${slack_url}" ]; then
   echo 'slack_url=${slack_url}' > /etc/facter/facts.d/slack_url.txt
 fi
+
+##
+# Disable TCP Offloading in builds on Interfaces
+if [[ \$(facter is_virtual) == true ]];
+then
+  for nic in \$(ifconfig -a | awk '/eth[0-9]+/ {print \$1}'); do
+    ethtool -K \${nic} tx off
+    sed -i -e "/^exit 0$/i\ethtool -K \${nic} tx off" /etc/rc.local
+  done
+fi
+
+
 ##
 # Workaround to add the swap partition for baremetal systems, as even though
 # cloudinit is creating the swap partition, its not added to the fstab and not
