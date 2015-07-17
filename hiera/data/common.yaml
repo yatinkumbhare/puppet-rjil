@@ -959,8 +959,8 @@ rjil::jiocloud::consul::consul_alerts::slack_channel: "consul-alerts"
 #### Squid configurations
 squid3::cache_dir: ['ufs /var/spool/squid3 40000 16 256']
 squid3::maximum_object_size: '512 MB'
-squid3::maximum_object_size_in_memory: '10240 KB'
-squid3::cache_mem: '1024 MB'
+squid3::maximum_object_size_in_memory: '40000 KB'
+squid3::cache_mem: '1512 MB'
 squid3::refresh_patterns:
   - 'deb$   129600 100% 129600'
   - 'udeb$   129600 100% 129600'
