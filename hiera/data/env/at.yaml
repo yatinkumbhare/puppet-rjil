@@ -48,6 +48,7 @@ rjil::neutron::ovs::swap_macs: true
 ilo::network: 10.1.0.0
 ilo::netmask: 255.255.255.0
 ilo::gateway: 10.1.0.1
+ilo::dhcp_range: '10.1.0.50 10.1.0.100'
 
 rjil::jiocloud::dhcp::interface: eth1
 rjil::jiocloud::dhcp::server_ipaddress: 10.1.0.2
