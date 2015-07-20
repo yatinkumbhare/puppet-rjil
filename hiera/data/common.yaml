@@ -966,3 +966,9 @@ squid3::refresh_patterns:
   - 'udeb$   129600 100% 129600'
   - 'tar.gz$  129600 100% 129600'
   - 'changelogs.ubuntu.com/*  0  1% 1'
+
+####workaround for neutron bad status line###
+####increasing the haproxy timeout from 20s ####
+rjil::haproxy::default_timeout_connect: 50000
+rjil::haproxy::default_timeout_client: 50000
+rjil::haproxy::default_timeout_server: 50000
