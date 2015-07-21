@@ -78,8 +78,9 @@ mod 'stackforge/openstacklib',
   :ref => 'origin/master'
 
 mod 'stackforge/ironic',
-  :git => "#{base_url}/hkumarmk/puppet-ironic",
-  :ref => 'adddbsync'
+  :git => "#{base_url}/jiocloud/puppet-ironic",
+  :ref => 'origin/master'
+
 mod 'puppetlabs/concat',
   :git => "#{base_url}/puppetlabs/puppetlabs-concat",
   :ref => '1.1.1'
@@ -101,8 +102,8 @@ mod 'puppetlabs/mysql',
   :ref => '2.2.x'
 
 mod 'stackforge/neutron',
-  :git => "#{base_url}/hkumarmk/puppet-neutron",
-  :ref => 'no_mk_resource_methods'
+  :git => "#{base_url}/jiocloud/puppet-neutron",
+  :ref => 'origin/master'
 
 mod 'stackforge/nova',
   :git => "#{base_url}/jiocloud/puppet-nova",
