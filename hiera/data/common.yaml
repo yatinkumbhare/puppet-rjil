@@ -6,10 +6,17 @@
 # Idea is to enable jumbo frames after completing initial setup.
 ##
 mtu: 1500
-public_address: "%{ipaddress_eth0}"
-public_interface: eth0
-private_address: "%{ipaddress_eth0}"
-private_interface: eth0
+##
+# instead of assuming the ipaddess will be on specific network interface, just
+# provide the network in the format <network with dot replaced with>_<cidr>
+# This will avoid issues on using different nic on the servers because of any
+# reasons like nic port failures. It also fix the problem of the ip address
+# being moved to vhost0 interface in compute node.
+##
+public_address: "%{ipaddress_10_0_0_0_16}"
+public_interface: "%{interface_10_0_0_0_16}"
+private_address: "%{ipaddress_10_0_0_0_16}"
+private_interface: "%{interface_10_0_0_0_16}"
 
 ###################################
 ########  Database config #########
@@ -647,17 +654,6 @@ contrail::enable_analytics: false
 contrail::vrouter::debug: true
 
 rjil::contrail::server::enable_analytics: false
-
-##
-# Adding common setting for contrail::interface, this may need to be override in
-# environment specific interface
-# contrail::interface must be the interface which is dedicated for VM network -
-# in case of two NIC scenario on openstack nodes (Compute, control etc), one nic would be dedicated for control plane,
-# storage access etc (private) and other would be used for SDN (VM communication
-# - public).
-##
-contrail::interface: "%{hiera('public_interface')}"
-contrail::vrouter::vrouter_physical_interface: "%{hiera('contrail::interface')}"
 
 contrail::config::quota_floating_ip: 5
 contrail::config::quota_logical_router: 10

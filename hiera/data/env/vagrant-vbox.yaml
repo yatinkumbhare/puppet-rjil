@@ -1,8 +1,3 @@
-public_address: "%{ipaddress_eth1}"
-public_interface: eth1
-private_address: "%{ipaddress_vhost0_or_eth1}"
-private_interface: eth1
-
 rjil::ceph::osd::autogenerate: true
 rjil::ceph::osd::autodisk_size: 10
 rjil::ceph::osd::osd_journal_size: 2

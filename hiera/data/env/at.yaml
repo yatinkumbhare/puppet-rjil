@@ -1,6 +1,7 @@
 rustedhalo_apt_repo_release: 'trusty-testing'
 
 rjil::jiocloud::consul::encrypt: "%{consul_gossip_encrypt}"
+contrail::vrouter::vrouter_physical_interface: eth0
 
 rjil::ceph::osd::autogenerate: true
 rjil::ceph::osd::autodisk_size: 10
