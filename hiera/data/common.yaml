@@ -274,7 +274,7 @@ rjil::neutron::ovs::br_physical_interface: "%{hiera('private_interface')}"
 rjil::neutron::ovs::br_name: "%{hiera('uc_br_name')}"
 
 
-neutron::agents::ml2::ovs::bridge_uplinks: ["%{hiera('uc_br_name')}:%{hiera('private_interface')}"]
+neutron::agents::ml2::ovs::bridge_uplinks: ["%{hiera('uc_br_name')}:%{hiera('rjil::neutron::ovs::br_physical_interface')}"]
 neutron::agents::ml2::ovs::bridge_mappings: ["%{hiera('uc_network_name')}:%{hiera('uc_br_name')}"]
 
 neutron::plugins::ml2::type_drivers: ['flat']
