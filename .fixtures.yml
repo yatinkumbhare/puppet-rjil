@@ -27,7 +27,8 @@ fixtures:
       repo: git://github.com/puppetlabs/puppetlabs-vcsrepo
       ref: 1.2.0
     tempest:
-      repo: git://github.com/jiocloud/puppet-tempest
+      repo: git://github.com/anshprat/puppet-tempest
+      ref: 'origin/raw_image'
     ssh:
       repo: https://github.com/saz/puppet-ssh
       ref: v2.3.6
