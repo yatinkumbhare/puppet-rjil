@@ -13,7 +13,9 @@ class rjil::tempest::provision (
   $convert_to_raw         = true,
   $image_name             = 'cirros',
   $staging_path           = '/opt/staging',
-  $configure_neutron      = true,
+  $is_public              = 'yes',
+  $container_format       = 'bare',
+  $disk_format            = 'qcow2',
 ) {
 
 ##
@@ -49,7 +51,7 @@ class rjil::tempest::provision (
     }
   }
 
-  include staging
+  include ::staging
 
   staging::file {"image_stage_${image_name}":
     source => $image_source,
@@ -62,14 +64,16 @@ class rjil::tempest::provision (
       creates => "${staging_path}/${image_name}.img",
       require => Staging::File["image_stage_${image_name}"],
     }
-
     $image_source_path = "${staging_path}/${image_name}.img"
+    $disk_format_l = 'raw'
   } else {
     $image_source_path = "${staging_path}/${image_name}"
+    $disk_format_l = $disk_format
   }
-
   class {'::tempest::provision':
     image_source => $image_source_path,
+    disk_format  => $disk_format_l,
+    imagename    => $image_name
   }
 }
 
