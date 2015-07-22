@@ -258,7 +258,6 @@ rjil::neutron::contrail::public_network_name: "%{hiera('public_network_name')}"
 
 rjil::neutron::contrail::fip_pool::keystone_admin_password: "%{hiera('admin_password')}"
 
-rjil::neutron::ovs::ctlplane_network_name: ctlplane
 rjil::neutron::server_name: "%{hiera('neutron_public_address')}"
 rjil::neutron::ssl: true
 rjil::neutron::rewrites:
@@ -270,6 +269,25 @@ rjil::neutron::headers:
   - 'always set Access-Control-Allow-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
   - 'always set Access-Control-Expose-Headers "Accept, Content-Type, X-Auth-Token, X-Subject-Token"'
   - 'always set Access-Control-Allow-Methods "GET POST OPTIONS PUT DELETE PATCH"'
+
+########### Neutron ovs configuration
+######################################
+##
+# OVS is used in undercloud neutron
+##
+uc_br_name: br-ctlplane
+uc_network_name: ctlplane
+rjil::neutron::ovs::br_physical_interface: "%{hiera('private_interface')}"
+rjil::neutron::ovs::br_name: "%{hiera('uc_br_name')}"
+
+
+neutron::agents::ml2::ovs::bridge_uplinks: ["%{hiera('uc_br_name')}:%{hiera('rjil::neutron::ovs::br_physical_interface')}"]
+neutron::agents::ml2::ovs::bridge_mappings: ["%{hiera('uc_network_name')}:%{hiera('uc_br_name')}"]
+
+neutron::plugins::ml2::type_drivers: ['flat']
+neutron::plugins::ml2::tenant_network_types: ['flat']
+neutron::plugins::ml2::mechanism_drivers: ['openvswitch']
+neutron::plugins::ml2::flat_networks: ["%{hiera('uc_network_name')}"]
 
 ########### Cinder configuration
 ###################################
@@ -429,6 +447,7 @@ nova::compute::ironic::keystone_password: "%{hiera('ironic::api::admin_password'
 nova::compute::ironic::keystone_url: "%{hiera('ironic::api::auth_uri')}"
 
 rjil::ironic::deploy_ironic_api_url: "http://%{::ipaddress}:6385/"
+rjil::ironic::neutron_url: "%{hiera('api_protocol')}://%{hiera('neutron_public_address')}:%{hiera('neutron_port')}"
 
 ########### Keystone config
 ###################################
@@ -539,12 +558,6 @@ ironic::keystone::auth::public_address: "%{hiera('ironic_public_address')}"
 ironic::keystone::auth::public_port: 6385
 ironic::keystone::auth::region: "%{hiera('region')}"
 
-
-########### Undercloud
-############################
-
-ilo_user: hpadmin
-ilo_password: hpinvent
 
 #########################################
 ###### System configuration #############
@@ -788,11 +801,16 @@ ssh::server::storeconfigs_enabled: false
 
 gitolite::admin_pub_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDT7UcaDrA8FVbepVxD+HuhXDDzEyy2pKGZcv2PstGVEW0ltspt7glmxNRHHBUuPsgvMQjVnLHvmxUE79DotCsMFg2o2lQM8uRlIAiX3tSeN5pgxbt1MhpmAV7AyCkDLsUeTWhfVeUgTO2amM5aKuJzGqxbNgf1tNKEdyspCm/c06L2rMQZ2MWhqHLPC4C4O3mGbuTeWthIU4PgWK8hGcqxm4QwACwpMT7iTfH8mALCmeCw0PQdE6Mz5rpFftvwOPpNwU0W/dfqjZ/zTa+n5wIzTL7d6qD3E2ihSIsP8YCObiICWBJFzidtbLxMNu5nZqPK7wPL7VzQS89FNQNSD4if soren@bulky'
 
+########### Undercloud
+#############################
+#
+baremetal::ilo_user: hpadmin
+baremetal::ilo_password: hpinvent
+
 ######## ilo dhcp server settings
 #################################
-rjil::jiocloud::dhcp::interfaces:
-  - eth0
-
+dhcp::default_lease_time: 2592000
+dhcp::max_lease_time: 2592000
 ##
 # dhcp pools to be configured
 ##
@@ -816,10 +834,35 @@ rjil::jiocloud::dhcp::interfaces:
 #      - 'set cmac = binary-to-ascii(16, 8, ":", substring(hardware, 1, 6))'
 #      - 'execute("/tmp/script.sh","commit", cip, cmac)'
 
+rjil::jiocloud::dhcp::apparmor_rules:
+    '/etc/apparmor.d/local/usr.sbin.dhcpd':
+      content: |
+        /usr/bin/python2.7 ix,
+        /usr/local/lib/python2.7/dist-packages/ r,
+        /etc/python2.7/sitecustomize.py r,
+        /usr/share/pyshared/jiocloud/__init__.py r,
+        /usr/share/pyshared/jiocloud/enroll.py r,
+        /bin/dash ix,
 rjil::jiocloud::dhcp::dhcppools:
-  localnet:
-    network: "%{network_eth0}"
-    mask: "%{netmask_eth0}"
+  ilo_net:
+    network: "%{hiera('ilo::network')}"
+    mask: "%{hiera('ilo::netmask')}"
+    gateway: "%{hiera('ilo::gateway')}"
+    range: ["%{hiera('ilo::dhcp_range')}"]
+    files:
+      '/var/log/dhcp':
+        ensure: directory
+      '/var/log/dhcp/enroll_nodes.log':
+        ensure: file
+        mode: '0644'
+      '/usr/lib/jiocloud/enroll_nodes.sh':
+        content: "#!/bin/bash\n/usr/bin/python2.7 -m jiocloud.enroll --ilo_username %{hiera('baremetal::ilo_user')} --ilo_password %{hiera('baremetal::ilo_password')} --os_username admin --os_tenant openstack --os_password %{hiera('admin_password')} --os_auth_url %{hiera('keystone::endpoint::public_url')}/%{hiera('rjil::keystone::version')} --nic %{hiera('baremetal::active_nic_number')} --ilo_address $1 2>&1 >> /var/log/dhcp/enroll_nodes.log"
+        mode: '0700'
+
+    oncommit:
+      - set cip = binary-to-ascii(10, 8, ".", leased-address)
+      - execute("/usr/lib/jiocloud/enroll_nodes.sh", cip)
+
 
 ########## Common apache settings
 #################################
