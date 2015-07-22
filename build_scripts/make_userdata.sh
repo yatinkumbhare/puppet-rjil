@@ -110,12 +110,26 @@ fi
 
 ##
 # Disable TCP Offloading in builds on Interfaces
+# Add network config for all available interfaces, this would be usable for
+# undercloud as it will have multiple interfaces. cloudinit will only handle
+# first interface
+#
+
 if [[ \$(facter is_virtual) == true ]];
 then
   for nic in \$(ifconfig -a | awk '/eth[0-9]+/ {print \$1}'); do
+    netconfig_content="\$netconfig_content
+file { '/etc/network/interfaces.d/\${nic}':
+  ensure  => file,
+  content => 'auto \$nic
+iface \$nic inet dhcp
+',
+}"
     ethtool -K \${nic} tx off
     sed -i -e "/^exit 0$/i\ethtool -K \${nic} tx off" /etc/rc.local
   done
+
+  puppet apply --config_version='echo settings' -e "\$netconfig_content"
 fi
 
 
