@@ -59,9 +59,9 @@ class rjil::openstack_objects(
   Rjil::Service_blocker[$neutron_service_name] -> Neutron_network<||>
 
   # provision keystone objects for all services
-  include openstack_extras::keystone_endpoints
+  include ::openstack_extras::keystone_endpoints
   # provision tempest resources like images, network, users etc.
-  include tempest::provision
+  include rjil::tempest::provision
 
   # create users, tenants, roles, default networks
   create_resources('rjil::keystone::user',$users)
