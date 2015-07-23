@@ -138,8 +138,8 @@ mod 'stephenrjohnson/puppet',
   :ref => '1.0.0'
 
 mod 'jiocloud/contrail',
-  :git => "#{base_url}/JioCloud/jiocloud-contrail",
-  :ref => 'master'
+  :git => "#{base_url}/yatinkumbhare/jiocloud-contrail",
+  :ref => 'agent-vrouter-conf-flag'
 
 mod 'deric/zookeeper',
   :git => "#{base_url}/deric/puppet-zookeeper",
