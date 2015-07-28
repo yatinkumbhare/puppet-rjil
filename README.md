@@ -837,18 +837,6 @@ We use slack as the communication center for this project. Slack is a great plac
 to ask a questions, or to collaborate on issues where pairing is desired. Events related
 to the development of the cloud platform are also streamed to slack in real time.
 
-### Kanban board (ie: tasks)
-
-````
- https://trello.com/b/PUXa12Cl/jiocloud-deployments
-````
-
-We use Trello to track tasks and task backlog related to this project. It is used
-to understand our tasks, how they fit into overall categories as well as who is
-currently working on what things. The process for how tasks are added into Trello
-is currently a bit adhoc, but needs to be enhanced as additional resources come
-online.
-
 ### Specifications
 
 ````
